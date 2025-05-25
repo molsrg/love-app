@@ -2,10 +2,6 @@
 import QrcodeVue from 'qrcode.vue'
 import { useQrScanner } from 'vue-tg'
 
-definePageMeta({
-  layout: 'unauthorized',
-})
-
 interface CarouselItem {
   title: string
   subtitle: string

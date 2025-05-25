@@ -2,9 +2,9 @@
 import QrcodeVue from 'qrcode.vue'
 import { useQrScanner } from 'vue-tg'
 
-definePageMeta({
-  layout: 'unauthorized',
-})
+// definePageMeta({
+//   layout: 'unauthorized',
+// })
 
 interface CarouselItem {
   title: string
@@ -32,7 +32,7 @@ interface CarouselItem {
 }
 const qrValue = 'https://loveapp.com/pair/unique-user-id'
 const open = ref(false)
-
+const { $isMobile } = useNuxtApp()
 const qrScanner = useQrScanner()
 
 function startScanner(): void {
@@ -115,7 +115,7 @@ const items: CarouselItem[] = [
 
           <div v-if="item.actions" class="space-y-3">
             <UButton
-              v-if="item.actions.primary"
+              v-if="item.actions.primary && $isMobile"
               :icon="item.actions.primary.icon"
               :label="item.actions.primary.label"
               size="xl"
@@ -152,6 +152,8 @@ const items: CarouselItem[] = [
         </div>
       </UCard>
     </UCarousel>
+
+    <!--    <LoaderApp /> -->
   </div>
 
   <UDrawer v-model:open="open">
@@ -170,10 +172,6 @@ const items: CarouselItem[] = [
 
 .animate-slide-up {
   animation: slideUp 0.8s ease-out;
-}
-
-.animate-float {
-  animation: float 3s ease-in-out infinite;
 }
 
 @keyframes fadeIn {

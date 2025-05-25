@@ -9,10 +9,10 @@ const handleError = () => clearError({ redirect: '/' })
     class="flex justify-center items-center px-6 h-[100vh] w-full bg-cover bg-center bg-no-repeat bg-img"
   >
     <div class="text-center flex flex-col gap-4 items-center">
-      <p class="text-[9.5rem] text-info ">
+      <p class="text-[9.5rem] text-primary ">
         {{ error.statusCode }}
       </p>
-      <p class=" tx-title-1">
+      <p class="text-xl">
         {{ error.message }}
       </p>
       <UButton

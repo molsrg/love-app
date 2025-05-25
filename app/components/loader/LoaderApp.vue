@@ -7,7 +7,7 @@
   width: 68px;
   height: 68px;
   border: 5px solid #fff;
-  border-bottom-color: #4ade80;
+  border-bottom-color: var(--ui-primary);
   border-radius: 50%;
   display: inline-block;
   box-sizing: border-box;

@@ -13,32 +13,15 @@ const marginTopCalculate = computed(() => {
   return `${contentSafeAreaInset.value.top * 1.9}px`
 })
 
-const itemss = ref<TabsItem[]>([
-  {
-    icon: 'i-lucide-user',
-  },
-  {
-    icon: 'i-lucide-lock',
-  },
-  {
-    icon: 'i-lucide-user',
-  },
-  {
-    icon: 'i-lucide-lock',
-  },
-  {
-    icon: 'i-lucide-user',
-  },
-])
-
-const viewport = useViewport()
+const { $initApp } = useNuxtApp()
+await $initApp()
 </script>
 
 <template>
   <div :style="{ paddingTop: marginTopCalculate, paddingBottom: marginTopCalculate }">
     <UApp :toaster="app.toaster">
       <NuxtRouteAnnouncer />
-      <LoadingIndicator color="#00d492" :style="{ top: marginTopCalculate }" />
+      <LoadingIndicator color="#ffffff" :style="{ top: marginTopCalculate }" />
       <NuxtLayout>
         <div class="mx-auto max-w-[95%] mt-2">
           <NuxtPage />
