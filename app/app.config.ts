@@ -19,6 +19,9 @@ export default defineAppConfig({
       black: 'black',
       indigo: 'indigo',
       orange: 'orange',
+      amber: 'amber',
+      blue: 'blue',
+      emerald: 'emerald',
     },
     modal: {
       slots: {
