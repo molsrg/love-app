@@ -41,11 +41,11 @@ const modelValue = shallowRef(new CalendarDate(2022, 1, 10))
 </script>
 
 <template>
-  <div class="p-4 mx-auto space-y-6 mb-12">
+  <div class="p-4 mx-auto space-y-6 ">
     <h1 class="text-2xl font-bold text-white">
       Настройки
     </h1>
-    <UCard>
+    <UCard variant="subtle">
       <template #header>
         <div class="flex items-center gap-2">
           <UIcon :name="config.sections.profile.icon" class="text-primary" />
@@ -91,7 +91,7 @@ const modelValue = shallowRef(new CalendarDate(2022, 1, 10))
       </div>
     </UCard>
 
-    <UCard>
+    <UCard variant="subtle">
       <template #header>
         <div class="flex items-center gap-2">
           <UIcon :name="config.sections.notifications.icon" class="text-primary" />
@@ -128,7 +128,7 @@ const modelValue = shallowRef(new CalendarDate(2022, 1, 10))
     </UCard>
 
     <!-- Конфиденциальность -->
-    <UCard>
+    <UCard variant="subtle">
       <template #header>
         <div class="flex items-center gap-2">
           <UIcon :name="config.sections.privacy.icon" class="text-primary" />

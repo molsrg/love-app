@@ -6,7 +6,7 @@ const route = useRoute()
 
 const marginBottomCalculate = computed<string>(() => {
   const { safeAreaInset } = useViewport()
-  return `${safeAreaInset.value.bottom * 0.7 + 5}px`
+  return `${safeAreaInset.value.bottom * 0.65 + 5}px`
 })
 
 interface TabItem extends TabsItem {
