@@ -15,8 +15,8 @@ interface TabItem extends TabsItem {
 
 const items: TabItem[] = [
   {
-    icon: 'i-material-symbols:add-link-rounded',
-    value: '/connect',
+    icon: 'i-streamline-interface-calendar-heart-calendar-date-day-favorite-heart-like-month',
+    value: '/calendar',
   },
   {
     icon: 'i-material-symbols:indeterminate-question-box-rounded',
@@ -28,7 +28,7 @@ const items: TabItem[] = [
   },
   {
     icon: 'i-lucide-chart-line',
-    value: '/aaa',
+    value: '/connect',
   },
   {
     icon: 'i-lucide-settings',

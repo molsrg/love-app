@@ -33,6 +33,8 @@ export default defineNuxtPlugin(async () => {
       window.Telegram.WebApp.requestFullscreen()
       isMobile.value = true
     }
+
+    console.log('init project')
     window.Telegram.WebApp.disableVerticalSwipes()
     window.Telegram.WebApp.SettingsButton.show()
     window.Telegram.WebApp.SettingsButton.onClick(() =>
