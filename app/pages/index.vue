@@ -66,60 +66,54 @@ const timeLeft = computed<TimeLeft>(() => {
 </script>
 
 <template>
-  <div>
-    <div class="mx-auto p-4">
-      <div class="flex flex-col items-center space-y-6 ">
-        <UAvatarGroup size="3xl" :ui="{ base: 'size-25 ring-3 -me-3' }">
-          <UAvatar src="https://github.com/benjamincanac.png" alt="Benjamin Canac" />
-          <UAvatar src="https://github.com/romhml.png" alt="Romain Hamel" />
-        </UAvatarGroup>
+  <div class="mx-auto p-4">
+    <div class="flex flex-col items-center space-y-6 ">
+      <UAvatarGroup size="3xl" :ui="{ base: 'size-25 ring-3 -me-3' }">
+        <UAvatar src="https://github.com/benjamincanac.png" alt="Benjamin Canac" />
+        <UAvatar src="https://github.com/romhml.png" alt="Romain Hamel" />
+      </UAvatarGroup>
 
-        <h2 class="text-3xl font-bold text-white animate-fade-in">
-          Сергей и
-          <span class="text-primary">Олеся</span>
-        </h2>
+      <h2 class="text-3xl font-bold text-white animate-fade-in">
+        Сергей и
+        <span class="text-primary">Олеся</span>
+      </h2>
 
-        <!-- Статистика -->
-        <div class="grid grid-cols-3 gap-4 w-full max-w-md">
-          <div
-            v-for="stat in stats" :key="stat.label"
-            class="bg-elevated/50 rounded-lg p-4 flex flex-col items-center"
-          >
-            <h3 class="text-2xl font-bold text-primary">
-              {{ stat.value }}
-            </h3>
-            <p :class="`text-sm text-${stat.color} text-center`">
-              {{ stat.label }}
-            </p>
-          </div>
-        </div>
-
-        <!-- Счётчик до годовщины -->
-        <div class="w-full max-w-md bg-elevated/50 rounded-lg p-4">
-          <h3 class="text-xl font-bold text-white mb-4 text-center">
-            {{ config.countdown.title }}
+      <!-- Статистика -->
+      <div class="grid grid-cols-3 gap-4 w-full max-w-md">
+        <div
+          v-for="stat in stats" :key="stat.label"
+          class="bg-elevated/50 rounded-lg p-4 flex flex-col items-center"
+        >
+          <h3 class="text-2xl font-bold text-primary">
+            {{ stat.value }}
           </h3>
-          <div class="grid grid-cols-4 gap-4">
-            <template v-for="(unit, index) in config.countdown.units" :key="unit">
-              <div class="flex flex-col items-center">
-                <div class="text-3xl font-bold text-primary">
-                  {{ index === 0 ? timeLeft.days
-                    : index === 1 ? timeLeft.hours
-                      : index === 2 ? timeLeft.minutes
-                        : timeLeft.seconds }}
-                </div>
-                <div class="text-sm text-gray-400">
-                  {{ unit }}
-                </div>
+          <p :class="`text-sm text-${stat.color} text-center`">
+            {{ stat.label }}
+          </p>
+        </div>
+      </div>
+
+      <!-- Счётчик до годовщины -->
+      <div class="w-full max-w-md bg-elevated/50 rounded-lg p-4">
+        <h3 class="text-xl font-bold text-white mb-4 text-center">
+          {{ config.countdown.title }}
+        </h3>
+        <div class="grid grid-cols-4 gap-4">
+          <template v-for="(unit, index) in config.countdown.units" :key="unit">
+            <div class="flex flex-col items-center">
+              <div class="text-3xl font-bold text-primary">
+                {{ index === 0 ? timeLeft.days
+                  : index === 1 ? timeLeft.hours
+                    : index === 2 ? timeLeft.minutes
+                      : timeLeft.seconds }}
               </div>
-            </template>
-          </div>
+              <div class="text-sm text-gray-400">
+                {{ unit }}
+              </div>
+            </div>
+          </template>
         </div>
       </div>
     </div>
   </div>
 </template>
-
-<style scoped>
-
-</style>

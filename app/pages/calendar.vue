@@ -13,7 +13,7 @@
     />
 
     <CalendarApp
-      icon-name="i-material-symbols-heart-check-outline"
+      icon-name="i-material-symbols-heart-check-outline-rounded"
       @update:model-value="changeDayActivity"
     />
   </div>

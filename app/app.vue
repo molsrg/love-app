@@ -17,7 +17,7 @@ const marginTopCalculate = computed(() => {
   <div :style="{ paddingTop: marginTopCalculate, paddingBottom: marginTopCalculate }">
     <UApp :toaster="app.toaster">
       <NuxtRouteAnnouncer />
-      <LoadingIndicator color="primary" :style="{ top: marginTopCalculate }" />
+      <LoadingIndicator color="#D3A7A7" :style="{ top: marginTopCalculate }" />
       <NuxtLayout>
         <div class="mx-auto max-w-[95%] mt-2">
           <NuxtPage />
