@@ -73,9 +73,9 @@ const timeLeft = computed<TimeLeft>(() => {
         <UAvatar src="https://github.com/romhml.png" alt="Romain Hamel" />
       </UAvatarGroup>
 
-      <h2 class="text-3xl font-bold text-white animate-fade-in">
-        Сергей и
-        <span class="text-primary">Олеся</span>
+      <h2 class="text-3xl font-bold text-white text-center animate-fade-in">
+        Пользователь 1 и
+        <span class="text-primary">Пользователь 2</span>
       </h2>
 
       <!-- Статистика -->

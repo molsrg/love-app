@@ -27,8 +27,8 @@ const locationSharing = ref(false)
 const showOnlineStatus = ref(true)
 
 const profile = ref({
-  name: 'Сергей',
-  partnerName: 'Олеся',
+  name: 'Пользователь 1',
+  partnerName: 'Пользователь 2',
   startDate: '2025-05-05',
   theme: 'dark',
 })
