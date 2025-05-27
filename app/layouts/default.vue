@@ -20,7 +20,7 @@ const items: TabItem[] = [
   },
   {
     icon: 'i-material-symbols:indeterminate-question-box-rounded',
-    value: '/test',
+    value: '/activity',
   },
   {
     icon: 'i-lucide-users',

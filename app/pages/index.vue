@@ -63,6 +63,15 @@ const timeLeft = computed<TimeLeft>(() => {
 
   return { days, hours, minutes, seconds }
 })
+
+const items = [
+  'https://images.wallpaperscraft.ru/image/single/chelovek_gory_ozero_134771_1080x1920.jpg',
+  'https://images.wallpaperscraft.ru/image/single/chelovek_gory_ozero_134771_1080x1920.jpg',
+  'https://images.wallpaperscraft.ru/image/single/chelovek_gory_ozero_134771_1080x1920.jpg',
+  'https://images.wallpaperscraft.ru/image/single/chelovek_gory_ozero_134771_1080x1920.jpg',
+  'https://images.wallpaperscraft.ru/image/single/chelovek_gory_ozero_134771_1080x1920.jpg',
+  'https://images.wallpaperscraft.ru/image/single/chelovek_gory_ozero_134771_1080x1920.jpg',
+]
 </script>
 
 <template>
@@ -114,6 +123,22 @@ const timeLeft = computed<TimeLeft>(() => {
           </template>
         </div>
       </div>
+      <UCarousel
+        v-slot="{ item }"
+        loop
+        dots
+        :autoplay="{ delay: 2000 }"
+        :items="items"
+        class="w-full max-w-md mx-auto"
+      >
+        <div class="aspect-square w-full">
+          <img
+            :src="item"
+            class="w-full h-full object-cover rounded-lg"
+            alt="Carousel image"
+          >
+        </div>
+      </UCarousel>
     </div>
   </div>
 </template>

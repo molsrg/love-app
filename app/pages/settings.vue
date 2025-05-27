@@ -12,8 +12,8 @@ const config = {
       icon: 'i-heroicons-paint-brush',
     },
     notifications: {
-      title: 'Уведомления',
-      icon: 'i-heroicons-bell',
+      title: 'Пара',
+      icon: 'i-heroicons-users',
     },
     privacy: {
       title: 'Конфиденциальность',
@@ -22,7 +22,7 @@ const config = {
   },
 }
 
-const notifications = ref(true)
+const notifications = ref(false)
 const locationSharing = ref(false)
 const showOnlineStatus = ref(true)
 
@@ -50,12 +50,14 @@ const themes = [
 
 const appConfig = useAppConfig()
 const currentTheme = ref(appConfig.ui.colors.primary)
+const themePopover = ref(false)
 
 function changeTheme(theme: typeof themes[0]) {
   if (!appConfig?.ui?.colors)
     return
   currentTheme.value = theme.value
   appConfig.ui.colors.primary = theme.value
+  themePopover.value = !themePopover.value
 }
 </script>
 
@@ -67,7 +69,7 @@ function changeTheme(theme: typeof themes[0]) {
     <UCard variant="subtle">
       <template #header>
         <div class="flex items-center gap-2">
-          <UIcon :name="config.sections.profile.icon" class="text-primary" />
+          <UIcon :name="config.sections.profile.icon" class="text-primary size-6" />
           <h2 class="text-lg font-semibold text-white">
             {{ config.sections.profile.title }}
           </h2>
@@ -84,6 +86,67 @@ function changeTheme(theme: typeof themes[0]) {
             placeholder="Введите ваше имя"
           />
         </div>
+
+        <div>
+          <label class="text-sm text-gray-400 mb-1 block">Аватар</label>
+
+          <!-- <UAvatar size="3xl" src="https://github.com/benjamincanac.png" alt="Benjamin Canac" /> -->
+          <UButton
+            class="w-full h-[36px] flex items-center "
+            :avatar="{
+              src: 'https://github.com/benjamincanac.png',
+            }"
+            size="md"
+            color="neutral"
+            variant="subtle"
+          >
+            Изменить
+          </UButton>
+        </div>
+        <div>
+          <label class="text-sm text-gray-400 mb-1 block">Тема</label>
+
+          <UPopover v-model:open="themePopover" arrow>
+            <UButton class="w-full h-[36px]" icon="i-lucide-palette" color="neutral" variant="subtle">
+              {{ themes.find(t => t.value === currentTheme)?.name || 'Выбрать тему' }}
+            </UButton>
+
+            <template #content>
+              <div class="p-2">
+                <div class="grid grid-cols-2 gap-2">
+                  <UButton
+                    v-for="theme in themes"
+                    :key="theme.value"
+                    color="neutral"
+                    variant="subtle"
+                    class="text-center"
+                    :class="{ 'ring-1 ring-primary': currentTheme === theme.value }"
+                    :label="theme.name"
+                    @click="changeTheme(theme)"
+                  >
+                    <template #leading>
+                      <UChip :color="theme.value" size="sm" />
+                    </template>
+                  </UButton>
+                </div>
+              </div>
+            </template>
+          </UPopover>
+        </div>
+      </div>
+    </UCard>
+
+    <UCard variant="subtle">
+      <template #header>
+        <div class="flex items-center gap-2">
+          <UIcon :name="config.sections.notifications.icon" class="text-primary size-6" />
+          <h2 class="text-lg font-semibold text-white">
+            {{ config.sections.notifications.title }}
+          </h2>
+        </div>
+      </template>
+
+      <div class="space-y-4">
         <div>
           <label class="text-sm text-gray-400 mb-1 block">Имя партнера</label>
           <UInput
@@ -97,7 +160,7 @@ function changeTheme(theme: typeof themes[0]) {
         </div>
         <div>
           <label class="text-sm text-gray-400 mb-1 block">Дата начала отношений</label>
-          <UPopover>
+          <UPopover arrow>
             <UButton class="w-full h-[36px]" :ui="{ trailingIcon: 'ml-auto' }" disabled color="neutral" variant="subtle" icon="i-lucide-calendar" trailing-icon="i-material-symbols-lock-outline">
               {{ modelValue ? df.format(modelValue.toDate(getLocalTimeZone())) : 'Select a date' }}
             </UButton>
@@ -108,103 +171,25 @@ function changeTheme(theme: typeof themes[0]) {
           </UPopover>
         </div>
 
-        <div>
-          <label class="text-sm text-gray-400 mb-1 block">Тема</label>
-          <UPopover>
-            <UButton class="w-full h-[36px]" icon="i-lucide-palette" color="neutral" variant="subtle">
-              {{ themes.find(t => t.value === currentTheme)?.name || 'Выбрать тему' }}
-            </UButton>
-
-            <template #content>
-              <div class="p-2">
-                <div class="grid grid-cols-2 gap-2">
-                  <UButton
-                    v-for="theme in themes"
-                    :key="theme.value"
-                    :color="theme.value as 'rose' | 'success' | 'lime' | 'cyan' | 'indigo'"
-                    variant="soft"
-                    class="text-center"
-                    :class="{ 'ring-1 ring-primary': currentTheme === theme.value }"
-                    :label="theme.name"
-                    @click="changeTheme(theme)"
-                  />
-                </div>
-              </div>
-            </template>
-          </UPopover>
-        </div>
-      </div>
-    </UCard>
-
-    <UCard variant="subtle">
-      <template #header>
-        <div class="flex items-center gap-2">
-          <UIcon :name="config.sections.notifications.icon" class="text-primary" />
-          <h2 class="text-lg font-semibold text-white">
-            {{ config.sections.notifications.title }}
-          </h2>
-        </div>
-      </template>
-
-      <div class="space-y-4">
         <div class="flex items-center justify-between">
           <div>
             <h3 class="text-white">
-              Push-уведомления
+              Передать права хоста
             </h3>
             <p class="text-sm text-gray-400">
-              Получать уведомления о новых событиях
+              Хост может менять дату начала отношений
             </p>
           </div>
-          <USwitch v-model="notifications" />
-        </div>
-        <div class="flex items-center justify-between">
-          <div>
-            <h3 class="text-white">
-              Напоминания о годовщине
-            </h3>
-            <p class="text-sm text-gray-400">
-              Уведомления о приближающейся годовщине
-            </p>
-          </div>
-          <USwitch v-model="notifications" />
-        </div>
-      </div>
-    </UCard>
 
-    <!-- Конфиденциальность -->
-    <UCard variant="subtle">
-      <template #header>
-        <div class="flex items-center gap-2">
-          <UIcon :name="config.sections.privacy.icon" class="text-primary" />
-          <h2 class="text-lg font-semibold text-white">
-            {{ config.sections.privacy.title }}
-          </h2>
+          <UCheckbox v-model="notifications" />
         </div>
-      </template>
 
-      <div class="space-y-4">
-        <div class="flex items-center justify-between">
-          <div>
-            <h3 class="text-white">
-              Показывать онлайн статус
-            </h3>
-            <p class="text-sm text-gray-400">
-              Другие пользователи будут видеть, когда вы онлайн
-            </p>
-          </div>
-          <USwitch v-model="showOnlineStatus" />
-        </div>
-        <div class="flex items-center justify-between">
-          <div>
-            <h3 class="text-white">
-              Делиться местоположением
-            </h3>
-            <p class="text-sm text-gray-400">
-              Разрешить доступ к вашему местоположению
-            </p>
-          </div>
-          <USwitch v-model="locationSharing" />
+        <div class="flex justify-center">
+          <UButton
+            v-model="profile.partnerName"
+            leading-icon="i-material-symbols:heart-broken-outline" class=" h-[36px]" color="error" variant="subtle" label="Разорвать пару"
+            size="lg"
+          />
         </div>
       </div>
     </UCard>

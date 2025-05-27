@@ -19,7 +19,7 @@ const marginTopCalculate = computed(() => {
       <NuxtRouteAnnouncer />
       <LoadingIndicator color="#D3A7A7" :style="{ top: marginTopCalculate }" />
       <NuxtLayout>
-        <div class="mx-auto max-w-[95%] mt-2">
+        <div class="mx-auto mt-2 mb-12">
           <NuxtPage />
         </div>
       </NuxtLayout>

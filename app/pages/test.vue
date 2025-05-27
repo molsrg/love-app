@@ -18,7 +18,7 @@ function openFileDialog() {
 <template>
   <div>
     {{ fileInput }}
-
+    <UInput type="image" />
     <input
       ref="fileInput"
       type="file"
