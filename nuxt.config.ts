@@ -37,7 +37,7 @@ export default defineNuxtConfig({
     port: Number.parseInt(process.env.NUXT_DEV_SERVER_PORT || '3000', 10),
   },
 
-  modules: ['@nuxt/ui', '@nuxt/eslint', '@pinia/nuxt', '@nuxtjs/i18n', '@nuxtjs/color-mode'],
+  modules: ['@nuxt/ui', '@nuxt/eslint', '@pinia/nuxt', '@nuxtjs/i18n', '@nuxtjs/color-mode', '@vueuse/nuxt'],
 
   css: ['~/assets/css/main.css'],
 

@@ -26,7 +26,8 @@
     "qrcode.vue": "^3.6.0",
     "tailwindcss": "^4.1.7",
     "uuid": "^11.1.0",
-    "vue-tg": "0.9.0-beta.3"
+    "vue-tg": "0.9.0-beta.3",
+    "vue3-touch-events": "^5.0.13"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^4.13.2",
@@ -34,6 +35,8 @@
     "@commitlint/config-conventional": "^19.8.1",
     "@nuxt/devtools": "^2.4.1",
     "@nuxt/eslint": "^1.4.1",
+    "@vueuse/core": "^13.3.0",
+    "@vueuse/nuxt": "^13.3.0",
     "eslint": "^9.27.0",
     "git-cliff": "^2.8.0",
     "husky": "^9.1.7",

@@ -28,7 +28,7 @@ const items: TabItem[] = [
   },
   {
     icon: 'i-lucide-chart-line',
-    value: '/connect',
+    value: '/test',
   },
   {
     icon: 'i-lucide-settings',
