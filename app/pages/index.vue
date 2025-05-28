@@ -30,9 +30,9 @@ const daysTogether = computed(() => {
 })
 
 const stats = [
-  { label: config.stats.tasks, value: '24', color: 'gray' },
-  { label: config.stats.days, value: daysTogether, color: 'white' },
-  { label: config.stats.challenges, value: '156', color: 'gray' },
+  { label: config.stats.tasks, value: '24', color: 'muted' },
+  { label: config.stats.days, value: daysTogether, color: 'toned' },
+  { label: config.stats.challenges, value: '156', color: 'muted' },
 ]
 
 // Типы для timeLeft
@@ -92,7 +92,11 @@ const items = [
         v-for="stat in stats" :key="stat.label"
         class="bg-elevated/50 rounded-lg p-4 flex flex-col items-center"
       >
-        <h3 class="text-2xl font-bold text-primary">
+        <h3
+          class="text-2xl font-bold" :class="[
+            stat.label === config.stats.days ? 'text-primary' : 'text-white',
+          ]"
+        >
           {{ stat.value }}
         </h3>
         <p :class="`text-sm text-${stat.color} text-center`">
