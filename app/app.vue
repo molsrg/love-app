@@ -1,28 +1,31 @@
 <script lang="ts" setup>
 import { useViewport } from 'vue-tg'
 import { LoadingIndicator } from '~/components/nuxt'
+import { SAFE_AREA_MULTIPLIER } from '~/types/app'
 
-const app = useAppConfig()
-onMounted(async () => {
+onMounted(async (): Promise<void> => {
   await useLocaleStore().init()
 })
 
-const marginTopCalculate = computed(() => {
-  const { contentSafeAreaInset } = useViewport()
-  return `${contentSafeAreaInset.value.top * 1.9}px`
-})
+const app = useAppConfig()
+const { contentSafeAreaInset } = useViewport()
+
+const marginTopCalculate = computed<string>(() =>
+  `${contentSafeAreaInset.value.top * SAFE_AREA_MULTIPLIER}px`,
+)
 </script>
 
 <template>
-  <div :style="{ paddingTop: marginTopCalculate, paddingBottom: marginTopCalculate }">
-    <UApp :toaster="app.toaster">
-      <NuxtRouteAnnouncer />
-      <LoadingIndicator color="#D3A7A7" :style="{ top: marginTopCalculate }" />
-      <NuxtLayout>
-        <div class="mx-auto mt-2 mb-12">
-          <NuxtPage />
-        </div>
-      </NuxtLayout>
-    </UApp>
-  </div>
+  <UApp :toaster="app.toaster">
+    <NuxtRouteAnnouncer />
+    <LoadingIndicator
+      color="#D3A7A7"
+      :style="{ top: marginTopCalculate }"
+    />
+    <NuxtLayout>
+      <div class="mx-auto p-4 mb-14">
+        <NuxtPage />
+      </div>
+    </NuxtLayout>
+  </UApp>
 </template>

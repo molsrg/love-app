@@ -1,131 +1,158 @@
 <script setup lang="ts">
-import { CalendarDate, DateFormatter, getLocalTimeZone } from '@internationalized/date'
+import type { CalendarDate, DateValue } from '@internationalized/date'
+import type { Profile, Theme } from '~/types/settings'
+import { useCloudStorage } from 'vue-tg/latest'
+import { SETTINGS_SECTIONS, THEMES } from '~/config/settings'
+import { createDateFormatter, createInitialDate, formatCalendarDate } from '~/helpers/date.helper'
 
-const config = {
-  sections: {
-    profile: {
-      title: 'Профиль',
-      icon: 'i-heroicons-user-circle',
-    },
-    appearance: {
-      title: 'Внешний вид',
-      icon: 'i-heroicons-paint-brush',
-    },
-    notifications: {
-      title: 'Пара',
-      icon: 'i-heroicons-users',
-    },
-    privacy: {
-      title: 'Конфиденциальность',
-      icon: 'i-heroicons-shield-check',
-    },
-  },
-}
+const appConfig = useAppConfig()
 
-const notifications = ref(false)
-const locationSharing = ref(false)
-const showOnlineStatus = ref(true)
-
-const profile = ref({
+const userProfile = ref<Profile>({
   name: 'Пользователь 1',
   partnerName: 'Пользователь 2',
   startDate: '2025-05-05',
   theme: 'dark',
 })
 
-const df = new DateFormatter('en-US', {
-  dateStyle: 'medium',
-})
+const activeTheme = ref(appConfig.ui.colors.primary)
+const isThemePopoverOpen = ref(false)
 
-const modelValue = shallowRef(new CalendarDate(2022, 1, 10))
+const dateFormatter = createDateFormatter()
+const selectedDate = shallowRef(createInitialDate())
 
-// Управление темой
-const themes = [
-  { name: 'Розовый', value: 'rose' },
-  { name: 'Зелёный', value: 'emerald' },
-  { name: 'Голубой', value: 'blue' },
-  { name: 'Жёлтый', value: 'amber' },
-  { name: 'Индиго', value: 'indigo' },
-]
+const isHostTransferEnabled = ref(false)
 
-const appConfig = useAppConfig()
-const currentTheme = ref(appConfig.ui.colors.primary)
-const themePopover = ref(false)
+function handleAvatarClick() {
+  const input = document.querySelector('input[type="file"]') as HTMLInputElement
+  input?.click()
+}
 
-function changeTheme(theme: typeof themes[0]) {
+function handleAvatarChange(event: Event) {
+  const target = event.target as HTMLInputElement
+  const file = target.files?.[0]
+  if (file) {
+    console.warn('Selected avatar file:', file)
+    // TODO: Здесь будет логика загрузки файла на сервер
+  }
+}
+
+async function changeTheme(theme: Theme): void {
   if (!appConfig?.ui?.colors)
     return
-  currentTheme.value = theme.value
+
+  await useCloudStorage().setItem('theme', theme.value)
+  activeTheme.value = theme.value
   appConfig.ui.colors.primary = theme.value
-  themePopover.value = !themePopover.value
+  isThemePopoverOpen.value = !isThemePopoverOpen.value
+}
+
+function handleHostTransfer() {
+  if (isHostTransferEnabled.value) {
+    console.log('Transferring host rights to partner')
+    // TODO: Здесь будет логика передачи прав хоста
+  }
+}
+
+function handleBreakUp() {
+  if (confirm('Вы уверены, что хотите разорвать пару?')) {
+    console.log('Breaking up the pair')
+    // TODO: Здесь будет логика разрыва пары
+  }
+}
+
+const formattedSelectedDate = computed(() =>
+  selectedDate.value ? formatCalendarDate(selectedDate.value, dateFormatter) : 'Select a date',
+)
+
+const activeThemeName = computed(() =>
+  THEMES.find((theme: Theme) => theme.value === activeTheme.value)?.name || 'Выбрать тему',
+)
+
+watch(isHostTransferEnabled, (newValue) => {
+  if (newValue) {
+    handleHostTransfer()
+  }
+})
+
+// Методы для работы с датой
+function handleDateChange(date: DateValue | null) {
+  if (!date)
+    return
+  selectedDate.value = date as any
+  console.warn('New date selected:', formatCalendarDate(date as any, dateFormatter))
 }
 </script>
 
 <template>
-  <div class="p-4 mx-auto space-y-6 ">
+  <div class="space-y-4">
     <h1 class="text-2xl font-bold text-white">
-      Настройки
+      {{ $t('settings.title') }}
     </h1>
     <UCard variant="subtle">
       <template #header>
         <div class="flex items-center gap-2">
-          <UIcon :name="config.sections.profile.icon" class="text-primary size-6" />
+          <UIcon :name="SETTINGS_SECTIONS.profile.icon" class="text-primary size-6" />
           <h2 class="text-lg font-semibold text-white">
-            {{ config.sections.profile.title }}
+            {{ SETTINGS_SECTIONS.profile.title }}
           </h2>
         </div>
       </template>
 
       <div class="space-y-4">
         <div>
-          <label class="text-sm text-gray-400 mb-1 block">Ваше имя</label>
+          <label class="text-sm text-gray-400 mb-1 block">{{ $t('settings.profile.name') }}</label>
           <UInput
-            v-model="profile.name"
+            v-model="userProfile.name"
             size="lg"
             class="w-full"
-            placeholder="Введите ваше имя"
+            :placeholder="$t('settings.profile.namePlaceholder')"
           />
         </div>
 
         <div>
-          <label class="text-sm text-gray-400 mb-1 block">Аватар</label>
-
-          <!-- <UAvatar size="3xl" src="https://github.com/benjamincanac.png" alt="Benjamin Canac" /> -->
+          <label class="text-sm text-gray-400 mb-1 block">{{ $t('settings.profile.avatar') }}</label>
           <UButton
-            class="w-full h-[36px] flex items-center "
+            class="w-full h-[36px] flex items-center"
             :avatar="{
               src: 'https://github.com/benjamincanac.png',
             }"
             size="md"
             color="neutral"
             variant="subtle"
+            @click="handleAvatarClick"
           >
-            Изменить
+            {{ $t('settings.profile.changeAvatar') }}
           </UButton>
+          <input
+            type="file"
+            accept="image/*"
+            class="hidden"
+            @change="handleAvatarChange"
+          >
         </div>
         <div>
-          <label class="text-sm text-gray-400 mb-1 block">Тема</label>
+          <label class="text-sm text-gray-400 mb-1 block">{{ $t('settings.profile.theme') }}</label>
 
-          <UPopover v-model:open="themePopover" arrow>
+          <UPopover v-model:open="isThemePopoverOpen" arrow>
             <UButton class="w-full h-[36px]" icon="i-lucide-palette" color="neutral" variant="subtle">
-              {{ themes.find(t => t.value === currentTheme)?.name || 'Выбрать тему' }}
+              {{ activeThemeName }}
             </UButton>
 
             <template #content>
               <div class="p-2">
                 <div class="grid grid-cols-2 gap-2">
                   <UButton
-                    v-for="theme in themes"
+                    v-for="theme in THEMES"
                     :key="theme.value"
                     color="neutral"
                     variant="subtle"
                     class="text-center"
-                    :class="{ 'ring-1 ring-primary': currentTheme === theme.value }"
+                    :class="{ 'ring-1 ring-primary': activeTheme === theme.value }"
                     :label="theme.name"
                     @click="changeTheme(theme)"
                   >
                     <template #leading>
-                      <UChip :color="theme.value" size="sm" />
+                      <UChip :color="theme.value as any" size="sm" />
                     </template>
                   </UButton>
                 </div>
@@ -139,34 +166,34 @@ function changeTheme(theme: typeof themes[0]) {
     <UCard variant="subtle">
       <template #header>
         <div class="flex items-center gap-2">
-          <UIcon :name="config.sections.notifications.icon" class="text-primary size-6" />
+          <UIcon :name="SETTINGS_SECTIONS.pair.icon" class="text-primary size-6" />
           <h2 class="text-lg font-semibold text-white">
-            {{ config.sections.notifications.title }}
+            {{ SETTINGS_SECTIONS.pair.title }}
           </h2>
         </div>
       </template>
 
       <div class="space-y-4">
         <div>
-          <label class="text-sm text-gray-400 mb-1 block">Имя партнера</label>
+          <label class="text-sm text-gray-400 mb-1 block">{{ $t('settings.partner.name') }}</label>
           <UInput
-            v-model="profile.partnerName"
+            v-model="userProfile.partnerName"
             disabled
             size="lg"
             trailing-icon="i-material-symbols-lock-outline"
             class="w-full"
-            placeholder="Введите имя партнера"
+            :placeholder="$t('settings.partner.namePlaceholder')"
           />
         </div>
         <div>
-          <label class="text-sm text-gray-400 mb-1 block">Дата начала отношений</label>
+          <label class="text-sm text-gray-400 mb-1 block">{{ $t('settings.partner.startDate') }}</label>
           <UPopover arrow>
-            <UButton class="w-full h-[36px]" :ui="{ trailingIcon: 'ml-auto' }" disabled color="neutral" variant="subtle" icon="i-lucide-calendar" trailing-icon="i-material-symbols-lock-outline">
-              {{ modelValue ? df.format(modelValue.toDate(getLocalTimeZone())) : 'Select a date' }}
+            <UButton class="w-full h-[36px]" :ui="{ trailingIcon: 'ml-auto' }" :disabled="isHostTransferEnabled" color="neutral" variant="subtle" icon="i-lucide-calendar" :trailing-icon="isHostTransferEnabled ? 'i-material-symbols-lock-outline' : ''">
+              {{ formattedSelectedDate }}
             </UButton>
 
             <template #content>
-              <UCalendar v-model="modelValue" class="p-2 w-full" />
+              <UCalendar v-model="selectedDate" class="p-2 w-full" @update:model-value="handleDateChange" />
             </template>
           </UPopover>
         </div>
@@ -174,21 +201,25 @@ function changeTheme(theme: typeof themes[0]) {
         <div class="flex items-center justify-between">
           <div>
             <h3 class="text-white">
-              Передать права хоста
+              {{ $t('settings.partner.transferHost') }}
             </h3>
             <p class="text-sm text-gray-400">
-              Хост может менять дату начала отношений
+              {{ $t('settings.partner.hostDescription') }}
             </p>
           </div>
 
-          <UCheckbox v-model="notifications" />
+          <UCheckbox v-model="isHostTransferEnabled" size="lg" class="mr-1" />
         </div>
 
         <div class="flex justify-center">
           <UButton
-            v-model="profile.partnerName"
-            leading-icon="i-material-symbols:heart-broken-outline" class=" h-[36px]" color="error" variant="subtle" label="Разорвать пару"
+            leading-icon="i-material-symbols:heart-broken-outline"
+            class="h-[36px]"
+            color="error"
+            variant="subtle"
+            :label="$t('settings.partner.breakUp')"
             size="lg"
+            @click="handleBreakUp"
           />
         </div>
       </div>

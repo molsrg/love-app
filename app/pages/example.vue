@@ -21,6 +21,9 @@ const next = computed(() => cards.value[index.value + 1])
 const afterNext = computed(() => cards.value[index.value + 2])
 
 function onPointerDown(e: PointerEvent | TouchEvent) {
+  if (dragging.value)
+    return
+
   dragging.value = true
   swipeDirection.value = null
   const startX = 'touches' in e ? e.touches?.[0]?.clientX ?? 0 : (e as PointerEvent).clientX
@@ -126,8 +129,7 @@ const overlayColor = computed(() => {
           transform: `translate(${x}px, ${y}px) rotate(${rotation}deg)`,
           transition: dragging ? 'none' : 'transform 0.3s',
         }"
-        @pointerdown="onPointerDown"
-        @touchstart="onPointerDown"
+        @touchstart.prevent="onPointerDown"
       >
         <div class="card-content">
           <h1>{{ current.text }}</h1>

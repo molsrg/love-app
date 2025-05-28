@@ -3,10 +3,9 @@ import type { TabsItem } from '@nuxt/ui'
 import { useViewport } from 'vue-tg'
 
 const route = useRoute()
-
 const marginBottomCalculate = computed<string>(() => {
   const { safeAreaInset } = useViewport()
-  return `${safeAreaInset.value.bottom * 0.65 + 5}px`
+  return `${safeAreaInset.value.bottom * 0.5 + 5}px`
 })
 
 interface TabItem extends TabsItem {
@@ -48,12 +47,13 @@ const active = computed<string>({
 
 <template>
   <slot />
+
   <UTabs
     v-model="active"
     :style="{ paddingBottom: marginBottomCalculate }"
     :content="false"
     size="xl"
-    class="fixed fixed bottom-0 w-full px-4"
+    class="fixed bottom-0 w-full px-4"
     :items="items"
   />
 </template>

@@ -10,6 +10,17 @@
     /* --ui-bg: var(--color-pink-200); */
     /*--ui-bg-inverted: var(--color-rose-400, oklch(71.2% 0.194 13.428));*/
     /*--ui-bg-accented: var(--color-gray-500);*/
+
+
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+
+
+    padding-top: calc(var(--tg-safe-area-inset-top, 0px) + var(--tg-content-safe-area-inset-top));
+    padding-right: var(--tg-safe-area-inset-right, 0px);
+    padding-bottom: var(--tg-safe-area-inset-bottom, 0px);
+    padding-left: var(--tg-safe-area-inset-left, 0px);
 }
 
 
@@ -25,8 +36,3 @@
 
 
 
-html {
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    user-select: none;
-  }

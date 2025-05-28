@@ -1,0 +1,20 @@
+{
+  "settings": {
+    "title": "Настройки",
+    "profile": {
+      "name": "Ваше имя",
+      "namePlaceholder": "Введите ваше имя",
+      "avatar": "Аватар",
+      "changeAvatar": "Изменить",
+      "theme": "Тема"
+    },
+    "partner": {
+      "name": "Имя партнера",
+      "namePlaceholder": "Введите имя партнера",
+      "startDate": "Дата начала отношений",
+      "transferHost": "Передать права хоста",
+      "hostDescription": "Хост может менять дату начала отношений",
+      "breakUp": "Разорвать пару"
+    }
+  }
+} 

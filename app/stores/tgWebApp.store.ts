@@ -1,6 +1,6 @@
 import { CalendarDate } from '@internationalized/date'
 import { useWebAppTheme } from 'vue-tg'
-import { useMiniApp } from 'vue-tg/latest'
+import { useCloudStorage, useMiniApp } from 'vue-tg/latest'
 
 export const useTgWebAppStore = defineStore('tgWebAppStore', {
   state: () => ({
@@ -37,6 +37,9 @@ export const useTgWebAppStore = defineStore('tgWebAppStore', {
     },
 
     async setInitData() {
+      const appConfig = useAppConfig()
+
+      appConfig.ui.colors.primary = await useCloudStorage().getItem('theme')
       // const initData = useMiniApp().initData
       // const initDataUnsafe = useMiniApp().initDataUnsafe.user
       //

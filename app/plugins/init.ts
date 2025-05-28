@@ -1,5 +1,6 @@
 import { navigateTo } from '#app'
 import { useWebAppTheme } from 'vue-tg'
+import { useCloudStorage } from 'vue-tg/latest'
 
 declare global {
   interface Window {
@@ -24,7 +25,10 @@ export default defineNuxtPlugin(async () => {
   }
 
   const setInitData = async () => {
-    // Add your initialization data logic here
+    const theme = await useCloudStorage().getItem('theme')
+    console.log(theme)
+
+    // appConfig.ui.colors.primary = theme.value
   }
 
   const init = async () => {
