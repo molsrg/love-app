@@ -62,7 +62,7 @@ function previousQuestion() {
 </script>
 
 <template>
-  <div class="p-4 mx-auto space-y-6 max-w-4xl">
+  <div class="space-y-4 ">
     <div class="flex items-center justify-between">
       <h1 class="text-2xl font-bold text-white">
         Активности

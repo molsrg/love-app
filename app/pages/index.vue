@@ -1,10 +1,14 @@
 <script setup lang="ts">
-// Дата начала отношений
-const startDate = new Date('2025-05-05')
-const now = ref(new Date())
+import type { Config, Stat, TimeLeft } from '~/types/stats'
+import { computed, onMounted, ref } from 'vue'
+import { getDaysTogether, getTimeLeft } from '~/helpers/stats'
+import { usePairStore } from '~/stores/pair.store'
 
-// Конфигурация текстов
-const config = {
+const pair = usePairStore()
+
+const now = ref<Date>(new Date())
+
+const config: Config = {
   countdown: {
     title: 'До годовщины осталось',
     units: ['дней', 'часов', 'минут', 'секунд'],
@@ -16,74 +20,33 @@ const config = {
   },
 }
 
-// Обновляем время каждую секунду
 onMounted(() => {
   setInterval(() => {
     now.value = new Date()
   }, 1000)
 })
 
-// Вычисляем количество дней вместе
-const daysTogether = computed(() => {
-  const diff = now.value.getTime() - startDate.getTime()
-  return Math.floor(diff / (1000 * 60 * 60 * 24))
-})
-
-const stats = [
-  { label: config.stats.tasks, value: '24', color: 'muted' },
-  { label: config.stats.days, value: daysTogether, color: 'toned' },
-  { label: config.stats.challenges, value: '156', color: 'muted' },
-]
-
-// Типы для timeLeft
-interface TimeLeft {
-  days: number
-  hours: number
-  minutes: number
-  seconds: number
-}
-
-// Вычисляем оставшееся время до годовщины
-const timeLeft = computed<TimeLeft>(() => {
-  // Получаем дату следующей годовщины
-  const nextAnniversary = new Date(startDate)
-  nextAnniversary.setFullYear(now.value.getFullYear())
-
-  // Если годовщина в этом году уже прошла, берем следующую
-  if (nextAnniversary < now.value) {
-    nextAnniversary.setFullYear(nextAnniversary.getFullYear() + 1)
-  }
-
-  const diff = nextAnniversary.getTime() - now.value.getTime()
-
-  const days = Math.floor(diff / (1000 * 60 * 60 * 24))
-  const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
-  const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))
-  const seconds = Math.floor((diff % (1000 * 60)) / 1000)
-
-  return { days, hours, minutes, seconds }
-})
-
-const items = [
-  'https://images.wallpaperscraft.ru/image/single/chelovek_gory_ozero_134771_1080x1920.jpg',
-  'https://images.wallpaperscraft.ru/image/single/chelovek_gory_ozero_134771_1080x1920.jpg',
-  'https://images.wallpaperscraft.ru/image/single/chelovek_gory_ozero_134771_1080x1920.jpg',
-  'https://images.wallpaperscraft.ru/image/single/chelovek_gory_ozero_134771_1080x1920.jpg',
-  'https://images.wallpaperscraft.ru/image/single/chelovek_gory_ozero_134771_1080x1920.jpg',
-  'https://images.wallpaperscraft.ru/image/single/chelovek_gory_ozero_134771_1080x1920.jpg',
-]
+const daysTogether = computed<number>(() => getDaysTogether(now.value, pair.startDate))
+const stats = computed<Stat[]>(() => [
+  { label: config.stats.tasks, value: pair.stats.tasks, color: 'muted' },
+  { label: config.stats.days, value: daysTogether.value, color: 'toned' },
+  { label: config.stats.challenges, value: pair.stats.challenges, color: 'muted' },
+])
+const timeLeft = computed<TimeLeft>(() => getTimeLeft(now.value, pair.startDate))
 </script>
 
 <template>
-  <div class="flex flex-col items-center space-y-6 ">
-    <UAvatarGroup size="3xl" :ui="{ base: 'size-25 ring-3 -me-3' }">
-      <UAvatar src="https://github.com/benjamincanac.png" alt="Benjamin Canac" />
-      <UAvatar src="https://github.com/romhml.png" alt="Romain Hamel" />
-    </UAvatarGroup>
+  <div class=" space-y-4 ">
+    <div class="flex justify-center">
+      <UAvatarGroup size="3xl" :ui="{ base: 'size-25 ring-3 -me-3' }">
+        <UAvatar :src="pair.user1.avatar" :alt="pair.user1.name" />
+        <UAvatar :src="pair.user2.avatar" :alt="pair.user2.name" />
+      </UAvatarGroup>
+    </div>
 
     <h2 class="text-3xl font-bold text-white text-center animate-fade-in">
-      Пользователь 1 и
-      <span class="text-primary">Пользователь 2</span>
+      {{ pair.user1.name }} и
+      <span class="text-primary">{{ pair.user2.name }}</span>
     </h2>
 
     <!-- Статистика -->
@@ -131,7 +94,7 @@ const items = [
       loop
       dots
       :autoplay="{ delay: 2000 }"
-      :items="items"
+      :items="pair.photos"
       class="w-full max-w-md mx-auto"
     >
       <div class="aspect-square w-full">
