@@ -16,6 +16,7 @@ const userProfile = ref<Profile>({
 
 const activeTheme = ref(appConfig.ui.colors.primary)
 const isThemePopoverOpen = ref(false)
+const isCalendarPopoverOpen = ref(false)
 
 const dateFormatter = createDateFormatter()
 const selectedDate = shallowRef(createInitialDate())
@@ -80,6 +81,7 @@ function handleDateChange(date: DateValue | null) {
     return
   selectedDate.value = date as any
   console.warn('New date selected:', formatCalendarDate(date as any, dateFormatter))
+  isCalendarPopoverOpen.value = false
 }
 </script>
 
@@ -187,7 +189,7 @@ function handleDateChange(date: DateValue | null) {
         </div>
         <div>
           <label class="text-sm text-gray-400 mb-1 block">{{ $t('settings.partner.startDate') }}</label>
-          <UPopover arrow>
+          <UPopover v-model:open="isCalendarPopoverOpen" arrow>
             <UButton class="w-full h-[36px]" :ui="{ trailingIcon: 'ml-auto' }" :disabled="isHostTransferEnabled" color="neutral" variant="subtle" icon="i-lucide-calendar" :trailing-icon="isHostTransferEnabled ? 'i-material-symbols-lock-outline' : ''">
               {{ formattedSelectedDate }}
             </UButton>

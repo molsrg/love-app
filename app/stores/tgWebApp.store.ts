@@ -39,7 +39,7 @@ export const useTgWebAppStore = defineStore('tgWebAppStore', {
     async setInitData() {
       const appConfig = useAppConfig()
 
-      appConfig.ui.colors.primary = await useCloudStorage().getItem('theme')
+      appConfig.ui.colors.primary = await useCloudStorage().getItem('theme') || 'rose'
       // const initData = useMiniApp().initData
       // const initDataUnsafe = useMiniApp().initDataUnsafe.user
       //
