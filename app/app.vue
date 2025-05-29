@@ -23,7 +23,7 @@ const marginTopCalculate = computed<string>(() =>
       :style="{ top: marginTopCalculate }"
     />
     <NuxtLayout>
-      <div class="mx-auto p-4 mb-14">
+      <div class="mx-auto p-4">
         <NuxtPage />
       </div>
     </NuxtLayout>
