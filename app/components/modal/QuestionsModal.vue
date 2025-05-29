@@ -16,10 +16,13 @@ function handleSubmit() {
 </script>
 
 <template>
-  <UModal
-  fullscreen
+  <USlideover
+  
     :close="{ onClick: () => emit('close', false) }"
     :title="questionText"
+    :ui="{
+      content: ' top-[calc(var(--tg-safe-area-inset-top,0px)+var(--tg-content-safe-area-inset-top))] '
+    }"
   >
     <template #body>
       <div class="flex flex-col gap-6">
@@ -93,5 +96,5 @@ function handleSubmit() {
         />
       </div>
     </template>
-  </UModal>
+  </USlideover>
 </template>

@@ -18,6 +18,11 @@ const modal = overlay.create(QuestionsModal, {
   },
 })
 
+
+onUnmounted(() =>  {
+  backButton?.hide()
+})
+
 const questions = [
   {
     id: 1,
