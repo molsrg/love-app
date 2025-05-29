@@ -29,11 +29,13 @@ function handleAvatarChange(event: Event) {
     <template #body>
       <div class="flex flex-col items-center gap-4">
         <div v-if="selectedImage" class="w-full flex flex-col items-center gap-2">
-          <img
-            :src="selectedImage"
-            alt="Выбранное фото"
-            class="w-full h-64 object-cover rounded-lg"
-          />
+          <div class="w-full max-w-md mx-auto aspect-square">
+            <img
+              :src="selectedImage"
+              alt="Выбранное фото"
+              class="w-full h-full object-cover rounded-lg"
+            />
+          </div>
           <UButton
             class="mx-auto"
             size="sm"
