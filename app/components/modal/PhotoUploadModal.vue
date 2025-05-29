@@ -1,0 +1,77 @@
+<script setup lang="ts">
+const props = defineProps<{ day: any }>()
+const emit = defineEmits<{ close: [boolean] }>()
+
+const selectedImage = ref<string | null>(null)
+
+function handleAvatarClick() {
+  const input = document.querySelector('input[type="file"]') as HTMLInputElement
+  input?.click()
+}
+
+function handleAvatarChange(event: Event) {
+  const target = event.target as HTMLInputElement
+  const file = target.files?.[0]
+  if (file) {
+    // Создаем URL для предпросмотра изображения
+    selectedImage.value = URL.createObjectURL(file)
+    console.warn('Selected avatar file:', file)
+    // TODO: Здесь будет логика загрузки файла на сервер
+  }
+}
+</script>
+
+<template>
+  <UModal
+    :close="{ onClick: () => emit('close', false) }"
+    title="Загрузите совместное фото"
+  >
+    <template #body>
+      <div class="flex flex-col items-center gap-4">
+        <div v-if="selectedImage" class="w-full flex flex-col items-center gap-2">
+          <img
+            :src="selectedImage"
+            alt="Выбранное фото"
+            class="w-full h-64 object-cover rounded-lg"
+          />
+          <UButton
+            class="mx-auto"
+            size="sm"
+            color="neutral"
+            variant="subtle"
+            @click="handleAvatarClick"
+          >
+            Изменить
+          </UButton>
+        </div>
+        <div v-else>
+          <UButton
+            class="mx-auto flex items-center"
+            size="md"
+            color="neutral"
+            variant="subtle"
+            @click="handleAvatarClick"
+            label="Выбрать фото"
+          />
+        </div>
+        <input
+          type="file"
+          accept="image/*"
+          class="hidden"
+          @change="handleAvatarChange"
+        />
+      </div>
+    </template>
+
+    <template #footer>
+      <div class="flex gap-2">
+        <UButton color="neutral" label="Отмена" @click="emit('close', false)" />
+        <UButton 
+          label="Сохранить" 
+          :disabled="!selectedImage"
+          @click="emit('close', true)" 
+        />
+      </div>
+    </template>
+  </UModal>
+</template>

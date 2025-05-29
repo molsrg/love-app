@@ -13,13 +13,17 @@ const props = withDefaults(defineProps<Props>(), {
   iconName: () => 'i-solar-dumbbell-large-minimalistic-broken',
 })
 
-const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits(['update:modelValue', 'update:dayClick'])
 
 const { t } = useI18n()
 const selectedDays = computed({
   get: () => props.selectedDays,
   set: value => emit('update:modelValue', value),
 })
+
+function handleDayClick(day: any) {
+  emit('update:dayClick', day)
+}
 </script>
 
 <template>
@@ -43,7 +47,7 @@ const selectedDays = computed({
       {{ t(`calendar.day.${day}`) }}
     </template>
     <template #day="{ day }">
-      <div class="flex flex-col items-center">
+      <div class="flex flex-col items-center cursor-pointer" @click.stop="handleDayClick(day)">
         <p>{{ day.day }}</p>
         <UIcon
           :name="props.iconName"
