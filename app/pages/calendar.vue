@@ -36,14 +36,7 @@ async function openPhotoModal(day: any) {
   }
 }
 
-function closeModal() {
-  selectedDay.value = null
-}
 
-function uploadPhoto(event: Event) {
-  // Ваша логика загрузки
-  closeModal()
-}
 </script>
 
 <template>

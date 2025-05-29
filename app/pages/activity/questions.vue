@@ -7,6 +7,16 @@ backButton?.onClick(() => {
   navigateTo('/activity')
 })
 
+const overlay = useOverlay()
+const toast = useToast()
+
+const modal = overlay.create(QuestionsModal, {
+  props: {
+    questionId: 0,
+    questionText: ''
+  },
+})
+
 const questions = [
   {
     id: 1,
@@ -39,10 +49,17 @@ const questions = [
 ]
 
 function handleQuestionClick(id: number) {
-  console.warn('Selected question ID:', id)
+  const question = questions.find(q => q.id === id)
+  if (question) {
+    modal.open({
+      questionId: question.id,
+      questionText: question.text
+    })
+  }
 }
 
 import type { TabsItem } from '@nuxt/ui'
+import QuestionsModal from '~/components/modal/QuestionsModal.vue'
 
 const items: TabsItem[] = [
   {
