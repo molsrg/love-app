@@ -50,7 +50,7 @@ const timeLeft = computed<TimeLeft>(() => getTimeLeft(now.value, pair.startDate)
     </h2>
 
     <!-- Статистика -->
-    <div class="grid grid-cols-3 gap-4 w-full max-w-md">
+    <div class="grid grid-cols-3 gap-4 w-full ">
       <div
         v-for="stat in stats" :key="stat.label"
         class="bg-elevated/50 rounded-lg p-4 flex flex-col items-center"
@@ -69,7 +69,7 @@ const timeLeft = computed<TimeLeft>(() => getTimeLeft(now.value, pair.startDate)
     </div>
 
     <!-- Счётчик до годовщины -->
-    <div class="w-full max-w-md bg-elevated/50 rounded-lg p-4">
+    <div class="w-full  bg-elevated/50 rounded-lg p-4">
       <h3 class="text-xl font-bold text-white mb-4 text-center">
         {{ config.countdown.title }}
       </h3>

@@ -17,12 +17,11 @@ const marginTopCalculate = computed<string>(() =>
 
 <template>
   <UApp :toaster="app.toaster">
-    <NuxtLoadingIndicator />
     <NuxtRouteAnnouncer />
-    <!-- <LoadingIndicator
-      color="#D3A7A7"
+    <LoadingIndicator
+      color="#FFFFFF"
       :style="{ top: marginTopCalculate }"
-    /> -->
+    />
     <NuxtLayout>
       <div class="mx-auto p-4 mb-14">
         <NuxtPage />

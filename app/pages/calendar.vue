@@ -13,7 +13,7 @@
     />
 
     <CalendarApp
-      icon-name="i-material-symbols-heart-check-outline-rounded"
+      icon-name="i-material-symbols-android-camera-outline"
       @update:model-value="changeDayActivity"
     />
   </div>

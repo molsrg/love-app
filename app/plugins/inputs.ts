@@ -1,6 +1,4 @@
 export default defineNuxtPlugin(() => {
-  console.log('start')
-
   const closeKeyboard = (e: Event) => {
     const target = e.target as HTMLElement
     const activeElement = document.activeElement as HTMLElement
