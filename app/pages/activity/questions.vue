@@ -13,7 +13,8 @@ const toast = useToast()
 const modal = overlay.create(QuestionsModal, {
   props: {
     questionId: 0,
-    questionText: ''
+    questionText: '',
+    questionsStatus: ''
   },
 })
 
@@ -32,7 +33,7 @@ const questions = [
   {
     id: 3,
     text: 'Перед тем как позвонить, вы репетируете то, что собираетесь сказать? Почему?',
-    status: 'answered',
+    status: 'done',
     answeredAt: '15 марта'
   },
   {
@@ -53,7 +54,8 @@ function handleQuestionClick(id: number) {
   if (question) {
     modal.open({
       questionId: question.id,
-      questionText: question.text
+      questionText: question.text,
+      questionsStatus: question.status
     })
   }
 }
@@ -141,7 +143,7 @@ const items: TabsItem[] = [
             {{ item.description }}
           </p>
           <UCard
-            v-for="question in questions.filter(q => q.status === 'answered')"
+            v-for="question in questions.filter(q => q.status === 'done')"
             :key="question.id"
             variant="subtle"
             class="cursor-pointer transition-all active:scale-[0.98]"
