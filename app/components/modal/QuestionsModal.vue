@@ -17,6 +17,7 @@ function handleSubmit() {
 
 <template>
   <UModal
+  fullscreen
     :close="{ onClick: () => emit('close', false) }"
     :title="questionText"
   >
