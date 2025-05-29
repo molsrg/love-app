@@ -15,15 +15,22 @@ const dragging = ref(false)
 const isVisible = ref(true)
 const approved = ref<{ text: string, color: string }[]>([])
 const swipeDirection = ref<'left' | 'right' | null>(null)
+const hasDragged = ref(false)
 
 const current = computed(() => cards.value[index.value])
 const next = computed(() => cards.value[index.value + 1])
 const afterNext = computed(() => cards.value[index.value + 2])
 
+const nextScale = computed(() => {
+  const maxScale = 1.05
+  const maxOffset = 120
+  return 1 + Math.min(Math.abs(x.value) / maxOffset, 1) * (maxScale - 1)
+})
+
 function onPointerDown(e: PointerEvent | TouchEvent) {
   if (dragging.value)
     return
-
+  hasDragged.value = true
   dragging.value = true
   swipeDirection.value = null
   const startX = 'touches' in e ? e.touches?.[0]?.clientX ?? 0 : (e as PointerEvent).clientX
@@ -90,11 +97,6 @@ const overlayColor = computed(() => {
 
 <template>
   <section class="container">
-    <div class="approved-list">
-      <span v-for="card in approved" :key="card.text" class="approved-item">
-        {{ card.text }}
-      </span>
-    </div>
     <div class="stack">
       <!-- afterNext card (third in stack) -->
       <div
@@ -114,6 +116,8 @@ const overlayColor = computed(() => {
         class="card card--next"
         :style="{
           background: next.color,
+          transform: `scale(${nextScale})`,
+          transition: hasDragged ? (dragging ? 'none' : 'transform 0.3s') : 'none',
         }"
       >
         <div class="card-content">
@@ -130,6 +134,7 @@ const overlayColor = computed(() => {
           transition: dragging ? 'none' : 'transform 0.3s',
         }"
         @touchstart.prevent="onPointerDown"
+        @pointerdown="onPointerDown"
       >
         <div class="card-content">
           <h1>{{ current.text }}</h1>
