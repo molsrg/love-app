@@ -51,7 +51,7 @@ function handleDayClick(day: any) {
         <p>{{ day.day }}</p>
         <UIcon
           :name="props.iconName"
-          class="size-6.5"
+          class="size-5"
         />
       </div>
     </template>

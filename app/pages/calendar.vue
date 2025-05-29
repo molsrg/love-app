@@ -47,7 +47,7 @@ function uploadPhoto(event: Event) {
 </script>
 
 <template>
-  <div class="flex p-2 flex-col gap-4">
+  <div class="flex flex-col gap-4">
     <UBadge
       variant="subtle"
       label="Отмечай близость — следи за ритмом и здоровьем!"

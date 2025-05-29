@@ -46,15 +46,18 @@ function handleAvatarChange(event: Event) {
             Изменить
           </UButton>
         </div>
-        <div v-else>
+        <div v-else class="w-full max-w-md mx-auto">
           <UButton
-            class="mx-auto flex items-center"
-            size="md"
+            class="w-full aspect-square flex items-center justify-center"
             color="neutral"
             variant="subtle"
             @click="handleAvatarClick"
-            label="Выбрать фото"
-          />
+          >
+            <div class="flex flex-col items-center gap-2">
+              <UIcon name="i-material-symbols-android-camera-outline" class="text-2xl" />
+              <span>Выбрать фото</span>
+            </div>
+          </UButton>
         </div>
         <input
           type="file"
