@@ -3,6 +3,7 @@ import type { CalendarDate, DateValue } from '@internationalized/date'
 import type { Profile, Theme } from '~/types/settings'
 import { useCloudStorage } from 'vue-tg/latest'
 import { SETTINGS_SECTIONS, THEMES } from '~/config/settings'
+import { debounce } from '~/helpers/api.helper'
 import { createDateFormatter, createInitialDate, formatCalendarDate } from '~/helpers/date.helper'
 
 const props = defineProps<{
@@ -89,13 +90,23 @@ function handleDateChange(date: DateValue | null) {
 }
 
 const toast = useToast()
+const debouncedUpdateName = debounce((name: string) => {
+  updateNameOnBackend(name)
+}, 600)
 
-function showToast() {
+function updateNameOnBackend(newName: string) {
   toast.add({
-    title: 'Uh oh! Something went wrong.',
-    description: 'There was a problem with your request.',
+    title: `Имя обновлено! ${newName}`,
+    description: 'Ваше имя успешно изменено.',
+    color: 'success',
   })
 }
+
+watch(() => userProfile.value.name, (newName, oldName) => {
+  if (newName !== oldName) {
+    debouncedUpdateName(newName)
+  }
+})
 </script>
 
 <template>
@@ -122,7 +133,6 @@ function showToast() {
             class="w-full"
             :placeholder="$t('settings.profile.namePlaceholder')"
           />
-          <UButton label="Show toast" color="neutral" variant="outline" @click="showToast" />
         </div>
 
         <div>
