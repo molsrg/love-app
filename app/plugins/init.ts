@@ -25,9 +25,7 @@ export default defineNuxtPlugin(async () => {
   }
 
   const setInitData = async () => {
-    const theme = await useCloudStorage().getItem('theme')
-    console.log(theme)
-
+    // const theme = await useCloudStorage().getItem('theme')
     // appConfig.ui.colors.primary = theme.value
   }
 
@@ -39,7 +37,6 @@ export default defineNuxtPlugin(async () => {
     }
 
 
-    console.log('init project')
     window.Telegram.WebApp.disableVerticalSwipes()
     window.Telegram.WebApp.SettingsButton.show()
     window.Telegram.WebApp.SettingsButton.onClick(() =>

@@ -137,6 +137,15 @@ const items: CarouselItem[] = [
                 class="w-full justify-center focus:outline-none focus:ring-2 focus:ring-primary"
                 @click="item.actions.secondary.action"
               />
+
+              <UButton
+              label="Перейти в ожидание"
+                size="xl"
+                color="neutral"
+                variant="subtle"
+                class="w-full justify-center focus:outline-none focus:ring-2 focus:ring-primary"
+                @click="navigateTo('/wait')"
+              />
             </div>
 
             <UBadge

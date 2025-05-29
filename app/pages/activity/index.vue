@@ -1,7 +1,12 @@
 <script setup lang="ts">
+import { useBackButton } from 'vue-tg'
+const backButton = useBackButton()
+backButton?.hide()
+
 const activities = [
   {
     title: 'Вопросы для сближения',
+    value: 'questions',
     description: '36 вопросов, которые помогут вам лучше узнать друг друга',
     icon: 'i-lucide-message-square-quote',
     color: 'rose' as const,
@@ -11,6 +16,7 @@ const activities = [
   },
   {
     title: 'Совместные челленджи',
+    value: 'challenges',
     description: 'Ежедневные задания для укрепления отношений',
     icon: 'i-lucide-trophy',
     color: 'amber' as const,
@@ -20,6 +26,7 @@ const activities = [
   },
   {
     title: 'Свидания',
+    value: 'dates',
     description: 'Идеи для незабываемых свиданий',
     icon: 'i-lucide-heart',
     color: 'rose' as const,
@@ -29,6 +36,7 @@ const activities = [
   },
   {
     title: 'Совместные цели',
+    value: 'goals',
     description: 'Планируйте и достигайте целей вместе',
     icon: 'i-lucide-target',
     color: 'emerald' as const,
@@ -38,55 +46,34 @@ const activities = [
   },
 ]
 
-const currentActivity = ref(activities[0])
-const showQuestions = ref(false)
 
-const questions = [
-  'Если бы вы могли пригласить на ужин любого человека, кто бы это был?',
-  'Хотели бы вы быть знаменитым? В какой области?',
-  'Перед тем как позвонить, вы репетируете то, что собираетесь сказать? Почему?',
-  'Что для вас было бы "идеальным" днем?',
-  'Когда вы в последний раз пели самому себе? А кому-то другому?',
-]
 
-const currentQuestion = ref(0)
-const answers = ref<string[]>([])
-
-function nextQuestion() {
-  if (currentQuestion.value < questions.length - 1) {
-    currentQuestion.value++
-  }
-}
-
-function previousQuestion() {
-  if (currentQuestion.value > 0) {
-    currentQuestion.value--
-  }
+function handleActivityClick(activity: typeof activities[0]) {
+  navigateTo(`/activity/${activity.value}`)
 }
 </script>
 
 <template>
-  <div class="">
-    <div class="max-w-7xl mx-auto space-y-8">
-      <!-- Заголовок -->
+    <div class="max-w-7xl mx-auto space-y-6">
+    
       <div class="flex items-center justify-between">
         <div>
           <h1 class="text-3xl font-bold text-white">
             Активности
           </h1>
-          <p class="text-gray-400 mt-1">
+          <p class="text-muted">
             Развивайте ваши отношения вместе
           </p>
         </div>
       </div>
 
       <!-- Карточки активностей -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div
           v-for="activity in activities"
           :key="activity.title"
-          class="group relative overflow-hidden rounded-2xl  bg-elevated/50 p-4 transition-all hover:scale-[1.02] cursor-pointer"
-          @click="currentActivity = activity; showQuestions = true"
+          class="group relative overflow-hidden rounded-2xl bg-elevated/50 p-4 transition-all hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
+          @click="handleActivityClick(activity)"
         >
           <!-- Градиентный фон -->
           <div
@@ -115,7 +102,7 @@ function previousQuestion() {
                 {{ activity.description }}
               </p>
               
-              <!-- Прогресс -->
+   
               <div class="mt-4">
                 <div class="flex items-center justify-between mb-2">
                   <span class="text-sm text-gray-400">
@@ -126,7 +113,7 @@ function previousQuestion() {
                   </span>
                 </div>
                 <UProgress
-                  :value="(activity.progress / activity.total) * 100"
+                  :model-value="(activity.progress / activity.total) * 100"
                   :color="activity.color"
                   size="sm"
                   class="h-2"
@@ -137,5 +124,4 @@ function previousQuestion() {
         </div>
       </div>
     </div>
-  </div>
 </template>
