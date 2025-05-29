@@ -3,8 +3,11 @@ import { useViewport } from 'vue-tg'
 import { LoadingIndicator } from '~/components/nuxt'
 import { SAFE_AREA_MULTIPLIER } from '~/types/app'
 
+const { $initApp } = useNuxtApp()
+
 onMounted(async (): Promise<void> => {
   await useLocaleStore().init()
+  await $initApp()
 })
 
 const app = useAppConfig()

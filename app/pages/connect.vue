@@ -97,8 +97,7 @@ const items: CarouselItem[] = [
 </script>
 
 <template>
-  <div class="relative" style="height: 80vh;">
-    {{ $isMobile }}
+  <div class="relative" style="height: 75vh;">
     <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center w-full">
       <UCarousel v-slot="{ item }" dots :items="items" class="w-full">
         <UCard variant="subtle" class="p-2" :ui="{ root: 'rounded-xl' }">

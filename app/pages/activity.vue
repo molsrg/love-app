@@ -4,33 +4,37 @@ const activities = [
     title: 'Вопросы для сближения',
     description: '36 вопросов, которые помогут вам лучше узнать друг друга',
     icon: 'i-lucide-message-square-quote',
-    color: 'rose',
+    color: 'rose' as const,
     progress: 12,
     total: 36,
+    gradient: 'from-rose-500 to-pink-500',
   },
   {
     title: 'Совместные челленджи',
     description: 'Ежедневные задания для укрепления отношений',
     icon: 'i-lucide-trophy',
-    color: 'amber',
+    color: 'amber' as const,
     progress: 5,
     total: 30,
+    gradient: 'from-amber-500 to-orange-500',
   },
   {
     title: 'Свидания',
     description: 'Идеи для незабываемых свиданий',
     icon: 'i-lucide-heart',
-    color: 'red',
+    color: 'rose' as const,
     progress: 3,
     total: 10,
+    gradient: 'from-red-500 to-rose-500',
   },
   {
     title: 'Совместные цели',
     description: 'Планируйте и достигайте целей вместе',
     icon: 'i-lucide-target',
-    color: 'emerald',
+    color: 'emerald' as const,
     progress: 2,
     total: 5,
+    gradient: 'from-emerald-500 to-teal-500',
   },
 ]
 
@@ -62,57 +66,76 @@ function previousQuestion() {
 </script>
 
 <template>
-  <div class="space-y-4 ">
-    <div class="flex items-center justify-between">
-      <h1 class="text-2xl font-bold text-white">
-        Активности
-      </h1>
-      <UButton
-        icon="i-lucide-plus"
-        color="primary"
-        variant="soft"
-      >
-        Новая активность
-      </UButton>
-    </div>
+  <div class="">
+    <div class="max-w-7xl mx-auto space-y-8">
+      <!-- Заголовок -->
+      <div class="flex items-center justify-between">
+        <div>
+          <h1 class="text-3xl font-bold text-white">
+            Активности
+          </h1>
+          <p class="text-gray-400 mt-1">
+            Развивайте ваши отношения вместе
+          </p>
+        </div>
+      </div>
 
-    <!-- Карточки активностей -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <UCard
-        v-for="activity in activities"
-        :key="activity.title"
-        :ui="{
-          base: 'transition-all duration-200 hover:scale-[1.02] cursor-pointer',
-          body: { padding: 'p-4' },
-        }"
-        @click="currentActivity = activity; showQuestions = true"
-      >
-        <div class="flex items-start gap-4">
-          <UIcon
-            :name="activity.icon"
-            class="text-2xl"
-            :class="`text-${activity.color}-500`"
+      <!-- Карточки активностей -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div
+          v-for="activity in activities"
+          :key="activity.title"
+          class="group relative overflow-hidden rounded-2xl  bg-elevated/50 p-4 transition-all hover:scale-[1.02] cursor-pointer"
+          @click="currentActivity = activity; showQuestions = true"
+        >
+          <!-- Градиентный фон -->
+          <div
+            class="absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity"
+            :class="`bg-gradient-to-r ${activity.gradient}`"
           />
-          <div class="flex-1">
-            <h3 class="text-lg font-semibold text-white">
-              {{ activity.title }}
-            </h3>
-            <p class="text-sm text-gray-400 mt-1">
-              {{ activity.description }}
-            </p>
-            <div class="mt-3">
-              <UProgress
-                :value="(activity.progress / activity.total) * 100"
-                :color="activity.color"
-                size="sm"
+          
+          <div class="relative flex items-start gap-4">
+            <!-- Иконка -->
+            <div
+              class="flex h-12 w-12 items-center justify-center rounded-xl"
+              :class="`bg-gradient-to-r ${activity.gradient}`"
+            >
+              <UIcon
+                :name="activity.icon"
+                class="text-2xl text-white"
               />
-              <p class="text-xs text-gray-400 mt-1">
-                Прогресс: {{ activity.progress }}/{{ activity.total }}
+            </div>
+
+            <!-- Контент -->
+            <div class="flex-1">
+              <h3 class="text-xl font-semibold text-white">
+                {{ activity.title }}
+              </h3>
+              <p class="text-sm text-gray-400 mt-1">
+                {{ activity.description }}
               </p>
+              
+              <!-- Прогресс -->
+              <div class="mt-4">
+                <div class="flex items-center justify-between mb-2">
+                  <span class="text-sm text-gray-400">
+                    Прогресс
+                  </span>
+                  <span class="text-sm font-medium text-white">
+                    {{ activity.progress }}/{{ activity.total }}
+                  </span>
+                </div>
+                <UProgress
+                  :value="(activity.progress / activity.total) * 100"
+                  :color="activity.color"
+                  size="sm"
+                  class="h-2"
+                />
+              </div>
             </div>
           </div>
         </div>
-      </UCard>
+      </div>
     </div>
   </div>
 </template>

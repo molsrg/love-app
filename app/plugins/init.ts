@@ -35,8 +35,9 @@ export default defineNuxtPlugin(async () => {
     setWebAppData()
     if (['ios', 'android'].includes(webAppData.value.platform)) {
       window.Telegram.WebApp.requestFullscreen()
-      isMobile.value = webAppData.value.platform
+      isMobile.value = true
     }
+
 
     console.log('init project')
     window.Telegram.WebApp.disableVerticalSwipes()
@@ -52,11 +53,11 @@ export default defineNuxtPlugin(async () => {
     }
   }
 
-  // Provide the initialization function and isMobile state to the app
+
   return {
     provide: {
       initApp: init,
-      isMobile: readonly(isMobile),
+      isMobile: isMobile,
     },
   }
 })
