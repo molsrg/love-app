@@ -41,17 +41,22 @@ const selectedDate = ref<DateValue | null>(parseDate(userProfile.value.startDate
 const isHostTransferEnabled = ref(false)
 
 function handleHostTransfer() {
-  telegramSelectionChanged()
   if (isHostTransferEnabled.value) {
     if (confirm('Вы уверены, что хотите передать права партнёру?')) {
     console.log('Host trasfered')
+    isHostTransferEnabled.value = true
+  }
     // TODO: Здесь будет логика разрыва пары
+  }
+  else {
+    isHostTransferEnabled.value = false
   }
   }
 }
 
 watch(isHostTransferEnabled, (newValue) => {
   if (newValue) {
+    telegramSelectionChanged()
     handleHostTransfer()
   }
 })
