@@ -46,13 +46,17 @@ const active = computed<string>({
 </script>
 
 <template>
-  <slot />
-
-  <!-- <UTabs
-    v-model="active"
-    :content="false"
-    size="xl"
-    :class="[$isMobile ? 'bottom-5' : 'bottom-1', 'fixed w-full px-4']"
-    :items="items"
-  /> -->
+  <div class="flex flex-col">
+    <div class="flex-1 pb-[64px]">
+      <slot />
+    </div>
+    <UTabs
+      v-model="active"
+      :content="false"
+      size="xl"
+      :class="[$isMobile ? 'bottom-5' : 'bottom-1', 'fixed w-full px-4 z-50']"
+      :items="items"
+    />
+  </div>
 </template>
+
