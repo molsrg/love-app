@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import type { TabsItem } from '@nuxt/ui'
 import { useViewport } from 'vue-tg'
-
+const { $isMobile } = useNuxtApp()
 const route = useRoute()
 // const marginBottomCalculate = computed<string>(() => {
 //   const { safeAreaInset } = useViewport()
@@ -50,10 +50,9 @@ const active = computed<string>({
 
   <UTabs
     v-model="active"
-    
     :content="false"
     size="xl"
-    class="fixed bottom-1.5 w-full px-4"
+    :class="[$isMobile ? 'bottom-5' : 'bottom-1', 'fixed w-full px-4']"
     :items="items"
   />
 </template>

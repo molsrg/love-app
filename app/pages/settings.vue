@@ -124,10 +124,10 @@ function handleHapticFeedback() {
 
 <template>
   <div class="space-y-4">
-    <h1 class="text-2xl font-bold text-white">
+    <h1 class="text-2xl font-bold text-white animate-fade-in mb-0">
       {{ $t('settings.title') }}
     </h1>
-    <UCard variant="subtle">
+    <UCard variant="subtle" class="animate-slide-up opacity-0 translate-y-5" style="animation-delay: 0.2s">
       <template #header>
         <div class="flex items-center gap-2">
           <UIcon :name="SETTINGS_SECTIONS.profile.icon" class="text-primary size-6" />
@@ -202,7 +202,7 @@ function handleHapticFeedback() {
       </div>
     </UCard>
 
-    <UCard variant="subtle">
+    <UCard variant="subtle" class="animate-slide-up opacity-0 translate-y-5" style="animation-delay: 0.4s">
       <template #header>
         <div class="flex items-center gap-2">
           <UIcon :name="SETTINGS_SECTIONS.pair.icon" class="text-primary size-6" />
@@ -272,5 +272,27 @@ function handleHapticFeedback() {
 </template>
 
 <style scoped>
+.animate-fade-in {
+  animation: fadeIn 1s ease-in;
+}
 
+.animate-slide-up {
+  animation: slideUp 0.8s ease-out forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 </style>
