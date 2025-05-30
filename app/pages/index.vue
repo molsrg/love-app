@@ -38,12 +38,11 @@ const timeLeft = computed<TimeLeft>(() => getTimeLeft(now.value, pair.startDate)
 <template>
   <div class=" space-y-4 ">
 
-    <p>Haptics:</p>
+    <!-- <p>Haptics:</p>
     <ul>
         <li>Impact: <a href="javascript:Telegram.WebApp.HapticFeedback.impactOccurred('heavy');">heavy</a>, &nbsp; <a href="javascript:Telegram.WebApp.HapticFeedback.impactOccurred('light');">light</a>, &nbsp; <a href="javascript:Telegram.WebApp.HapticFeedback.impactOccurred('medium');">medium</a>, &nbsp; <a href="javascript:Telegram.WebApp.HapticFeedback.impactOccurred('rigid');">rigid</a>, &nbsp; <a href="javascript:Telegram.WebApp.HapticFeedback.impactOccurred('soft');">soft</a><br><br></li>
-        <li>Notification: <a href="javascript:Telegram.WebApp.HapticFeedback.notificationOccurred('error');">error</a>, &nbsp; <a href="javascript:Telegram.WebApp.HapticFeedback.notificationOccurred('success');">success</a>, &nbsp; <a href="javascript:Telegram.WebApp.HapticFeedback.notificationOccurred('warning');">warning</a><br><br></li>
-        <li>Selection: <a href="javascript:Telegram.WebApp.HapticFeedback.selectionChanged();">changed</a><br><br></li>
-    </ul>
+       
+    </ul> -->
     <div class="flex justify-center">
       <UAvatarGroup size="3xl" :ui="{ base: 'size-25 ring-3 -me-3' }">
         <UAvatar :src="pair.user1.avatar" :alt="pair.user1.name" />

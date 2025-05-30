@@ -33,6 +33,4 @@
       </p>
     </div>
   </div>
-
-  <UButton label="Назад" @click="navigateTo('/connect')" />
 </template>

@@ -48,6 +48,7 @@ async function changeTheme(theme: Theme): void {
 
   await useCloudStorage().setItem('theme', theme.value)
   activeTheme.value = theme.value
+  handleHapticFeedback()
   appConfig.ui.colors.primary = theme.value
   isThemePopoverOpen.value = !isThemePopoverOpen.value
 }
@@ -60,6 +61,7 @@ function handleHostTransfer() {
 }
 
 function handleBreakUp() {
+  handleHapticFeedback()
   if (confirm('Вы уверены, что хотите разорвать пару?')) {
     console.log('Breaking up the pair')
     // TODO: Здесь будет логика разрыва пары
@@ -85,6 +87,7 @@ function handleDateChange(date: DateValue | null) {
   if (!date)
     return
   selectedDate.value = date as any
+  handleHapticFeedback()
   console.warn('New date selected:', formatCalendarDate(date as any, dateFormatter))
   isCalendarPopoverOpen.value = false
 }
@@ -95,11 +98,15 @@ const debouncedUpdateName = debounce((name: string) => {
 }, 600)
 
 function updateNameOnBackend(newName: string) {
+  if (window.Telegram?.WebApp?.HapticFeedback) {
+    window.Telegram.WebApp.HapticFeedback.notificationOccurred('success') // error, warning
+  }
   toast.add({
     title: `Имя обновлено! ${newName}`,
     description: 'Ваше имя успешно изменено.',
     color: 'success',
   })
+  
 }
 
 watch(() => userProfile.value.name, (newName, oldName) => {
@@ -107,6 +114,12 @@ watch(() => userProfile.value.name, (newName, oldName) => {
     debouncedUpdateName(newName)
   }
 })
+
+function handleHapticFeedback() {
+  if (window.Telegram?.WebApp?.HapticFeedback) {
+    window.Telegram.WebApp.HapticFeedback.selectionChanged()
+  }
+}
 </script>
 
 <template>
@@ -234,7 +247,12 @@ watch(() => userProfile.value.name, (newName, oldName) => {
             </p>
           </div>
 
-          <UCheckbox v-model="isHostTransferEnabled" size="lg" class="mr-1" />
+          <UCheckbox 
+            v-model="isHostTransferEnabled" 
+            size="lg" 
+            class="mr-1"
+            @change="handleHapticFeedback"
+          />
         </div>
 
         <div class="flex justify-center">

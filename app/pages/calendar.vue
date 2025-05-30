@@ -43,7 +43,7 @@ async function openPhotoModal(day: any) {
   <div class="flex flex-col gap-4">
     <UBadge
       variant="subtle"
-      label="Отмечай близость — следи за ритмом и здоровьем!"
+      label="Здесь будут ваши совместные фото, попробуй прямо сейчас!"
       size="xl"
       :ui="{
         label: 'whitespace-normal text-center',

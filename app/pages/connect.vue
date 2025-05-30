@@ -139,12 +139,21 @@ const items: CarouselItem[] = [
               />
 
               <UButton
-              label="Перейти в ожидание"
+              label="Перейти в ожидание (тест)"
                 size="xl"
                 color="neutral"
                 variant="subtle"
                 class="w-full justify-center focus:outline-none focus:ring-2 focus:ring-primary"
                 @click="navigateTo('/wait')"
+              />
+
+              <UButton
+              label="Перейти в инициализацию (для хоста, тест)"
+                size="xl"
+                color="neutral"
+                variant="subtle"
+                class="w-full justify-center focus:outline-none focus:ring-2 focus:ring-primary"
+                @click="navigateTo('/initialization')"
               />
             </div>
 

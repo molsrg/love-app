@@ -1,1 +1,1 @@
-export const SAFE_AREA_MULTIPLIER = 1.9
+export const SAFE_AREA_MULTIPLIER = 2
