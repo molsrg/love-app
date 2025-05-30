@@ -47,7 +47,7 @@ const active = computed<string>({
 
 <template>
   <div class="flex flex-col">
-    <div class="flex-1 pb-[64px]">
+    <div class="flex-1 pb-[56px]">
       <slot />
     </div>
     <UTabs
