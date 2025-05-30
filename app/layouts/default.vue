@@ -13,10 +13,10 @@ interface TabItem extends TabsItem {
 }
 
 const items: TabItem[] = [
-  {
-    icon: 'i-streamline-interface-calendar-heart-calendar-date-day-favorite-heart-like-month',
-    value: '/connect',
-  },
+  // {
+  //   icon: 'i-streamline-interface-calendar-heart-calendar-date-day-favorite-heart-like-month',
+  //   value: '/connect',
+  // },
   {
     icon: 'i-material-symbols:indeterminate-question-box-rounded',
     value: '/activity',
