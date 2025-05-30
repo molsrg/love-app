@@ -41,16 +41,24 @@ function startScanner(): void {
   }
 }
 
-if (qrScanner) {
-  qrScanner.onScan((eventData: { data: string }) => {
-    console.log(eventData.data)
+const handleScan = (eventData: { data: string }) => {
+  console.log(eventData.data)
 
-    if (qrScanner) {
-      qrScanner.close()
-    }
-    navigateTo('/wait')
-  })
+  if (qrScanner) {
+    qrScanner.close()
+  }
+  navigateTo('/wait')
 }
+
+if (qrScanner) {
+  qrScanner.onScan(handleScan)
+}
+
+onUnmounted(() => {
+  if (qrScanner) {
+    qrScanner.close()
+  }
+})
 
 const items: CarouselItem[] = [
   {
