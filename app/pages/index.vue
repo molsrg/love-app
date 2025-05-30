@@ -36,15 +36,9 @@ const timeLeft = computed<TimeLeft>(() => getTimeLeft(now.value, pair.startDate)
 </script>
 
 <template>
-  <div class=" space-y-4 ">
-
-    <!-- <p>Haptics:</p>
-    <ul>
-        <li>Impact: <a href="javascript:Telegram.WebApp.HapticFeedback.impactOccurred('heavy');">heavy</a>, &nbsp; <a href="javascript:Telegram.WebApp.HapticFeedback.impactOccurred('light');">light</a>, &nbsp; <a href="javascript:Telegram.WebApp.HapticFeedback.impactOccurred('medium');">medium</a>, &nbsp; <a href="javascript:Telegram.WebApp.HapticFeedback.impactOccurred('rigid');">rigid</a>, &nbsp; <a href="javascript:Telegram.WebApp.HapticFeedback.impactOccurred('soft');">soft</a><br><br></li>
-       
-    </ul> -->
+  <div class="space-y-4">
     <div class="flex justify-center">
-      <UAvatarGroup size="3xl" :ui="{ base: 'size-25 ring-3 -me-3' }">
+      <UAvatarGroup size="3xl" :ui="{ base: 'size-25 ring-3 -me-3' }" class="animate-fade-in">
         <UAvatar :src="pair.user1.avatar" :alt="pair.user1.name" />
         <UAvatar :src="pair.user2.avatar" :alt="pair.user2.name" />
       </UAvatarGroup>
@@ -56,10 +50,11 @@ const timeLeft = computed<TimeLeft>(() => getTimeLeft(now.value, pair.startDate)
     </h2>
 
     <!-- Статистика -->
-    <div class="grid grid-cols-3 gap-4 w-full ">
+    <div class="grid grid-cols-3 gap-4 w-full">
       <div
-        v-for="stat in stats" :key="stat.label"
-        class="bg-elevated/50 rounded-lg p-4 flex flex-col items-center"
+        v-for="(stat, index) in stats" :key="stat.label"
+        class="bg-elevated/50 rounded-lg p-4 flex flex-col items-center animate-slide-up opacity-0 translate-y-3"
+        :style="{ animationDelay: `${0.2 + index * 0.1}s` }"
       >
         <h3
           class="text-2xl font-bold" :class="[
@@ -75,7 +70,7 @@ const timeLeft = computed<TimeLeft>(() => getTimeLeft(now.value, pair.startDate)
     </div>
 
     <!-- Счётчик до годовщины -->
-    <div class="w-full  bg-elevated/50 rounded-lg p-4">
+    <div class="w-full bg-elevated/50 rounded-lg p-4 animate-slide-up opacity-0 translate-y-3" style="animation-delay: 0.5s">
       <h3 class="text-xl font-bold text-white mb-4 text-center">
         {{ config.countdown.title }}
       </h3>
@@ -95,13 +90,15 @@ const timeLeft = computed<TimeLeft>(() => getTimeLeft(now.value, pair.startDate)
         </template>
       </div>
     </div>
+
     <UCarousel
       v-slot="{ item }"
       loop
       dots
       :autoplay="{ delay: 2000 }"
       :items="pair.photos"
-      class="w-full max-w-md mx-auto"
+      class="w-full max-w-md mx-auto animate-slide-up opacity-0 translate-y-3"
+      style="animation-delay: 0.6s"
     >
       <div class="aspect-square w-full">
         <img
@@ -113,3 +110,29 @@ const timeLeft = computed<TimeLeft>(() => getTimeLeft(now.value, pair.startDate)
     </UCarousel>
   </div>
 </template>
+
+<style scoped>
+.animate-fade-in {
+  animation: fadeIn 1s ease-in;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.8s ease-out forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+</style>

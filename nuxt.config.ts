@@ -3,6 +3,7 @@ export default defineNuxtConfig({
   ssr: false,
 
   app: {
+    pageTransition: { name: 'page', mode: 'out-in' },
     head: {
       meta: [
         {
@@ -13,6 +14,7 @@ export default defineNuxtConfig({
       script: [{ src: 'https://telegram.org/js/telegram-web-app.js' }],
     },
   },
+
 
   runtimeConfig: {
     public: {

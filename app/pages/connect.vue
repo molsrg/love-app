@@ -36,15 +36,21 @@ const { $isMobile } = useNuxtApp()
 const qrScanner = useQrScanner()
 
 function startScanner(): void {
-  qrScanner?.show({ text: 'Наведите камеру на QR-код партнёра' })
+  if (qrScanner) {
+    qrScanner.show({ text: 'Наведите камеру на QR-код партнёра' })
+  }
 }
 
-qrScanner?.onScan((eventData: { data: string }) => {
-  console.log(data)
+if (qrScanner) {
+  qrScanner.onScan((eventData: { data: string }) => {
+    console.log(eventData.data)
 
-  qrScanner?.close()
-  navigateTo('/wait')
-})
+    if (qrScanner) {
+      qrScanner.close()
+    }
+    navigateTo('/wait')
+  })
+}
 
 const items: CarouselItem[] = [
   {
@@ -97,93 +103,95 @@ const items: CarouselItem[] = [
 </script>
 
 <template>
-  <div class="relative" style="height: 75vh;">
-    <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center w-full">
-      <UCarousel v-slot="{ item }" dots :items="items" class="w-full">
-        <UCard variant="subtle" class="p-2" :ui="{ root: 'rounded-xl' }">
-          <div class="space-y-4">
-            <div class="text-center">
-              <h2 class="text-3xl font-bold text-white animate-fade-in mb-4">
-                {{ item.title }}
-                <span class="text-primary">{{ item.subtitle }}</span>
-              </h2>
-              <p class="text-lg leading-relaxed animate-slide-up" v-html="item.main" />
-            </div>
+  <div>
+    <div class="relative" style="height: 75vh;">
+      <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center w-full">
+        <UCarousel v-slot="{ item }" dots :items="items" class="w-full">
+          <UCard variant="subtle" class="p-2" :ui="{ root: 'rounded-xl' }">
+            <div class="space-y-4">
+              <div class="text-center">
+                <h2 class="text-3xl font-bold text-white animate-fade-in mb-4">
+                  {{ item.title }}
+                  <span class="text-primary">{{ item.subtitle }}</span>
+                </h2>
+                <p class="text-lg leading-relaxed animate-slide-up" v-html="item.main" />
+              </div>
 
-            <ul v-if="item.features" class="space-y-1 text-left">
-              <li v-for="feature in item.features" :key="feature.text" class="flex items-center gap-2">
-                <UIcon :name="feature.icon" class="w-5 h-5" :class="[feature.color]" />
-                <span>{{ feature.text }}</span>
-              </li>
-            </ul>
+              <ul v-if="item.features" class="space-y-1 text-left">
+                <li v-for="feature in item.features" :key="feature.text" class="flex items-center gap-2">
+                  <UIcon :name="feature.icon" class="w-5 h-5" :class="[feature.color]" />
+                  <span>{{ feature.text }}</span>
+                </li>
+              </ul>
 
-            <div v-if="item.actions" class="space-y-3">
-              <UButton
-                v-if="item.actions.primary && $isMobile"
-                :icon="item.actions.primary.icon"
-                :label="item.actions.primary.label"
-                size="xl"
+              <div v-if="item.actions" class="space-y-3">
+                <UButton
+                  v-if="item.actions.primary && $isMobile"
+                  :icon="item.actions.primary.icon"
+                  :label="item.actions.primary.label"
+                  size="xl"
+                  variant="soft"
+                  class="w-full justify-center shadow-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                  @click="item.actions.primary.action"
+                />
+                <UButton
+                  v-if="item.actions.secondary"
+                  :icon="item.actions.secondary.icon"
+                  :label="item.actions.secondary.label"
+                  size="xl"
+                  color="neutral"
+                  variant="subtle"
+                  class="w-full justify-center focus:outline-none focus:ring-2 focus:ring-primary"
+                  @click="item.actions.secondary.action"
+                />
+
+                <UButton
+                label="Перейти в ожидание (тест)"
+                  size="xl"
+                  color="neutral"
+                  variant="subtle"
+                  class="w-full justify-center focus:outline-none focus:ring-2 focus:ring-primary"
+                  @click="navigateTo('/wait')"
+                />
+
+                <UButton
+                label="Перейти в инициализацию (для хоста, тест)"
+                  size="xl"
+                  color="neutral"
+                  variant="subtle"
+                  class="w-full justify-center focus:outline-none focus:ring-2 focus:ring-primary"
+                  @click="navigateTo('/initialization')"
+                />
+              </div>
+
+              <UBadge
+                v-if="item.badge"
                 variant="soft"
-                class="w-full justify-center shadow-lg focus:outline-none focus:ring-2 focus:ring-primary"
-                @click="item.actions.primary.action"
-              />
-              <UButton
-                v-if="item.actions.secondary"
-                :icon="item.actions.secondary.icon"
-                :label="item.actions.secondary.label"
+                :label="item.badge"
                 size="xl"
-                color="neutral"
-                variant="subtle"
-                class="w-full justify-center focus:outline-none focus:ring-2 focus:ring-primary"
-                @click="item.actions.secondary.action"
+                :ui="{
+                  label: 'whitespace-normal text-center',
+                }"
               />
 
-              <UButton
-              label="Перейти в ожидание (тест)"
-                size="xl"
-                color="neutral"
-                variant="subtle"
-                class="w-full justify-center focus:outline-none focus:ring-2 focus:ring-primary"
-                @click="navigateTo('/wait')"
-              />
-
-              <UButton
-              label="Перейти в инициализацию (для хоста, тест)"
-                size="xl"
-                color="neutral"
-                variant="subtle"
-                class="w-full justify-center focus:outline-none focus:ring-2 focus:ring-primary"
-                @click="navigateTo('/initialization')"
-              />
+              <div v-if="item.call" class="flex items-center justify-center gap-2 text-sm text-gray-400">
+                <UIcon name="i-heroicons-users" class="w-4 h-4" />
+                <p>{{ item.call }}</p>
+              </div>
             </div>
-
-            <UBadge
-              v-if="item.badge"
-              variant="soft"
-              :label="item.badge"
-              size="xl"
-              :ui="{
-                label: 'whitespace-normal text-center',
-              }"
-            />
-
-            <div v-if="item.call" class="flex items-center justify-center gap-2 text-sm text-gray-400">
-              <UIcon name="i-heroicons-users" class="w-4 h-4" />
-              <p>{{ item.call }}</p>
-            </div>
-          </div>
-        </UCard>
-      </UCarousel>
-    </div>
-  </div>
-
-  <UDrawer v-model:open="open">
-    <template #content>
-      <div class="flex flex-col items-center p-6 space-y-4">
-        <QrcodeVue :value="qrValue" :size="200" />
+          </UCard>
+        </UCarousel>
       </div>
-    </template>
-  </UDrawer>
+    </div>
+
+    <UDrawer v-model:open="open">
+      <template #content>
+        <div class="flex flex-col items-center p-6 space-y-4">
+          <QrcodeVue :value="qrValue" :size="200" />
+        </div>
+      </template>
+    </UDrawer>
+  </div>
 </template>
 
 <style>

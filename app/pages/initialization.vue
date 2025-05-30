@@ -4,7 +4,7 @@
 // })
 
 import type { DateValue } from '@internationalized/date'
-import { createDateFormatter, createInitialDate, formatCalendarDate } from '~/helpers/date.helper'
+import { createDateFormatter, formatCalendarDate } from '~/helpers/date.helper'
 import { THEMES } from '~/config/settings'
 import type { Theme } from '~/types/settings'
 import { useStorage } from '@vueuse/core'

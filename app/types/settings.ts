@@ -19,4 +19,5 @@ export interface Profile {
   partnerName: string
   startDate: string
   theme: string
+  avatar?: string
 }

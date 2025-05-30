@@ -1,9 +1,9 @@
-import en from 'assets/locales/en.json'
-import ru from 'assets/locales/ru.json'
+import en from '../app/locales/en.json'
+import ru from '../app/locales/ru.json'
 
 export default defineI18nConfig(() => ({
   legacy: false,
-  locale: 'ru',
+  locale: 'en',
   messages: {
     en,
     ru,

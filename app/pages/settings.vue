@@ -1,32 +1,57 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import type { CalendarDate, DateValue } from '@internationalized/date'
 import type { Profile, Theme } from '~/types/settings'
+import { parseDate } from '@internationalized/date'
 import { useCloudStorage } from 'vue-tg/latest'
 import { SETTINGS_SECTIONS, THEMES } from '~/config/settings'
-import { debounce } from '~/helpers/api.helper'
-import { createDateFormatter, createInitialDate, formatCalendarDate } from '~/helpers/date.helper'
 
-const props = defineProps<{
-  title: string
-}>()
-
+const { telegramSelectionChanged, telegramNotificationOccurred } = useHapticFeedback()
 const appConfig = useAppConfig()
+const toast = useToast()
 
 const userProfile = ref<Profile>({
   name: 'Пользователь 1',
   partnerName: 'Пользователь 2',
+  avatar: 'https://github.com/benjamincanac.png',
   startDate: '2025-05-05',
   theme: 'dark',
 })
 
 const activeTheme = ref(appConfig.ui.colors.primary)
 const isThemePopoverOpen = ref(false)
-const isCalendarPopoverOpen = ref(false)
 
-const dateFormatter = createDateFormatter()
-const selectedDate = shallowRef(createInitialDate())
+async function changeTheme(theme: Theme): Promise<void> {
+  if (!appConfig?.ui?.colors)
+    return
+
+  await useCloudStorage().setItem('theme', theme.value)
+  activeTheme.value = theme.value
+  telegramSelectionChanged()
+  appConfig.ui.colors.primary = theme.value
+  isThemePopoverOpen.value = !isThemePopoverOpen.value
+}
+
+const activeThemeName = computed(() =>
+  THEMES.find((theme: Theme) => theme.value === activeTheme.value)?.name || 'Выбрать тему',
+)
+
+const isCalendarPopoverOpen = ref(false)
+const selectedDate = ref<DateValue | null>(parseDate(userProfile.value.startDate))
 
 const isHostTransferEnabled = ref(false)
+
+function handleHostTransfer() {
+  if (isHostTransferEnabled.value) {
+    console.log('Transferring host rights to partner')
+    // TODO: Здесь будет логика передачи прав хоста
+  }
+}
+
+watch(isHostTransferEnabled, (newValue) => {
+  if (newValue) {
+    handleHostTransfer()
+  }
+})
 
 function handleAvatarClick() {
   const input = document.querySelector('input[type="file"]') as HTMLInputElement
@@ -42,71 +67,37 @@ function handleAvatarChange(event: Event) {
   }
 }
 
-async function changeTheme(theme: Theme): void {
-  if (!appConfig?.ui?.colors)
-    return
-
-  await useCloudStorage().setItem('theme', theme.value)
-  activeTheme.value = theme.value
-  handleHapticFeedback()
-  appConfig.ui.colors.primary = theme.value
-  isThemePopoverOpen.value = !isThemePopoverOpen.value
-}
-
-function handleHostTransfer() {
-  if (isHostTransferEnabled.value) {
-    console.log('Transferring host rights to partner')
-    // TODO: Здесь будет логика передачи прав хоста
-  }
-}
-
 function handleBreakUp() {
-  handleHapticFeedback()
+  telegramSelectionChanged()
   if (confirm('Вы уверены, что хотите разорвать пару?')) {
     console.log('Breaking up the pair')
     // TODO: Здесь будет логика разрыва пары
   }
 }
 
-const formattedSelectedDate = computed(() =>
-  selectedDate.value ? formatCalendarDate(selectedDate.value, dateFormatter) : 'Select a date',
-)
-
-const activeThemeName = computed(() =>
-  THEMES.find((theme: Theme) => theme.value === activeTheme.value)?.name || 'Выбрать тему',
-)
-
-watch(isHostTransferEnabled, (newValue) => {
-  if (newValue) {
-    handleHostTransfer()
-  }
-})
-
-// Методы для работы с датой
-function handleDateChange(date: DateValue | null) {
-  if (!date)
+function handleDateChange(date: CalendarDate) {
+  if (!date || typeof date !== 'object' || 'start' in date || Array.isArray(date))
     return
-  selectedDate.value = date as any
-  handleHapticFeedback()
-  console.warn('New date selected:', formatCalendarDate(date as any, dateFormatter))
+  selectedDate.value = date
+  userProfile.value.startDate = date.toString()
+  telegramSelectionChanged()
   isCalendarPopoverOpen.value = false
+
+  console.log('new date - ', date );
+  
 }
 
-const toast = useToast()
-const debouncedUpdateName = debounce((name: string) => {
+const debouncedUpdateName = useDebounce((name: string) => {
   updateNameOnBackend(name)
 }, 600)
 
 function updateNameOnBackend(newName: string) {
-  if (window.Telegram?.WebApp?.HapticFeedback) {
-    window.Telegram.WebApp.HapticFeedback.notificationOccurred('success') // error, warning
-  }
+  telegramNotificationOccurred('success')
   toast.add({
     title: `Имя обновлено! ${newName}`,
     description: 'Ваше имя успешно изменено.',
     color: 'success',
   })
-  
 }
 
 watch(() => userProfile.value.name, (newName, oldName) => {
@@ -114,12 +105,6 @@ watch(() => userProfile.value.name, (newName, oldName) => {
     debouncedUpdateName(newName)
   }
 })
-
-function handleHapticFeedback() {
-  if (window.Telegram?.WebApp?.HapticFeedback) {
-    window.Telegram.WebApp.HapticFeedback.selectionChanged()
-  }
-}
 </script>
 
 <template>
@@ -127,7 +112,7 @@ function handleHapticFeedback() {
     <h1 class="text-2xl font-bold text-white animate-fade-in mb-0">
       {{ $t('settings.title') }}
     </h1>
-    <UCard variant="subtle" class="animate-slide-up opacity-0 translate-y-5" style="animation-delay: 0.2s">
+    <UCard class="animate-slide-up opacity-0 translate-y-5" style="animation-delay: 0.2s" variant="subtle">
       <template #header>
         <div class="flex items-center gap-2">
           <UIcon :name="SETTINGS_SECTIONS.profile.icon" class="text-primary size-6" />
@@ -142,30 +127,30 @@ function handleHapticFeedback() {
           <label class="text-sm text-gray-400 mb-1 block">{{ $t('settings.profile.name') }}</label>
           <UInput
             v-model="userProfile.name"
-            size="lg"
-            class="w-full"
             :placeholder="$t('settings.profile.namePlaceholder')"
+            class="w-full"
+            size="lg"
           />
         </div>
 
         <div>
           <label class="text-sm text-gray-400 mb-1 block">{{ $t('settings.profile.avatar') }}</label>
           <UButton
-            class="w-full h-[36px] flex items-center"
             :avatar="{
-              src: 'https://github.com/benjamincanac.png',
+              src: userProfile.avatar,
             }"
-            size="md"
+            class="w-full h-[36px] flex items-center"
             color="neutral"
+            size="md"
             variant="subtle"
             @click="handleAvatarClick"
           >
             {{ $t('settings.profile.changeAvatar') }}
           </UButton>
           <input
-            type="file"
             accept="image/*"
             class="hidden"
+            type="file"
             @change="handleAvatarChange"
           >
         </div>
@@ -173,7 +158,7 @@ function handleHapticFeedback() {
           <label class="text-sm text-gray-400 mb-1 block">{{ $t('settings.profile.theme') }}</label>
 
           <UPopover v-model:open="isThemePopoverOpen" arrow>
-            <UButton class="w-full h-[36px]" icon="i-lucide-palette" color="neutral" variant="subtle">
+            <UButton class="w-full h-[36px]" color="neutral" icon="i-lucide-palette" variant="subtle">
               {{ activeThemeName }}
             </UButton>
 
@@ -183,11 +168,11 @@ function handleHapticFeedback() {
                   <UButton
                     v-for="theme in THEMES"
                     :key="theme.value"
-                    color="neutral"
-                    variant="subtle"
-                    class="text-center"
                     :class="{ 'ring-1 ring-primary': activeTheme === theme.value }"
                     :label="theme.name"
+                    class="text-center"
+                    color="neutral"
+                    variant="subtle"
                     @click="changeTheme(theme)"
                   >
                     <template #leading>
@@ -201,8 +186,7 @@ function handleHapticFeedback() {
         </div>
       </div>
     </UCard>
-
-    <UCard variant="subtle" class="animate-slide-up opacity-0 translate-y-5" style="animation-delay: 0.4s">
+    <UCard class="animate-slide-up opacity-0 translate-y-5" style="animation-delay: 0.4s" variant="subtle">
       <template #header>
         <div class="flex items-center gap-2">
           <UIcon :name="SETTINGS_SECTIONS.pair.icon" class="text-primary size-6" />
@@ -217,22 +201,33 @@ function handleHapticFeedback() {
           <label class="text-sm text-gray-400 mb-1 block">{{ $t('settings.partner.name') }}</label>
           <UInput
             v-model="userProfile.partnerName"
+            :placeholder="$t('settings.partner.namePlaceholder')"
+            class="w-full"
             disabled
             size="lg"
             trailing-icon="i-material-symbols-lock-outline"
-            class="w-full"
-            :placeholder="$t('settings.partner.namePlaceholder')"
           />
         </div>
         <div>
           <label class="text-sm text-gray-400 mb-1 block">{{ $t('settings.partner.startDate') }}</label>
           <UPopover v-model:open="isCalendarPopoverOpen" arrow>
-            <UButton class="w-full h-[36px]" :ui="{ trailingIcon: 'ml-auto' }" :disabled="isHostTransferEnabled" color="neutral" variant="subtle" icon="i-lucide-calendar" :trailing-icon="isHostTransferEnabled ? 'i-material-symbols-lock-outline' : ''">
-              {{ formattedSelectedDate }}
+            <UButton
+              :disabled="isHostTransferEnabled"
+              :trailing-icon="isHostTransferEnabled ? 'i-material-symbols-lock-outline' : ''"
+              :ui="{ trailingIcon: 'ml-auto' }"
+              class="w-full h-[36px]" color="neutral" icon="i-lucide-calendar"
+              variant="subtle"
+            >
+              {{ userProfile.startDate }}
             </UButton>
 
             <template #content>
-              <UCalendar v-model="selectedDate" class="p-2 w-full" @update:model-value="handleDateChange" />
+              <UCalendar
+                v-model="selectedDate" :ui="{
+
+                  cellTrigger: ' data-today:not-data-[selected]:text-[var(--ui-deafult)]',
+                }" class="p-2 w-full" @update:model-value="handleDateChange"
+              />
             </template>
           </UPopover>
         </div>
@@ -247,22 +242,21 @@ function handleHapticFeedback() {
             </p>
           </div>
 
-          <UCheckbox 
-            v-model="isHostTransferEnabled" 
-            size="lg" 
+          <UCheckbox
+            v-model="isHostTransferEnabled"
             class="mr-1"
-            @change="handleHapticFeedback"
+            size="lg"
           />
         </div>
 
         <div class="flex justify-center">
           <UButton
-            leading-icon="i-material-symbols:heart-broken-outline"
+            :label="$t('settings.partner.breakUp')"
             class="h-[36px]"
             color="error"
-            variant="subtle"
-            :label="$t('settings.partner.breakUp')"
+            leading-icon="i-material-symbols:heart-broken-outline"
             size="lg"
+            variant="subtle"
             @click="handleBreakUp"
           />
         </div>
@@ -270,29 +264,3 @@ function handleHapticFeedback() {
     </UCard>
   </div>
 </template>
-
-<style scoped>
-.animate-fade-in {
-  animation: fadeIn 1s ease-in;
-}
-
-.animate-slide-up {
-  animation: slideUp 0.8s ease-out forwards;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-</style>

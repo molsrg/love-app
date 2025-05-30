@@ -21,12 +21,36 @@
     padding-right: var(--tg-safe-area-inset-right, 0px);
     padding-bottom: max(var(--tg-safe-area-inset-bottom, 5px), 5px);
     padding-left: var(--tg-safe-area-inset-left, 0px);
+
+
 }
 
 
 
 
-
+.animate-fade-in {
+    animation: fadeIn 1s ease-in;
+  }
+  
+  .animate-slide-up {
+    animation: slideUp 0.8s ease-out forwards;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
 
 
 
