@@ -43,14 +43,11 @@ const isHostTransferEnabled = ref(false)
 function handleHostTransfer() {
   if (isHostTransferEnabled.value) {
     if (confirm('Вы уверены, что хотите передать права партнёру?')) {
-    console.log('Host trasfered')
-    isHostTransferEnabled.value = true
-  }
-    // TODO: Здесь будет логика разрыва пары
-  }
-  else {
-    isHostTransferEnabled.value = false
-  }
+      console.log('Host transferred')
+      // TODO: Здесь будет логика передачи прав хоста
+    } else {
+      isHostTransferEnabled.value = false
+    }
   }
 }
 
