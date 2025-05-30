@@ -52,8 +52,8 @@ function handleHostTransfer() {
 }
 
 watch(isHostTransferEnabled, (newValue) => {
+  telegramSelectionChanged()
   if (newValue) {
-    telegramSelectionChanged()
     handleHostTransfer()
   }
 })

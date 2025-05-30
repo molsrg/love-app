@@ -48,11 +48,11 @@ const active = computed<string>({
 <template>
   <slot />
 
-  <UTabs
+  <!-- <UTabs
     v-model="active"
     :content="false"
     size="xl"
     :class="[$isMobile ? 'bottom-5' : 'bottom-1', 'fixed w-full px-4']"
     :items="items"
-  />
+  /> -->
 </template>
