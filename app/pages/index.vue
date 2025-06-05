@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { Config, Stat, TimeLeft } from '~/types/stats'
 import { computed, onMounted, ref } from 'vue'
+import RelationshipProgress from '~/components/RelationshipProgress.vue'
 import { getDaysTogether, getTimeLeft } from '~/helpers/stats'
 import { usePairStore } from '~/stores/pair.store'
 
@@ -91,7 +92,21 @@ const timeLeft = computed<TimeLeft>(() => getTimeLeft(now.value, pair.startDate)
       </div>
     </div>
 
-    <UCarousel
+    <!-- Прогресс отношений -->
+    <div class="grid grid-cols-3 gap-4 w-full">
+      <div
+        v-for="(target, index) in [30, 100, 151]" :key="target"
+        class="bg-elevated/50 rounded-lg p-2 flex flex-col items-center animate-slide-up opacity-0 translate-y-3"
+        :style="{ animationDelay: `${0.5 + index * 0.1}s` }"
+      >
+        <RelationshipProgress
+          :current-days="daysTogether"
+          :target-days="target"
+        />
+      </div>
+    </div>
+
+    <!-- <UCarousel
       v-slot="{ item }"
       loop
       dots
@@ -107,7 +122,7 @@ const timeLeft = computed<TimeLeft>(() => getTimeLeft(now.value, pair.startDate)
           alt="Carousel image"
         >
       </div>
-    </UCarousel>
+    </UCarousel> -->
   </div>
 </template>
 
@@ -128,7 +143,7 @@ const timeLeft = computed<TimeLeft>(() => getTimeLeft(now.value, pair.startDate)
 @keyframes slideUp {
   from {
     opacity: 0;
-    transform: translateY(12px);
+    transform: translateY(22px);
   }
   to {
     opacity: 1;
