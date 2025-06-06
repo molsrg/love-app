@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-
 const props = defineProps<{
   currentDays: number
   targetDays: number
@@ -55,7 +53,7 @@ const strokeDashoffset = computed(() => {
     <!-- Center text -->
     <div class="absolute inset-0 flex flex-col items-center justify-center">
       <template v-if="isCompleted">
-        <UIcon name="i-heroicons-check-circle" class="text-2xl text-success mb-1" />
+        <UIcon name="i-heroicons-check-circle" class="text-2xl text-success " />
         <span class="text-xs text-gray-400">{{ targetDays }} дней</span>
       </template>
       <template v-else>

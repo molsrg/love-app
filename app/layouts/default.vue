@@ -1,13 +1,9 @@
 <script lang="ts" setup>
 import type { TabsItem } from '@nuxt/ui'
-import { useViewport } from 'vue-tg'
 
+const { telegramSelectionChanged } = useHapticFeedback()
 const { $isMobile } = useNuxtApp()
 const route = useRoute()
-// const marginBottomCalculate = computed<string>(() => {
-//   const { safeAreaInset } = useViewport()
-//   return `${safeAreaInset.value.bottom * 0.5 + 5}px`
-// })
 
 interface TabItem extends TabsItem {
   value: string
@@ -42,6 +38,7 @@ const active = computed<string>({
     return route.path
   },
   set(value: string): void {
+    telegramSelectionChanged()
     navigateTo(value)
   },
 })
