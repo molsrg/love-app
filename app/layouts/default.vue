@@ -33,13 +33,25 @@ const items: TabItem[] = [
   },
 ]
 
+let isNavigating = false
 const active = computed<string>({
   get(): string {
     return route.path
   },
   set(value: string): void {
+    if (isNavigating || value === route.path)
+      return
+    isNavigating = true
     telegramSelectionChanged()
-    navigateTo(value)
+    const result = navigateTo(value)
+    if (result && typeof (result as Promise<any>).finally === 'function') {
+      (result as Promise<any>).finally(() => {
+        isNavigating = false
+      })
+    }
+    else {
+      isNavigating = false
+    }
   },
 })
 </script>
