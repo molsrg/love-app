@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import type { TabsItem } from '@nuxt/ui'
 import { useViewport } from 'vue-tg'
+
 const { $isMobile } = useNuxtApp()
 const route = useRoute()
 // const marginBottomCalculate = computed<string>(() => {
@@ -17,18 +18,19 @@ const items: TabItem[] = [
   //   icon: 'i-streamline-interface-calendar-heart-calendar-date-day-favorite-heart-like-month',
   //   value: '/connect',
   // },
+  // {
+  //   icon: 'i-material-symbols:indeterminate-question-box-rounded',
+  //   value: '/activity',
+  // },
   {
-    icon: 'i-material-symbols:indeterminate-question-box-rounded',
-    value: '/activity',
+    icon: 'i-lucide-calendar',
+    value: '/calendar',
   },
   {
     icon: 'i-lucide-users',
     value: '/',
   },
-  {
-    icon: 'i-lucide-chart-line',
-    value: '/calendar',
-  },
+
   {
     icon: 'i-lucide-settings',
     value: '/settings',
@@ -54,9 +56,8 @@ const active = computed<string>({
       v-model="active"
       :content="false"
       size="xl"
-      :class="[$isMobile ? 'bottom-5' : 'bottom-1', 'fixed w-full px-4 z-50']"
+      class="fixed w-full px-4 z-50" :class="[$isMobile ? 'bottom-5' : 'bottom-1']"
       :items="items"
     />
   </div>
 </template>
-

@@ -9,6 +9,16 @@ const pair = usePairStore()
 
 const now = ref<Date>(new Date())
 
+const RELATIONSHIP_GOALS = [
+  { days: 30, label: 'Первый месяц' },
+  { days: 100, label: '100 дней' },
+  { days: 180, label: 'Полгода' },
+  { days: 365, label: 'Год' },
+  { days: 1460, label: 'Три года' },
+  { days: 5840, label: 'Пять лет' },
+  { days: 11680, label: 'Десять лет' },
+]
+
 const config: Config = {
   countdown: {
     title: 'До годовщины осталось',
@@ -34,10 +44,14 @@ const stats = computed<Stat[]>(() => [
   { label: config.stats.challenges, value: pair.stats.challenges, color: 'muted' },
 ])
 const timeLeft = computed<TimeLeft>(() => getTimeLeft(now.value, pair.startDate))
+
+const activeGoals = computed(() => {
+  return RELATIONSHIP_GOALS.filter(goal => daysTogether.value < goal.days)
+})
 </script>
 
 <template>
-  <div class="space-y-4">
+  <div class="space-y-3">
     <div class="flex justify-center">
       <UAvatarGroup size="3xl" :ui="{ base: 'size-25 ring-3 -me-3' }" class="animate-fade-in">
         <UAvatar :src="pair.user1.avatar" :alt="pair.user1.name" />
@@ -51,7 +65,7 @@ const timeLeft = computed<TimeLeft>(() => getTimeLeft(now.value, pair.startDate)
     </h2>
 
     <!-- Статистика -->
-    <div class="grid grid-cols-3 gap-4 w-full">
+    <div class="grid grid-cols-3 gap-3 w-full">
       <div
         v-for="(stat, index) in stats" :key="stat.label"
         class="bg-elevated/50 rounded-lg p-4 flex flex-col items-center animate-slide-up opacity-0 translate-y-3"
@@ -75,7 +89,7 @@ const timeLeft = computed<TimeLeft>(() => getTimeLeft(now.value, pair.startDate)
       <h3 class="text-xl font-bold text-white mb-4 text-center">
         {{ config.countdown.title }}
       </h3>
-      <div class="grid grid-cols-4 gap-4">
+      <div class="grid grid-cols-4 gap-3">
         <template v-for="(unit, index) in config.countdown.units" :key="unit">
           <div class="flex flex-col items-center">
             <div class="text-3xl font-bold text-primary">
@@ -93,15 +107,15 @@ const timeLeft = computed<TimeLeft>(() => getTimeLeft(now.value, pair.startDate)
     </div>
 
     <!-- Прогресс отношений -->
-    <div class="grid grid-cols-3 gap-4 w-full">
+    <div class="grid grid-cols-3 gap-3 w-full  mx-auto">
       <div
-        v-for="(target, index) in [30, 100, 151]" :key="target"
+        v-for="(goal, index) in RELATIONSHIP_GOALS" :key="goal.days"
         class="bg-elevated/50 rounded-lg p-2 flex flex-col items-center animate-slide-up opacity-0 translate-y-3"
         :style="{ animationDelay: `${0.5 + index * 0.1}s` }"
       >
         <RelationshipProgress
           :current-days="daysTogether"
-          :target-days="target"
+          :target-days="goal.days"
         />
       </div>
     </div>

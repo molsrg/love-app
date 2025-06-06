@@ -41,7 +41,7 @@ function startScanner(): void {
   }
 }
 
-const handleScan = (eventData: { data: string }) => {
+function handleScan(eventData: { data: string }) {
   console.log(eventData.data)
 
   if (qrScanner) {
@@ -154,7 +154,7 @@ const items: CarouselItem[] = [
                 />
 
                 <UButton
-                label="Перейти в ожидание (тест)"
+                  label="Перейти в ожидание (тест)"
                   size="xl"
                   color="neutral"
                   variant="subtle"
@@ -163,7 +163,7 @@ const items: CarouselItem[] = [
                 />
 
                 <UButton
-                label="Перейти в инициализацию (для хоста, тест)"
+                  label="Перейти в инициализацию (для хоста, тест)"
                   size="xl"
                   color="neutral"
                   variant="subtle"
@@ -174,11 +174,12 @@ const items: CarouselItem[] = [
 
               <UBadge
                 v-if="item.badge"
+                class="w-full"
                 variant="soft"
                 :label="item.badge"
                 size="xl"
                 :ui="{
-                  label: 'whitespace-normal text-center',
+                  label: 'whitespace-normal text-center ',
                 }"
               />
 

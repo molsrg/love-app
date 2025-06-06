@@ -10,6 +10,10 @@ const progress = computed(() => {
   return (props.currentDays / props.targetDays) * 100
 })
 
+const isCompleted = computed(() => {
+  return props.currentDays >= props.targetDays
+})
+
 const visualProgress = computed(() => {
   return Math.min(progress.value, 100)
 })
@@ -43,13 +47,21 @@ const strokeDashoffset = computed(() => {
         fill="none"
         :stroke-dasharray="circumference"
         :style="{ '--dashoffset': strokeDashoffset }"
-        class="text-primary progress-circle"
+        class="progress-circle" :class="[
+          isCompleted ? 'text-primary' : 'text-primary',
+        ]"
       />
     </svg>
     <!-- Center text -->
     <div class="absolute inset-0 flex flex-col items-center justify-center">
-      <span class="text-md font-bold text-white">{{ Math.round(progress) }}%</span>
-      <span class="text-xs text-gray-400">{{ targetDays }} дней</span>
+      <template v-if="isCompleted">
+        <UIcon name="i-heroicons-check-circle" class="text-2xl text-success mb-1" />
+        <span class="text-xs text-gray-400">{{ targetDays }} дней</span>
+      </template>
+      <template v-else>
+        <span class="text-md font-bold text-white">{{ Math.round(progress) }}%</span>
+        <span class="text-xs text-gray-400">{{ targetDays }} дней</span>
+      </template>
     </div>
   </div>
 </template>
