@@ -16,7 +16,6 @@ const RELATIONSHIP_GOALS = [
   { days: 365, label: 'Год' },
   { days: 1460, label: 'Три года' },
   { days: 5840, label: 'Пять лет' },
-  { days: 11680, label: 'Десять лет' },
 ]
 
 const config: Config = {
@@ -44,10 +43,6 @@ const stats = computed<Stat[]>(() => [
   { label: config.stats.challenges, value: pair.stats.challenges, color: 'muted' },
 ])
 const timeLeft = computed<TimeLeft>(() => getTimeLeft(now.value, pair.startDate))
-
-const activeGoals = computed(() => {
-  return RELATIONSHIP_GOALS.filter(goal => daysTogether.value < goal.days)
-})
 </script>
 
 <template>
@@ -79,7 +74,7 @@ const activeGoals = computed(() => {
           {{ stat.value }}
         </h3>
         <p :class="`text-sm text-${stat.color} text-center`">
-          {{ stat.label }}
+          {{ stat.label.split(' ')[0] }}<br>{{ stat.label.split(' ').slice(1).join(' ') }}
         </p>
       </div>
     </div>
