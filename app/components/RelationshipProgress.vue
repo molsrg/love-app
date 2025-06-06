@@ -2,6 +2,7 @@
 const props = defineProps<{
   currentDays: number
   targetDays: number
+  label: string
 }>()
 
 const progress = computed(() => {
@@ -54,11 +55,11 @@ const strokeDashoffset = computed(() => {
     <div class="absolute inset-0 flex flex-col items-center justify-center">
       <template v-if="isCompleted">
         <UIcon name="i-heroicons-check-circle" class="size-7 text-primary" />
-        <span class="text-xs text-gray-400">{{ targetDays }} дней</span>
+        <span class="text-xs text-gray-400">{{ label }}</span>
       </template>
       <template v-else>
         <span class="text-md font-bold text-white">{{ Math.round(progress) }}%</span>
-        <span class="text-xs text-gray-400">{{ targetDays }} дней</span>
+        <span class="text-xs text-gray-400">{{ label }}</span>
       </template>
     </div>
   </div>

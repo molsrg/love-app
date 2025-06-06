@@ -10,12 +10,12 @@ const pair = usePairStore()
 const now = ref<Date>(new Date())
 
 const RELATIONSHIP_GOALS = [
-  { days: 30, label: 'Первый месяц' },
+  { days: 30, label: '1 месяц' },
   { days: 100, label: '100 дней' },
-  { days: 180, label: 'Полгода' },
-  { days: 365, label: 'Год' },
-  { days: 1460, label: 'Три года' },
-  { days: 5840, label: 'Пять лет' },
+  { days: 180, label: 'полгода' },
+  { days: 365, label: 'год' },
+  { days: 1460, label: 'три года' },
+  { days: 5840, label: 'пять лет' },
 ]
 
 const config: Config = {
@@ -111,6 +111,7 @@ const timeLeft = computed<TimeLeft>(() => getTimeLeft(now.value, pair.startDate)
         <RelationshipProgress
           :current-days="daysTogether"
           :target-days="goal.days"
+          :label="goal.label"
         />
       </div>
     </div>
