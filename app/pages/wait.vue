@@ -1,5 +1,24 @@
 <script setup lang="ts">
+import { pollingService } from '~/services/polling.service'
 
+definePageMeta({
+  layout: 'unauthorized',
+})
+
+function handlePingResponse(data: any) {
+  if (data?.ready) {
+    pollingService.stop()
+    navigateTo('/success')
+  }
+}
+const config = useRuntimeConfig()
+onMounted(() => {
+  pollingService.start(config.public.initUrl, handlePingResponse, 3000)
+})
+
+onUnmounted(() => {
+  pollingService.stop()
+})
 </script>
 
 <template>

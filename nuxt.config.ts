@@ -15,11 +15,11 @@ export default defineNuxtConfig({
     },
   },
 
-
   runtimeConfig: {
     public: {
       apiUrl: '',
       botToken: '',
+      initUrl: '',
       chatId: '',
       devServerHost: '',
       devServerPort: 5000,
