@@ -30,63 +30,41 @@ interface CarouselItem {
     }
   }
 }
-const qrValue = 'https://loveapp.com/pair/unique-user-id'
-const open = ref(false)
-const { $isMobile } = useNuxtApp()
-const qrScanner = useQrScanner()
 
-function startScanner(): void {
-  if (qrScanner) {
-    qrScanner.show({ text: 'Наведите камеру на QR-код партнёра' })
-  }
+const qrUrl = 'https://loveapp.com/pair/unique-user-id'
+const isQrOpen = ref(false)
+const { $isMobile } = useNuxtApp()
+const qrScannerInstance = useQrScanner()
+
+function openQrScanner(): void {
+  qrScannerInstance?.show?.({ text: 'Наведите камеру на QR-код партнёра' })
 }
 
-function handleScan(eventData: { data: string }) {
-  console.log(eventData.data)
-
-  if (qrScanner) {
-    qrScanner.close()
-  }
+function handleQrScan(eventData: { data: string }) {
+  // console.warn('QR scanned:', eventData.data)
+  qrScannerInstance?.close?.()
   navigateTo('/wait')
 }
 
-if (qrScanner) {
-  qrScanner.onScan(handleScan)
-}
-
+onMounted(() => {
+  qrScannerInstance?.onScan?.(handleQrScan)
+})
 onUnmounted(() => {
-  if (qrScanner) {
-    qrScanner.close()
-  }
+  qrScannerInstance?.close?.()
+  // qrScannerInstance?.offScan?.(handleQrScan)
 })
 
-const items: CarouselItem[] = [
+const carouselItems: CarouselItem[] = [
   {
     title: 'Привет,',
     subtitle: 'Sergey',
     badge: 'И ещё многое другое ждёт тебя в LoveApp',
     main: 'Мы рады представить тебе новое приложение для отслеживания <b>ваших</b> отношений',
     features: [
-      {
-        icon: 'i-heroicons-bell',
-        text: 'Не пропустите важные даты',
-        color: 'text-primary',
-      },
-      {
-        icon: 'i-heroicons-calendar',
-        text: 'Планируйте свидания вместе',
-        color: 'text-primary',
-      },
-      {
-        icon: 'i-heroicons-light-bulb',
-        text: 'Идеи для романтических вечеров',
-        color: 'text-primary',
-      },
-      {
-        icon: 'i-heroicons-trophy',
-        text: 'Весёлые челленджи для двоих',
-        color: 'text-primary',
-      },
+      { icon: 'i-heroicons-bell', text: 'Не пропустите важные даты', color: 'text-primary' },
+      { icon: 'i-heroicons-calendar', text: 'Планируйте свидания вместе', color: 'text-primary' },
+      { icon: 'i-heroicons-light-bulb', text: 'Идеи для романтических вечеров', color: 'text-primary' },
+      { icon: 'i-heroicons-trophy', text: 'Весёлые челленджи для двоих', color: 'text-primary' },
     ],
   },
   {
@@ -98,12 +76,12 @@ const items: CarouselItem[] = [
       primary: {
         icon: 'i-heroicons-qr-code',
         label: 'Сканировать QR партнёра',
-        action: startScanner,
+        action: openQrScanner,
       },
       secondary: {
         icon: 'i-heroicons-share',
         label: 'Поделиться моим QR',
-        action: () => open.value = !open.value,
+        action: () => { isQrOpen.value = !isQrOpen.value },
       },
     },
   },
@@ -114,7 +92,7 @@ const items: CarouselItem[] = [
   <div>
     <div class="relative" style="height: 75vh;">
       <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center w-full">
-        <UCarousel v-slot="{ item }" dots :items="items" class="w-full">
+        <UCarousel v-slot="{ item }" dots :items="carouselItems" class="w-full">
           <UCard variant="subtle" class="p-2" :ui="{ root: 'rounded-xl' }">
             <div class="space-y-4">
               <div class="text-center">
@@ -193,10 +171,10 @@ const items: CarouselItem[] = [
       </div>
     </div>
 
-    <UDrawer v-model:open="open">
+    <UDrawer v-model:open="isQrOpen">
       <template #content>
         <div class="flex flex-col items-center p-6 space-y-4">
-          <QrcodeVue :value="qrValue" :size="200" />
+          <QrcodeVue :value="qrUrl" :size="200" />
         </div>
       </template>
     </UDrawer>

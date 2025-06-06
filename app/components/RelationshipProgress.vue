@@ -33,7 +33,7 @@ const strokeDashoffset = computed(() => {
         stroke="currentColor"
         stroke-width="4"
         fill="none"
-        class="text-gray-700"
+        class="text-dimmed"
       />
       <!-- Progress circle -->
       <circle
