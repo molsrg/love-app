@@ -53,7 +53,7 @@ const strokeDashoffset = computed(() => {
     <!-- Center text -->
     <div class="absolute inset-0 flex flex-col items-center justify-center">
       <template v-if="isCompleted">
-        <UIcon name="i-heroicons-check-circle" class="text-2xl text-success " />
+        <UIcon name="i-heroicons-check-circle" class="size-7 text-primary" />
         <span class="text-xs text-gray-400">{{ targetDays }} дней</span>
       </template>
       <template v-else>
