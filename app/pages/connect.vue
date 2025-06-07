@@ -30,8 +30,9 @@ interface CarouselItem {
     }
   }
 }
-
-const qrUrl = 'https://loveapp.com/pair/unique-user-id'
+const config = useRuntimeConfig()
+const tgUserStore = useTgWebAppStore().initDataUnsafe.user
+const qrUrl = `https://t.me/${config.public.botUrl}?startapp=${tgUserStore.id}`
 const isQrOpen = ref(false)
 const { $isMobile } = useNuxtApp()
 const qrScannerInstance = useQrScanner()
@@ -57,7 +58,7 @@ onUnmounted(() => {
 const carouselItems: CarouselItem[] = [
   {
     title: 'Привет,',
-    subtitle: 'Sergey',
+    subtitle: tgUserStore.first_name,
     badge: 'И ещё многое другое ждёт тебя в LoveApp',
     main: 'Мы рады представить тебе новое приложение для отслеживания <b>ваших</b> отношений',
     features: [
@@ -90,6 +91,7 @@ const carouselItems: CarouselItem[] = [
 
 <template>
   <div>
+    {{ qrUrl }}
     <div class="relative" style="height: 75vh;">
       <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center w-full">
         <UCarousel v-slot="{ item }" dots :items="carouselItems" class="w-full">

@@ -20,6 +20,7 @@ export default defineNuxtConfig({
       apiUrl: '',
       botToken: '',
       initUrl: '',
+      botUrl: '',
       chatId: '',
       devServerHost: '',
       devServerPort: 5000,

@@ -38,18 +38,18 @@ export const useTgWebAppStore = defineStore('tgWebAppStore', {
 
     async setInitData() {
       const appConfig = useAppConfig()
-
       appConfig.ui.colors.primary = await useCloudStorage().getItem('theme') || 'rose'
-      // const initData = useMiniApp().initData
-      // const initDataUnsafe = useMiniApp().initDataUnsafe.user
-      //
-      // if (initData !== 'user') {
-      //   await useCloudStorage().setItem('initData', initData)
-      //   await useCloudStorage().setItem('initDataUnsafe', JSON.stringify(initDataUnsafe))
-      // }
-      //
-      // this.initDataUnsafe = initDataUnsafe === null ? JSON.parse(await useCloudStorage().getItem('initDataUnsafe')) : initDataUnsafe
-      // this.initData = initData === 'user' ? await useCloudStorage().getItem('initData') : initData
+
+      const initData = useMiniApp().initData
+      const initDataUnsafe = useMiniApp().initDataUnsafe
+
+      if (initData !== 'user') {
+        await useCloudStorage().setItem('initData', initData)
+        await useCloudStorage().setItem('initDataUnsafe', JSON.stringify(initDataUnsafe))
+      }
+
+      this.initDataUnsafe = initDataUnsafe === null ? JSON.parse(await useCloudStorage().getItem('initDataUnsafe')) : initDataUnsafe
+      this.initData = initData === 'user' ? await useCloudStorage().getItem('initData') : initData
 
       // const { $api } = useNuxtApp()
       // const { accessToken, isRegistered } = await $api.post(endpoints.auth.session, {
