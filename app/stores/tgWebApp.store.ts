@@ -57,19 +57,22 @@ export const useTgWebAppStore = defineStore('tgWebAppStore', {
       this.initDataUnsafe = initDataUnsafe === null ? JSON.parse(await useCloudStorage().getItem('initDataUnsafe')) : initDataUnsafe
       this.initData = initData === 'user' ? await useCloudStorage().getItem('initData') : initData
 
+      console.log('initData = ', this.initData)
+      console.log('initDataUnsafe = ', this.initDataUnsafe)
+
       // Отправляем initData на сервер
-      const api = useApi()
-      const { accessToken, isRegistered, user } = await api.post<{
-        accessToken: string
-        isRegistered: boolean
-        user: {
-          id: number
-          name: string
-          avatar: string
-        }
-      }>('/auth/session', {
-        queryString: this.initData,
-      })
+      // const api = useApi()
+      // const { accessToken, isRegistered, user } = await api.post<{
+      //   accessToken: string
+      //   isRegistered: boolean
+      //   user: {
+      //     id: number
+      //     name: string
+      //     avatar: string
+      //   }
+      // }>('/auth/session', {
+      //   queryString: this.initData,
+      // })
 
       console.log(accessToken, isRegistered, user)
 
