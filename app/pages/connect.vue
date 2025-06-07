@@ -91,7 +91,6 @@ const carouselItems: CarouselItem[] = [
 
 <template>
   <div>
-    {{ qrUrl }}
     <div class="relative" style="height: 75vh;">
       <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center w-full">
         <UCarousel v-slot="{ item }" dots :items="carouselItems" class="w-full">

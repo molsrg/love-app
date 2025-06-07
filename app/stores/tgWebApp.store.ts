@@ -1,6 +1,9 @@
 import { CalendarDate } from '@internationalized/date'
 import { useWebAppTheme } from 'vue-tg'
 import { useCloudStorage, useMiniApp } from 'vue-tg/latest'
+import { useApi } from '~/composables/useApi'
+
+import { useTokenStore } from '~/stores/token.store'
 
 export const useTgWebAppStore = defineStore('tgWebAppStore', {
   state: () => ({
@@ -10,6 +13,9 @@ export const useTgWebAppStore = defineStore('tgWebAppStore', {
 
     registrationDate: new CalendarDate(2024, 11, 1),
     isMobile: false,
+
+    user: null,
+    isRegistered: false,
   }),
 
   actions: {
@@ -51,12 +57,28 @@ export const useTgWebAppStore = defineStore('tgWebAppStore', {
       this.initDataUnsafe = initDataUnsafe === null ? JSON.parse(await useCloudStorage().getItem('initDataUnsafe')) : initDataUnsafe
       this.initData = initData === 'user' ? await useCloudStorage().getItem('initData') : initData
 
-      // const { $api } = useNuxtApp()
-      // const { accessToken, isRegistered } = await $api.post(endpoints.auth.session, {
-      //   queryString: this.initData,
-      // })
-      //
-      // useTokenStore().setToken(accessToken)
+      // Отправляем initData на сервер
+      const api = useApi()
+      const { accessToken, isRegistered, user } = await api.post<{
+        accessToken: string
+        isRegistered: boolean
+        user: {
+          id: number
+          name: string
+          avatar: string
+        }
+      }>('/auth/session', {
+        queryString: this.initData,
+      })
+
+      console.log(accessToken, isRegistered, user)
+
+      // Сохраняем токен
+      useTokenStore().setToken(accessToken)
+
+      // Сохраняем информацию о пользователе
+      this.user = user
+      this.isRegistered = isRegistered
     },
   },
 })
