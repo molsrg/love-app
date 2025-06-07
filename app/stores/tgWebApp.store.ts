@@ -74,14 +74,14 @@ export const useTgWebAppStore = defineStore('tgWebAppStore', {
       //   queryString: this.initData,
       // })
 
-      console.log(accessToken, isRegistered, user)
+      // console.log(accessToken, isRegistered, user)
 
       // Сохраняем токен
-      useTokenStore().setToken(accessToken)
+      // useTokenStore().setToken(accessToken)
 
       // Сохраняем информацию о пользователе
-      this.user = user
-      this.isRegistered = isRegistered
+      // this.user = user
+      // this.isRegistered = isRegistered
     },
   },
 })
