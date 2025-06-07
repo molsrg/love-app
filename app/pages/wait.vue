@@ -1,7 +1,7 @@
 <script setup lang="ts">
-definePageMeta({
-  layout: 'unauthorized',
-})
+// definePageMeta({
+//   layout: 'unauthorized',
+// })
 
 const { start, stop } = usePolling()
 
