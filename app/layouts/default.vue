@@ -65,7 +65,7 @@ const active = computed<string>({
       v-model="active"
       :content="false"
       size="xl"
-      class="fixed w-full px-4 z-50" :class="[$isMobile ? 'bottom-5' : 'bottom-1']"
+      class="fixed w-full px-3.5 z-50" :class="[$isMobile ? 'bottom-5' : 'bottom-1']"
       :items="items"
     />
   </div>

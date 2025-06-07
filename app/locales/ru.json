@@ -1,12 +1,32 @@
 {
   "settings": {
     "title": "Настройки",
+    "sections": {
+      "profile": "Профиль",
+      "pair": "Пара"
+    },
     "profile": {
       "name": "Ваше имя",
       "namePlaceholder": "Введите ваше имя",
       "avatar": "Аватар",
       "changeAvatar": "Изменить",
-      "theme": "Тема"
+      "theme": "Тема",
+      "language": "Язык приложения",
+      "themes": {
+        "rose": "Розовый",
+        "emerald": "Зелёный",
+        "blue": "Голубой",
+        "amber": "Жёлтый",
+        "indigo": "Индиго"
+      },
+      "languages": {
+        "ru": "Русский",
+        "en": "English"
+      },
+      "nameUpdated": {
+        "title": "Имя обновлено",
+        "description": "Ваше имя было успешно обновлено"
+      }
     },
     "partner": {
       "name": "Имя партнера",
@@ -14,7 +34,11 @@
       "startDate": "Дата начала отношений",
       "transferHost": "Передать права хоста",
       "hostDescription": "Хост может менять дату начала отношений",
-      "breakUp": "Разорвать пару"
+      "breakUp": "Разорвать пару",
+      "confirmations": {
+        "transferHost": "Вы уверены, что хотите передать права хоста вашему партнеру?",
+        "breakup": "Вы уверены, что хотите разорвать пару?"
+      }
     }
   },
   "calendar": {

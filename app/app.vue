@@ -1,20 +1,16 @@
 <script lang="ts" setup>
 import { useViewport } from 'vue-tg'
-import { LoadingIndicator } from '~/components/nuxt'
-import { SAFE_AREA_MULTIPLIER } from '~/types/app'
 
 const { $initApp } = useNuxtApp()
+const { contentSafeAreaInset } = useViewport()
+const app = useAppConfig()
 
 onMounted(async (): Promise<void> => {
-  await useLocaleStore().init()
   await $initApp()
 })
 
-const app = useAppConfig()
-const { contentSafeAreaInset } = useViewport()
-
 const marginTopCalculate = computed<string>(() =>
-  `${contentSafeAreaInset.value.top * SAFE_AREA_MULTIPLIER}px`,
+  `${contentSafeAreaInset.value.top * 2}px`,
 )
 </script>
 

@@ -1,10 +1,14 @@
 <script lang="ts" setup>
 import type { CalendarDate, DateValue } from '@internationalized/date'
+
 import type { Profile, Theme } from '~/types/settings'
 import { parseDate } from '@internationalized/date'
+import { useI18n } from 'vue-i18n'
 import { useCloudStorage } from 'vue-tg/latest'
+
 import { SETTINGS_SECTIONS, THEMES } from '~/config/settings'
 
+const { t } = useI18n()
 const { telegramSelectionChanged, telegramNotificationOccurred } = useHapticFeedback()
 const appConfig = useAppConfig()
 const toast = useToast()
@@ -32,7 +36,7 @@ async function changeTheme(theme: Theme): Promise<void> {
 }
 
 const activeThemeName = computed(() =>
-  THEMES.find((theme: Theme) => theme.value === activeTheme.value)?.name || 'Выбрать тему',
+  THEMES.find((theme: Theme) => theme.value === activeTheme.value)?.name || 'settings.profile.selectTheme',
 )
 
 const isCalendarPopoverOpen = ref(false)
@@ -42,8 +46,8 @@ const isHostTransferEnabled = ref(false)
 
 function handleHostTransfer() {
   if (isHostTransferEnabled.value) {
-    if (confirm('Вы уверены, что хотите передать права партнёру?')) {
-      console.log('Host transferred')
+    if (confirm(t('settings.partner.confirmations.transferHost'))) {
+      console.warn('Host transferred')
       // TODO: Здесь будет логика передачи прав хоста
     }
     else {
@@ -75,8 +79,8 @@ function handleAvatarChange(event: Event) {
 
 function handleBreakUp() {
   telegramSelectionChanged()
-  if (confirm('Вы уверены, что хотите разорвать пару?')) {
-    console.log('Breaking up the pair')
+  if (confirm(t('settings.partner.confirmations.breakUp'))) {
+    console.warn('Breaking up the pair')
     // TODO: Здесь будет логика разрыва пары
   }
 }
@@ -99,8 +103,8 @@ const debouncedUpdateName = useDebounce((name: string) => {
 function updateNameOnBackend(newName: string) {
   telegramNotificationOccurred('success')
   toast.add({
-    title: `Имя обновлено! ${newName}`,
-    description: 'Ваше имя успешно изменено.',
+    title: t('settings.profile.nameUpdated.title', { name: newName }),
+    description: t('settings.profile.nameUpdated.description'),
     color: 'success',
   })
 }
@@ -110,6 +114,8 @@ watch(() => userProfile.value.name, (newName, oldName) => {
     debouncedUpdateName(newName)
   }
 })
+
+const { currentLocale, setLanguage, languages } = useLanguage()
 </script>
 
 <template>
@@ -122,7 +128,7 @@ watch(() => userProfile.value.name, (newName, oldName) => {
         <div class="flex items-center gap-2">
           <UIcon :name="SETTINGS_SECTIONS.profile.icon" class="text-primary size-6" />
           <h2 class="text-lg font-semibold text-white">
-            {{ SETTINGS_SECTIONS.profile.title }}
+            {{ $t(SETTINGS_SECTIONS.profile.title) }}
           </h2>
         </div>
       </template>
@@ -164,7 +170,7 @@ watch(() => userProfile.value.name, (newName, oldName) => {
 
           <UPopover v-model:open="isThemePopoverOpen" arrow>
             <UButton class="w-full h-[36px]" color="neutral" icon="i-lucide-palette" variant="subtle">
-              {{ activeThemeName }}
+              {{ $t(activeThemeName) }}
             </UButton>
 
             <template #content>
@@ -174,7 +180,7 @@ watch(() => userProfile.value.name, (newName, oldName) => {
                     v-for="theme in THEMES"
                     :key="theme.value"
                     :class="{ 'ring-1 ring-primary': activeTheme === theme.value }"
-                    :label="theme.name"
+                    :label="$t(theme.name)"
                     class="text-center"
                     color="neutral"
                     variant="subtle"
@@ -189,6 +195,27 @@ watch(() => userProfile.value.name, (newName, oldName) => {
             </template>
           </UPopover>
         </div>
+        <div>
+          <label class="text-sm text-gray-400 mb-1 block">{{ $t('settings.profile.language') }}</label>
+
+          <USelect
+            v-model="currentLocale"
+            :ui="{
+              trailingIcon: 'group-data-[state=open]:rotate-180 transition-transform duration-200',
+            }"
+            icon="i-famicons-language"
+            variant="subtle"
+            :content="{
+              align: 'center',
+              side: 'bottom',
+              sideOffset: 2,
+            }"
+            arrow
+            :items="languages"
+            class="w-full"
+            @update:model-value="setLanguage"
+          />
+        </div>
       </div>
     </UCard>
     <UCard class="animate-slide-up opacity-0 translate-y-5" style="animation-delay: 0.4s" variant="subtle">
@@ -196,7 +223,7 @@ watch(() => userProfile.value.name, (newName, oldName) => {
         <div class="flex items-center gap-2">
           <UIcon :name="SETTINGS_SECTIONS.pair.icon" class="text-primary size-6" />
           <h2 class="text-lg font-semibold text-white">
-            {{ SETTINGS_SECTIONS.pair.title }}
+            {{ $t(SETTINGS_SECTIONS.pair.title) }}
           </h2>
         </div>
       </template>

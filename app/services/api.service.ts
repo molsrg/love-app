@@ -14,7 +14,7 @@ class ApiService {
     })
 
     this.client.interceptors.request.use((config: AxiosRequestConfig) => {
-      config.headers['X-Locale-Language'] = useLocaleStore().locale
+      // config.headers['X-Locale-Language'] = useLocaleStore().locale
       if (useTokenStore().getStatus) {
         config.headers.Authorization = `Bearer ${useTokenStore().getToken}`
       }

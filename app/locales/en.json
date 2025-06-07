@@ -1,12 +1,32 @@
 {
   "settings": {
     "title": "Settings",
+    "sections": {
+      "profile": "Profile",
+      "pair": "Pair"
+    },
     "profile": {
       "name": "Your name",
       "namePlaceholder": "Enter your name",
       "avatar": "Avatar",
       "changeAvatar": "Change",
-      "theme": "Theme"
+      "theme": "Theme",
+      "language": "App language",
+      "themes": {
+        "rose": "Rose",
+        "emerald": "Emerald",
+        "blue": "Blue",
+        "amber": "Amber",
+        "indigo": "Indigo"
+      },
+      "languages": {
+        "ru": "Русский",
+        "en": "English"
+      },
+      "nameUpdated": {
+        "title": "Name updated",
+        "description": "Your name has been successfully updated"
+      }
     },
     "partner": {
       "name": "Partner's name",
@@ -14,7 +34,11 @@
       "startDate": "Relationship start date",
       "transferHost": "Transfer host rights",
       "hostDescription": "Host can change the relationship start date",
-      "breakUp": "Break up"
+      "breakUp": "Break up",
+      "confirmations": {
+        "transferHost": "Are you sure you want to transfer host rights to your partner?",
+        "breakup": "Are you sure you want to break up?"
+      }
     }
   },
   "calendar": {

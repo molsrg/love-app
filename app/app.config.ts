@@ -25,7 +25,7 @@ export default defineAppConfig({
     },
     modal: {
       slots: {
-        content: 'top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] max-w-[95%] h-auto  rounded-[calc(var(--ui-radius)*2)] shadow-lg ring ring-(--ui-border)',
+        // content: 'top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] max-w-[95%] h-auto  rounded-[calc(var(--ui-radius)*2)] shadow-lg ring ring-(--ui-border)',
         footer: 'justify-end',
       },
     },

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { Config, Stat, TimeLeft } from '~/types/stats'
 import { computed, onMounted, ref } from 'vue'
-import RelationshipProgress from '~/components/RelationshipProgress.vue'
+import RelationshipProgress from '~/components/progress/RelationshipProgress.vue'
 import { getDaysTogether, getTimeLeft } from '~/helpers/stats'
 import { usePairStore } from '~/stores/pair.store'
 
