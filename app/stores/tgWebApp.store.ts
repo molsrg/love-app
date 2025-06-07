@@ -16,6 +16,8 @@ export const useTgWebAppStore = defineStore('tgWebAppStore', {
 
     user: null,
     isRegistered: false,
+
+    userInPair: false,
   }),
 
   actions: {
@@ -44,6 +46,7 @@ export const useTgWebAppStore = defineStore('tgWebAppStore', {
 
     async setInitData() {
       const appConfig = useAppConfig()
+      const api = useApi()
       appConfig.ui.colors.primary = await useCloudStorage().getItem('theme') || 'rose'
 
       const initData = useMiniApp().initData
@@ -60,24 +63,15 @@ export const useTgWebAppStore = defineStore('tgWebAppStore', {
       console.log('initData = ', this.initData)
       console.log('initDataUnsafe = ', this.initDataUnsafe)
 
-      // Отправляем initData на сервер
-      // const api = useApi()
-      // const { accessToken, isRegistered, user } = await api.post<{
-      //   accessToken: string
-      //   isRegistered: boolean
-      //   user: {
-      //     id: number
-      //     name: string
-      //     avatar: string
-      //   }
-      // }>('/auth/session', {
-      //   queryString: this.initData,
-      // })
+      const { accessToken, isRegistration } = await api.post<{ accessToken: string, isRegistration: boolean }>('/auth/init', {
+        queryString: this.initData,
+      })
 
-      // console.log(accessToken, isRegistered, user)
+      console.log('isRegistration => ', isRegistration)
 
-      // Сохраняем токен
-      // useTokenStore().setToken(accessToken)
+      useTokenStore().setToken(accessToken)
+
+      this.userInPair = isRegistration
 
       // Сохраняем информацию о пользователе
       // this.user = user

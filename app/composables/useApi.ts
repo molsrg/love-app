@@ -28,7 +28,12 @@ export function useApi() {
     },
   }
 
-  const handleResponse = <T>(response: ApiResponse<T>, options: ApiOptions) => {
+  const handleResponse = <T>(response: ApiResponse<T> | T, options: ApiOptions) => {
+    // If response is already the data (not wrapped in ApiResponse)
+    if (!('data' in response)) {
+      return response
+    }
+
     if (options.showSuccessToast && response.message) {
       toast.add({
         color: 'success',
@@ -66,7 +71,7 @@ export function useApi() {
     }
 
     try {
-      const response = await $fetch<ApiResponse<T>>(`${config.public.apiUrl}${url}`, mergedOptions)
+      const response = await $fetch<ApiResponse<T>>(`${config.public.baseBackendUrl}${url}`, mergedOptions)
       return handleResponse(response, mergedOptions)
     }
     catch (error: any) {

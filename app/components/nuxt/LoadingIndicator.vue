@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { PropType } from 'vue'
+
 const props = defineProps({
   throttle: {
     type: Number,
@@ -21,7 +23,7 @@ const props = defineProps({
     default: 'repeating-linear-gradient(to right,#f87171 0%,#ef4444 100%)',
   },
   estimatedProgress: {
-    type: Function,
+    type: Function as PropType<(duration: number, elapsed: number) => number>,
     required: false,
   },
   style: {

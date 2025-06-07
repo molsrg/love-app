@@ -1,16 +1,11 @@
-export default defineNuxtRouteMiddleware((to) => {
-  // Check if it's the first launch only when navigating to the root path
+export default defineNuxtRouteMiddleware(async (to) => {
   if (to.path === '/') {
-    // Ensure localStorage is available (client-side)
-    if (typeof window !== 'undefined') {
-      const isFirstLaunch = localStorage.getItem('isFirstLaunch')
+    const tgWebAppStore = useTgWebAppStore()
+    console.log(tgWebAppStore.userInPair)
 
-      if (!isFirstLaunch || isFirstLaunch === 'true') {
-        // Mark as not the first launch
-        localStorage.setItem('isFirstLaunch', 'false')
-        // Redirect to connect page
-        return navigateTo('/connect')
-      }
+    // If user is not in pair, redirect to connect page
+    if (!tgWebAppStore.userInPair) {
+      return navigateTo('/connect')
     }
   }
   // Otherwise, allow navigation
