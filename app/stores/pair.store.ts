@@ -8,7 +8,7 @@ export interface PairUser {
 
 export interface PairStats {
   tasks: number
-  challenges: number
+  challenges: number | null
 }
 
 export interface PairState {
@@ -35,8 +35,8 @@ export const usePairStore = defineStore('pair', {
     isHost: true,
     startDate: new Date('2025-05-05'),
     stats: {
-      tasks: 24,
-      challenges: 156,
+      tasks: 0,
+      challenges: null,
     },
     photos: [
       'https://images.wallpaperscraft.ru/image/single/chelovek_gory_ozero_134771_1080x1920.jpg',

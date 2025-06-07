@@ -71,7 +71,7 @@ const stats = computed<Stat[]>(() => [
             stat.label === config.stats.days ? 'text-primary' : 'text-white',
           ]"
         >
-          {{ stat.value }}
+          {{ stat.value === null || stat.value === 0 ? '—' : stat.value }}
         </h3>
         <p :class="`text-sm text-${stat.color} text-center`">
           {{ stat.label.split(' ')[0] }}<br>{{ stat.label.split(' ').slice(1).join(' ') }}
