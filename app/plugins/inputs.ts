@@ -45,7 +45,7 @@ export default defineNuxtPlugin(() => {
 
   document.addEventListener('touchstart', closeKeyboard)
   document.addEventListener('mousedown', closeKeyboard)
-  document.addEventListener('focus', preventScroll, true) // true для capture phase
+  document.addEventListener('focus', preventScroll, true)
 
   onUnmounted(() => {
     document.removeEventListener('touchstart', closeKeyboard)

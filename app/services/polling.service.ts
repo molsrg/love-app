@@ -25,7 +25,7 @@ class PollingService {
       this.callback?.(data)
     }
     catch (e) {
-      // Можно обработать ошибку или проигнорировать
+      console.warn(e)
     }
     if (this.isActive) {
       this.timer = setTimeout(() => this.poll(), this.interval)

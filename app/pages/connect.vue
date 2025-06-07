@@ -41,7 +41,7 @@ function openQrScanner(): void {
 }
 
 function handleQrScan(eventData: { data: string }) {
-  // console.warn('QR scanned:', eventData.data)
+  console.warn('QR scanned:', eventData.data)
   qrScannerInstance?.close?.()
   navigateTo('/wait')
 }
