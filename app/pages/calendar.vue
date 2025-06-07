@@ -35,8 +35,6 @@ async function openPhotoModal(day: any) {
     })
   }
 }
-
-
 </script>
 
 <template>

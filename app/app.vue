@@ -33,7 +33,6 @@ const marginTopCalculate = computed<string>(() =>
   </UApp>
 </template>
 
-
 <style>
 .page-enter-active,
 .page-leave-active {

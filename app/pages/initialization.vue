@@ -4,11 +4,10 @@
 // })
 
 import type { DateValue } from '@internationalized/date'
-import { createDateFormatter, formatCalendarDate } from '~/helpers/date.helper'
-import { THEMES } from '~/config/settings'
 import type { Theme } from '~/types/settings'
 import { useStorage } from '@vueuse/core'
 import { useI18n } from 'vue-i18n'
+import { THEMES } from '~/config/settings'
 
 const items = [
   {
@@ -50,9 +49,7 @@ async function handleSubmit() {
       language: locale.value,
     })
 
-
-    console.log(selectedDate.value,  activeTheme.value, locale.value);
-    
+    console.warn(selectedDate.value, activeTheme.value, locale.value)
 
     await storage.value
 
@@ -68,7 +65,7 @@ async function handleSubmit() {
   catch (error) {
     toast.add({
       title: 'Ошибка',
-      description: 'Не удалось сохранить настройки',
+      description: error,
       color: 'error',
     })
   }
@@ -147,7 +144,7 @@ function onSelect(index: number) {
                 v-model="locale"
                 :items="[
                   { label: 'Русский', value: 'ru' },
-                  { label: 'English', value: 'en' }
+                  { label: 'English', value: 'en' },
                 ]"
                 size="lg"
                 class="w-full"

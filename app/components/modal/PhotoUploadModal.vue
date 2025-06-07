@@ -34,7 +34,7 @@ function handleAvatarChange(event: Event) {
               :src="selectedImage"
               alt="Выбранное фото"
               class="w-full h-full object-cover rounded-lg"
-            />
+            >
           </div>
           <UButton
             class="mx-auto"
@@ -64,17 +64,17 @@ function handleAvatarChange(event: Event) {
           accept="image/*"
           class="hidden"
           @change="handleAvatarChange"
-        />
+        >
       </div>
     </template>
 
     <template #footer>
       <div class="flex gap-2">
         <UButton color="neutral" label="Отмена" @click="emit('close', false)" />
-        <UButton 
-          label="Сохранить" 
+        <UButton
+          label="Сохранить"
           :disabled="!selectedImage"
-          @click="emit('close', true)" 
+          @click="emit('close', true)"
         />
       </div>
     </template>

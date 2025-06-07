@@ -9,10 +9,7 @@ backButton?.onClick(() => {
 </script>
 
 <template>
-    <div>
-        <h1>Activity</h1>
-    </div>
+  <div>
+    <h1>Activity</h1>
+  </div>
 </template>
-
-
-

@@ -16,7 +16,7 @@
       "hostDescription": "Host can change the relationship start date",
       "breakUp": "Break up"
     }
-  }, 
+  },
   "calendar": {
     "day": {
       "Mon": "Mon",
@@ -42,4 +42,4 @@
       "December": "December"
     }
   }
-} 
+}

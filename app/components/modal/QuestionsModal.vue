@@ -1,7 +1,7 @@
 <script setup lang="ts">
-const props = defineProps<{ 
+const props = defineProps<{
   questionId: number
-  questionText: string 
+  questionText: string
   questionsStatus: string
 }>()
 const emit = defineEmits<{ close: [boolean] }>()
@@ -17,11 +17,11 @@ function handleSubmit() {
 
 <template>
   <USlideover
-  
+
     :close="{ onClick: () => emit('close', false) }"
     :title="questionText"
     :ui="{
-      content: ' top-[calc(var(--tg-safe-area-inset-top,0px)+var(--tg-content-safe-area-inset-top))] '
+      content: ' top-[calc(var(--tg-safe-area-inset-top,0px)+var(--tg-content-safe-area-inset-top))] ',
     }"
   >
     <template #body>
@@ -61,8 +61,8 @@ function handleSubmit() {
               <span>Ваш ответ</span>
             </div>
             <UTextarea
-              disabled
               v-model="myAnswer"
+              disabled
               :rows="4"
               class="w-full"
             />
@@ -75,8 +75,8 @@ function handleSubmit() {
               <span>Ответ партнера</span>
             </div>
             <UTextarea
-              disabled
               v-model="partnerAnswer"
+              disabled
               :rows="4"
               class="w-full"
             />
@@ -88,11 +88,11 @@ function handleSubmit() {
     <template #footer>
       <div class="flex gap-2">
         <UButton color="neutral" variant="subtle" label="Закрыть" @click="emit('close', false)" />
-        <UButton 
+        <UButton
           v-if="questionsStatus === 'new' || questionsStatus === 'in-progress'"
-          label="Отправить" 
+          label="Отправить"
           :disabled="!myAnswer"
-          @click="handleSubmit" 
+          @click="handleSubmit"
         />
       </div>
     </template>

@@ -1,6 +1,5 @@
 import { navigateTo } from '#app'
 import { useWebAppTheme } from 'vue-tg'
-import { useCloudStorage } from 'vue-tg/latest'
 
 declare global {
   interface Window {
@@ -36,7 +35,6 @@ export default defineNuxtPlugin(async () => {
       isMobile.value = true
     }
 
-
     window.Telegram.WebApp.disableVerticalSwipes()
     window.Telegram.WebApp.SettingsButton.show()
     window.Telegram.WebApp.SettingsButton.onClick(() =>
@@ -50,11 +48,10 @@ export default defineNuxtPlugin(async () => {
     }
   }
 
-
   return {
     provide: {
       initApp: init,
-      isMobile: isMobile,
+      isMobile,
     },
   }
 })

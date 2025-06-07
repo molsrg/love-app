@@ -1,4 +1,5 @@
-import { CalendarDate, DateFormatter, getLocalTimeZone } from '@internationalized/date'
+import type { CalendarDate } from '@internationalized/date'
+import { DateFormatter, getLocalTimeZone } from '@internationalized/date'
 
 export function createDateFormatter(locale: string = 'en-US'): DateFormatter {
   return new DateFormatter(locale, {

@@ -36,13 +36,13 @@ onMounted(() => {
   }, 1000)
 })
 
+const timeLeft = computed<TimeLeft>(() => getTimeLeft(now.value, pair.startDate))
 const daysTogether = computed<number>(() => getDaysTogether(now.value, pair.startDate))
 const stats = computed<Stat[]>(() => [
   { label: config.stats.tasks, value: pair.stats.tasks, color: 'muted' },
   { label: config.stats.days, value: daysTogether.value, color: 'toned' },
   { label: config.stats.challenges, value: pair.stats.challenges, color: 'muted' },
 ])
-const timeLeft = computed<TimeLeft>(() => getTimeLeft(now.value, pair.startDate))
 </script>
 
 <template>
@@ -54,9 +54,9 @@ const timeLeft = computed<TimeLeft>(() => getTimeLeft(now.value, pair.startDate)
       </UAvatarGroup>
     </div>
 
-    <h2 class="text-3xl font-bold text-white text-center animate-fade-in">
+    <h2 class="text-3xl font-bold text-primary text-center animate-fade-in">
       {{ pair.user1.name }} и
-      <span class="text-primary">{{ pair.user2.name }}</span>
+      <span class="text-white">{{ pair.user2.name }}</span>
     </h2>
 
     <!-- Статистика -->

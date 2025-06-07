@@ -45,7 +45,8 @@ function handleHostTransfer() {
     if (confirm('Вы уверены, что хотите передать права партнёру?')) {
       console.log('Host transferred')
       // TODO: Здесь будет логика передачи прав хоста
-    } else {
+    }
+    else {
       isHostTransferEnabled.value = false
     }
   }
@@ -88,8 +89,7 @@ function handleDateChange(date: CalendarDate) {
   telegramSelectionChanged()
   isCalendarPopoverOpen.value = false
 
-  console.log('new date - ', date );
-  
+  console.log('new date - ', date)
 }
 
 const debouncedUpdateName = useDebounce((name: string) => {
