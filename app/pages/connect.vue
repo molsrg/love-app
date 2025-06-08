@@ -1,6 +1,12 @@
 <script setup lang="ts">
+import type { DateValue } from '@internationalized/date'
+import type { Theme } from '~/types/settings'
+
+import { useStorage } from '@vueuse/core'
 import QrcodeVue from 'qrcode.vue'
+import { useI18n } from 'vue-i18n'
 import { useQrScanner } from 'vue-tg'
+import { THEMES } from '~/config/settings'
 
 definePageMeta({
   layout: 'unauthorized',
@@ -32,7 +38,8 @@ interface CarouselItem {
 }
 const config = useRuntimeConfig()
 const tgUserStore = useTgWebAppStore().initDataUnsafe.user
-const qrUrl = `https://t.me/${config.public.botUrl}?startapp=${tgUserStore.id}`
+const selectedDate = ref<DateValue | null>(null)
+const qrUrl = computed(() => `https://t.me/${config.public.botUrl}?startapp=${tgUserStore.id}_${selectedDate.value}`)
 const isQrOpen = ref(false)
 const { $isMobile } = useNuxtApp()
 const qrScannerInstance = useQrScanner()
@@ -87,6 +94,39 @@ const carouselItems: CarouselItem[] = [
     },
   },
 ]
+const { telegramSelectionChanged, telegramNotificationOccurred } = useHapticFeedback()
+const items = [
+  {
+    title: 'Выбери дату начала отношений',
+  },
+  {
+    title: 'Твой готовый QR-код',
+  },
+]
+
+const carousel = useTemplateRef('carousel')
+const activeIndex = ref(0)
+
+function handleDateChange(date: any) {
+  if (!date || typeof date !== 'object' || 'start' in date || Array.isArray(date))
+    return
+  selectedDate.value = date
+  telegramSelectionChanged()
+  select(1)
+}
+
+function select(index: number) {
+  activeIndex.value = index
+  carousel.value?.emblaApi?.scrollTo(index)
+}
+
+function onSelect(index: number) {
+  if (index === 1 && !selectedDate.value) {
+    telegramNotificationOccurred('error')
+    return
+  }
+  activeIndex.value = index
+}
 </script>
 
 <template>
@@ -132,7 +172,7 @@ const carouselItems: CarouselItem[] = [
                   @click="item.actions.secondary.action"
                 />
 
-                <UButton
+                <!-- <UButton
                   label="Перейти в ожидание (тест)"
                   size="xl"
                   color="neutral"
@@ -148,7 +188,7 @@ const carouselItems: CarouselItem[] = [
                   variant="subtle"
                   class="w-full justify-center focus:outline-none focus:ring-2 focus:ring-primary"
                   @click="navigateTo('/initialization')"
-                />
+                /> -->
               </div>
 
               <UBadge
@@ -174,42 +214,48 @@ const carouselItems: CarouselItem[] = [
 
     <UDrawer v-model:open="isQrOpen">
       <template #content>
-        <div class="flex flex-col items-center p-6 space-y-4">
-          <QrcodeVue :value="qrUrl" :size="200" />
+        <div class="flex flex-col items-center px-6 py-3 space-y-4">
+          <UCarousel
+            ref="carousel"
+            v-slot="{ item }"
+
+            :items="items"
+            class="w-full"
+            @select="onSelect"
+          >
+            <!-- body: 'p-2', header: 'p-2' -->
+            <UCard
+              variant="subtle" :ui="{ root: 'rounded-xl h-85' }"
+            >
+              <template #header>
+                <h2 class="text-lg font-semibold text-white text-center">
+                  {{ item.title }}
+                </h2>
+              </template>
+
+              <!-- Первый слайд - выбор даты -->
+              <div v-if="activeIndex === 0" class="space-y-4">
+                <UCalendar
+                  v-model="selectedDate"
+                  :fixed-weeks="false"
+                  class="w-full"
+                  @update:model-value="handleDateChange"
+                />
+              </div>
+
+              <!-- Второй слайд - настройки -->
+              <div v-else class="flex flex-col items-center gap-4">
+                <QrcodeVue :value="qrUrl" :size="200" />
+
+                <div class="flex items-center justify-center gap-2 text-sm text-gray-400">
+                  <UIcon name="i-heroicons-users" class="w-4 h-4" />
+                  <p>Попробуй прямо сейчас! </p>
+                </div>
+              </div>
+            </UCard>
+          </uCarousel>
         </div>
       </template>
     </UDrawer>
   </div>
 </template>
-
-<style>
-.animate-fade-in {
-  animation: fadeIn 1s ease-in;
-}
-
-.animate-slide-up {
-  animation: slideUp 0.8s ease-out;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes float {
-  0% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
-  100% { transform: translateY(0px); }
-}
-</style>

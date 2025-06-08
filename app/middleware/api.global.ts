@@ -1,9 +1,15 @@
 export default defineNuxtRouteMiddleware(async (to) => {
   if (to.path === '/') {
     const tgWebAppStore = useTgWebAppStore()
-    console.log(tgWebAppStore.userInPair)
+    console.warn('userInPair:', tgWebAppStore.userInPair)
+    console.warn('isCreatePair:', tgWebAppStore.isCreatePair)
 
-    // If user is not in pair, redirect to connect page
+    // Если пользователь создает пару, перенаправляем на wait
+    if (tgWebAppStore.isCreatePair) {
+      return navigateTo('/wait')
+    }
+
+    // Если пользователь не в паре, перенаправляем на connect
     if (!tgWebAppStore.userInPair) {
       return navigateTo('/connect')
     }

@@ -47,7 +47,7 @@ export function useApi() {
     if (options.showErrorToast) {
       toast.add({
         color: 'error',
-        title: error.data?.message || 'Unknown error',
+        title: error.data?.message?.[0] || error.data?.message || 'Unknown error',
       })
     }
     throw error

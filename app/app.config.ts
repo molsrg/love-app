@@ -34,6 +34,12 @@ export default defineAppConfig({
         footer: 'justify-end',
       },
     },
+    // card: {
+    //   slots: {
+    //     body: 'p-2',
+
+    //   },
+    // },
   },
 
 })

@@ -17,6 +17,7 @@ export const useTgWebAppStore = defineStore('tgWebAppStore', {
     user: null,
     isRegistered: false,
 
+    isCreatePair: false,
     userInPair: false,
   }),
 
@@ -63,15 +64,27 @@ export const useTgWebAppStore = defineStore('tgWebAppStore', {
       console.log('initData = ', this.initData)
       console.log('initDataUnsafe = ', this.initDataUnsafe)
 
-      const { accessToken, isRegistration } = await api.post<{ accessToken: string, isRegistration: boolean }>('/auth/init', {
+      const { accessToken, isRegistration, isPaired } = await api.post<{ accessToken: string, isRegistration: boolean, isPaired: boolean }>('/auth/init', {
         queryString: this.initData,
       })
 
       console.log('isRegistration => ', isRegistration)
-
       useTokenStore().setToken(accessToken)
 
-      this.userInPair = isRegistration
+      // Если есть start_param, значит пользователь перешел по QR-коду
+      if (this.initDataUnsafe?.start_param) {
+        this.isCreatePair = true
+        navigateTo('/wait')
+
+        // if (partnerId && date) {
+        //   await api.post('/auth/pair', {
+        //     partnerId,
+        //     date: new Date(date).toISOString(),
+        //   })
+        // }
+      }
+
+      this.userInPair = isPaired
 
       // Сохраняем информацию о пользователе
       // this.user = user

@@ -1,9 +1,60 @@
 <script setup lang="ts">
-// definePageMeta({
-//   layout: 'unauthorized',
-// })
+definePageMeta({
+  layout: 'unauthorized',
+})
 
 const { start, stop } = usePolling()
+const tgWebAppStore = useTgWebAppStore()
+const api = useApi()
+
+interface Partner {
+  id: string
+  username: string
+  avatarUrl: string
+}
+
+const partner = ref<Partner | null>(null)
+const isAccepted = ref(false)
+const partnerId = ref<string>('')
+const startDate = ref<string>('')
+
+async function loadPartnerInfo() {
+  if (tgWebAppStore.initDataUnsafe?.start_param) {
+    const [id, date] = tgWebAppStore.initDataUnsafe.start_param.split('_')
+    partnerId.value = id
+    startDate.value = date
+
+    const res = await api.get<Partner>('/auth/user', {
+      query: {
+        telegramId: id,
+      },
+    })
+    partner.value = res
+  }
+}
+
+async function handleAccept() {
+  if (!partnerId.value || !startDate.value)
+    return
+
+  console.warn('User accepted pair creation with:', partner.value)
+  isAccepted.value = true
+
+  try {
+    await api.post('/auth/pair', {
+      partnerId: partner.value.id,
+      date: new Date(startDate.value).toISOString(),
+    })
+  }
+  catch {
+    isAccepted.value = false
+    navigateTo('/connect')
+  }
+}
+
+function handleDecline() {
+  navigateTo('/connect')
+}
 
 function handlePingResponse(data: any) {
   if (data?.ready) {
@@ -13,8 +64,9 @@ function handlePingResponse(data: any) {
 }
 
 const config = useRuntimeConfig()
-onMounted(() => {
-  start(config.public.initUrl, handlePingResponse, 3000)
+onMounted(async () => {
+  await loadPartnerInfo()
+  // start(config.public.initUrl, handlePingResponse, 3000)
 })
 
 onUnmounted(() => {
@@ -24,33 +76,80 @@ onUnmounted(() => {
 
 <template>
   <div class="relative" style="height: 80vh;">
-    <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center w-full">
-      <svg width="120" height="60" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 150">
-        <path
-          fill="none"
-          stroke="#FFFFFF"
-          stroke-width="15"
-          stroke-linecap="round"
-          stroke-dasharray="300 385"
-          stroke-dashoffset="0"
-          d="M275 75c0 31-27 50-50 50-58 0-92-100-150-100-28 0-50 22-50 50s23 50 50 50c58 0 92-100 150-100 24 0 50 19 50 50Z"
-        >
-          <animate
-            attributeName="stroke-dashoffset"
-            calcMode="spline"
-            dur="6.7"
-            values="685;-685"
-            keySplines="0 0 1 1"
-            repeatCount="indefinite"
+    <div v-if="partner && !isAccepted" class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center w-full max-w-sm">
+      <UCard class="w-full" variant="subtle">
+        <div class="flex flex-col items-center gap-6">
+          <UAvatar
+            :src="partner.avatarUrl"
+            :alt="partner.username"
+            size="3xl"
+            class="ring-2 ring-primary"
           />
-        </path>
-      </svg>
-      <h1 class="text-2xl font-bold text-white  text-center mt-4">
-        Почти готово!
-      </h1>
-      <p class="text-lg text-gray-300 text-center p-2">
-        Подождите, пока партнёр завершит настройку
-      </p>
+
+          <div class="text-center">
+            <UBadge color="neutral" variant="outline" size="lg" class="mb-2">
+              Создать пару с
+            </UBadge>
+            <h2 class="text-2xl font-bold text-white">
+              {{ partner.username }}
+            </h2>
+          </div>
+
+          <div class="flex gap-3 w-full">
+            <UButton
+              color="error"
+              variant="soft"
+              class="flex-1"
+              icon="i-heroicons-x-mark"
+              @click="handleDecline"
+            >
+              Отклонить
+            </UButton>
+            <UButton
+              color="success"
+              variant="soft"
+              class="flex-1"
+              icon="i-heroicons-check"
+              @click="handleAccept"
+            >
+              Согласиться
+            </UButton>
+          </div>
+        </div>
+      </UCard>
+    </div>
+
+    <div v-else class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center w-full">
+      <UCard class="w-full max-w-sm" variant="subtle">
+        <div class="flex flex-col items-center">
+          <svg width="120" height="60" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 150">
+            <path
+              fill="none"
+              stroke="white"
+              stroke-width="15"
+              stroke-linecap="round"
+              stroke-dasharray="300 385"
+              stroke-dashoffset="0"
+              d="M275 75c0 31-27 50-50 50-58 0-92-100-150-100-28 0-50 22-50 50s23 50 50 50c58 0 92-100 150-100 24 0 50 19 50 50Z"
+            >
+              <animate
+                attributeName="stroke-dashoffset"
+                calcMode="spline"
+                dur="6.7"
+                values="685;-685"
+                keySplines="0 0 1 1"
+                repeatCount="indefinite"
+              />
+            </path>
+          </svg>
+          <h1 class="text-2xl font-bold text-white text-center mt-4">
+            {{ isAccepted ? 'Почти готово!' : 'Загрузка...' }}
+          </h1>
+          <p v-if="isAccepted" class="text-lg text-gray-300 text-center p-2">
+            Подождите, пока партнёр завершит настройку
+          </p>
+        </div>
+      </UCard>
     </div>
   </div>
 </template>
