@@ -53,10 +53,11 @@ function handleQrScan(eventData: { data: string }) {
 onMounted(() => {
   qrScannerInstance?.onScan?.(handleQrScan)
 })
-// onUnmounted(() => {
-//   qrScannerInstance?.close?.()
-//   // qrScannerInstance?.offScan?.(handleQrScan)
-// })
+
+onUnmounted(() => {
+  qrScannerInstance?.close?.()
+  qrScannerInstance?.offScan?.(handleQrScan)
+})
 
 const carouselItems: CarouselItem[] = [
   {

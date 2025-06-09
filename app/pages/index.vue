@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { Config, Stat, TimeLeft } from '~/types/stats'
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, onUnmounted, ref } from 'vue'
 import RelationshipProgress from '~/components/progress/RelationshipProgress.vue'
 import { getDaysTogether, getTimeLeft } from '~/helpers/stats'
 import { usePairStore } from '~/stores/pair.store'
@@ -8,6 +8,7 @@ import { usePairStore } from '~/stores/pair.store'
 const pair = usePairStore()
 
 const now = ref<Date>(new Date())
+let intervalId: ReturnType<typeof setInterval>
 
 const RELATIONSHIP_GOALS = [
   { days: 30, label: '1 месяц' },
@@ -31,9 +32,15 @@ const config: Config = {
 }
 
 onMounted(() => {
-  setInterval(() => {
+  intervalId = setInterval(() => {
     now.value = new Date()
   }, 1000)
+})
+
+onUnmounted(() => {
+  if (intervalId) {
+    clearInterval(intervalId)
+  }
 })
 
 const timeLeft = computed<TimeLeft>(() => getTimeLeft(now.value, pair.startDate))
