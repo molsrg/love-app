@@ -28,8 +28,10 @@ export const useAppStore = defineStore('appStore', {
     },
 
     async sendSupportTicket(payload: object): Promise<void> {
-      const { $api } = useNuxtApp()
-      await $api.post(endpoints.app.support, { ...payload })
+      // Comment out API request
+      // const { $api } = useNuxtApp()
+      // await $api.post(endpoints.app.support, { ...payload })
+      console.warn('Support ticket would be sent:', payload)
     },
   },
 })

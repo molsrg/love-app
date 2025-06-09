@@ -24,13 +24,17 @@ export function usePolling() {
       return
 
     try {
-      const res = await fetch(url.value)
-      if (!res.ok) {
-        throw new Error(`HTTP error! status: ${res.status}`)
-      }
-      const data = await res.json()
+      // Comment out actual fetch
+      // const res = await fetch(url.value)
+      // if (!res.ok) {
+      //   throw new Error(`HTTP error! status: ${res.status}`)
+      // }
+      // const data = await res.json()
+
+      // Mock data for testing
+      const data = { ready: false }
       callback.value?.(data)
-      errorCount.value = 0 // Reset error count on success
+      errorCount.value = 0
     }
     catch (e) {
       console.warn('Polling error:', e)

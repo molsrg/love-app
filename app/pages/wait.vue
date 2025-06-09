@@ -41,10 +41,11 @@ async function handleAccept() {
   isAccepted.value = true
 
   try {
-    await api.post('/auth/pair', {
-      partnerId: partner.value.id,
-      date: new Date(startDate.value).toISOString(),
-    })
+    // await api.post('/auth/pair', {
+    //   partnerId: partner.value.id,
+    //   date: new Date(startDate.value).toISOString(),
+    // })
+    console.log('pair connect')
   }
   catch {
     isAccepted.value = false
@@ -65,7 +66,7 @@ function handlePingResponse(data: any) {
 
 const config = useRuntimeConfig()
 onMounted(async () => {
-  await loadPartnerInfo()
+  // await loadPartnerInfo()
   // start(config.public.initUrl, handlePingResponse, 3000)
 })
 
