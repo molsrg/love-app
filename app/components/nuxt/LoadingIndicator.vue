@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { PropType } from 'vue'
+import { useLoadingIndicator } from '#imports'
 
 const props = defineProps({
   throttle: {

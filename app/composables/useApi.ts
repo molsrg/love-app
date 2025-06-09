@@ -6,6 +6,7 @@ interface ApiOptions {
   headers?: Record<string, string>
   method?: HttpMethod
   body?: any
+  query?: Record<string, any>
 }
 
 interface ApiResponse<T> {

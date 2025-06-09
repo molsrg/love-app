@@ -3,7 +3,7 @@ definePageMeta({
   layout: 'unauthorized',
 })
 
-const { start, stop } = usePolling()
+const { start: _start, stop } = usePolling()
 const tgWebAppStore = useTgWebAppStore()
 const api = useApi()
 
@@ -21,8 +21,8 @@ const startDate = ref<string>('')
 async function loadPartnerInfo() {
   if (tgWebAppStore.initDataUnsafe?.start_param) {
     const [id, date] = tgWebAppStore.initDataUnsafe.start_param.split('_')
-    partnerId.value = id
-    startDate.value = date
+    partnerId.value = id || ''
+    startDate.value = date || ''
 
     const res = await api.get<Partner>('/auth/user', {
       query: {
@@ -41,13 +41,16 @@ async function handleAccept() {
   isAccepted.value = true
 
   try {
-    // await api.post('/auth/pair', {
-    //   partnerId: partner.value.id,
-    //   date: new Date(startDate.value).toISOString(),
-    // })
-    console.log('pair connect')
+    if (partner.value) {
+      await api.post('/auth/pair', {
+        partnerId: partner.value.id,
+        date: new Date(startDate.value).toISOString(),
+      })
+      console.warn('Pair connected successfully.')
+    }
   }
-  catch {
+  catch (error) {
+    console.error('Error connecting pair:', error)
     isAccepted.value = false
     navigateTo('/connect')
   }
@@ -57,17 +60,17 @@ function handleDecline() {
   navigateTo('/connect')
 }
 
-function handlePingResponse(data: any) {
+function _handlePingResponse(data: any) {
   if (data?.ready) {
     stop()
     navigateTo('/success')
   }
 }
 
-const config = useRuntimeConfig()
+const _config = useRuntimeConfig()
 onMounted(async () => {
-  // await loadPartnerInfo()
-  // start(config.public.initUrl, handlePingResponse, 3000)
+  await loadPartnerInfo()
+  // _start(_config.public.initUrl, _handlePingResponse, 3000)
 })
 
 onUnmounted(() => {
@@ -79,23 +82,32 @@ onUnmounted(() => {
   <div class="relative" style="height: 80vh;">
     <div v-if="partner && !isAccepted" class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center w-full max-w-sm">
       <UCard class="w-full" variant="subtle">
-        <div class="flex flex-col items-center gap-6">
+        <template #header>
+          <h2 class="text-xl font-bold text-white text-center">
+            У вас приглашение
+          </h2>
+        </template>
+
+        <div class="flex flex-col items-center gap-3">
           <UAvatar
             :src="partner.avatarUrl"
             :alt="partner.username"
             size="3xl"
-            class="ring-2 ring-primary"
+            class="ring-2"
           />
 
-          <div class="text-center">
-            <UBadge color="neutral" variant="outline" size="lg" class="mb-2">
-              Создать пару с
-            </UBadge>
+          <div class="text-center space-y-2">
             <h2 class="text-2xl font-bold text-white">
               {{ partner.username }}
             </h2>
-          </div>
 
+            <p class="text-gray-400 text-sm">
+              приглашает вас создать совместную историю в LoveMe
+            </p>
+          </div>
+        </div>
+
+        <template #footer>
           <div class="flex gap-3 w-full">
             <UButton
               color="error"
@@ -116,7 +128,7 @@ onUnmounted(() => {
               Согласиться
             </UButton>
           </div>
-        </div>
+        </template>
       </UCard>
     </div>
 

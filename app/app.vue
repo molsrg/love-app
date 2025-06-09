@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { useViewport } from 'vue-tg'
+import { LoadingIndicator } from '~/components/nuxt'
 
 const { contentSafeAreaInset } = useViewport()
 const app = useAppConfig()

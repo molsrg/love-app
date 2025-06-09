@@ -56,23 +56,31 @@ export const useTgWebAppStore = defineStore('tgWebAppStore', {
       this.initDataUnsafe = initDataUnsafe === null ? JSON.parse(await useCloudStorage().getItem('initDataUnsafe')) : initDataUnsafe
       this.initData = initData === 'user' ? await useCloudStorage().getItem('initData') : initData
 
-      // Comment out API request
-      // const { accessToken, isPaired } = await api.post<{ accessToken: string, isRegistration: boolean, isPaired: boolean }>('/auth/init', {
-      //   queryString: this.initData,
-      // })
+      const api = useApi()
+      const { accessToken, isRegistration: _isRegistration, isPaired } = await api.post<{ accessToken: string, isRegistration: boolean, isPaired: boolean }>('/auth/init', {
+        queryString: this.initData,
+      })
 
-      // Mock data for testing
-      const accessToken = 'mock_token'
-      const isPaired = false
+      this.userInPair = isPaired
 
       useTokenStore().setToken(accessToken)
 
-      if (this.initDataUnsafe?.start_param) {
-        this.isCreatePair = true
-        navigateTo('/wait')
+      // Determine initial navigation based on pairing status and start_param
+      if (this.userInPair) {
+        // If user is already paired, always go to home page
+        // console.warn('User is already paired, navigating to /')
+        // await navigateTo('/')
       }
-
-      this.userInPair = isPaired
+      if (this.initDataUnsafe?.start_param) {
+        // If not paired, but initiating pair via start_param, go to wait
+        // console.warn('start_param detected (not paired), navigating to /wait')
+        this.isCreatePair = true
+        // await navigateTo('/wait')
+      }
+      else {
+        // If not paired and no start_param, middleware will handle /connect or default to /
+        console.warn('User not paired and no start_param. Middleware should handle.')
+      }
     },
   },
 })
