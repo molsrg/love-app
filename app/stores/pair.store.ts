@@ -62,7 +62,16 @@ export const usePairStore = defineStore('pair', {
       this.user2.avatar = partnerUser.avatarUrl
 
       this.isHost = data.isHost
-      this.startDate = new Date(data.startDate)
+      
+      // Convert UTC date to local date, preserving the time as 00:00:00
+      const utcDate = new Date(data.startDate)
+      const localDate = new Date(
+        utcDate.getUTCFullYear(),
+        utcDate.getUTCMonth(),
+        utcDate.getUTCDate(),
+        0, 0, 0, 0
+      )
+      this.startDate = localDate
     },
     startPairPolling(pollInterval: number = 3000) {
       console.warn('Starting pair polling')
