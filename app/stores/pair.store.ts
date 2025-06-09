@@ -1,14 +1,11 @@
 import { defineStore } from 'pinia'
+import { useApi } from '~/composables/useApi'
+import { usePolling } from '~/composables/usePolling'
 
 export interface PairUser {
   id: string
-  name: string
+  username: string
   avatar: string
-}
-
-export interface PairStats {
-  tasks: number
-  challenges: number | null
 }
 
 export interface PairState {
@@ -16,35 +13,66 @@ export interface PairState {
   user2: PairUser
   isHost: boolean
   startDate: Date
-  stats: PairStats
-  photos: string[]
+}
+
+interface PairData {
+  user1: {
+    id: string
+    username: string
+    avatarUrl: string
+  }
+  user2: {
+    id: string
+    username: string
+    avatarUrl: string
+  }
+  isHost: boolean
+  startDate: string
 }
 
 export const usePairStore = defineStore('pair', {
   state: (): PairState => ({
     user1: {
-      id: '1',
-      name: 'Пользователь 1',
-      avatar: 'https://github.com/benjamincanac.png',
+      id: '',
+      username: '',
+      avatar: '',
     },
     user2: {
-      id: '2',
-      name: 'Пользователь 2',
-      avatar: 'https://github.com/romhml.png',
+      id: '',
+      username: '',
+      avatar: '',
     },
-    isHost: true,
-    startDate: new Date('2025-05-05'),
-    stats: {
-      tasks: 0,
-      challenges: null,
-    },
-    photos: [
-      'https://images.wallpaperscraft.ru/image/single/chelovek_gory_ozero_134771_1080x1920.jpg',
-      'https://images.wallpaperscraft.ru/image/single/chelovek_gory_ozero_134771_1080x1920.jpg',
-      'https://images.wallpaperscraft.ru/image/single/chelovek_gory_ozero_134771_1080x1920.jpg',
-      'https://images.wallpaperscraft.ru/image/single/chelovek_gory_ozero_134771_1080x1920.jpg',
-      'https://images.wallpaperscraft.ru/image/single/chelovek_gory_ozero_134771_1080x1920.jpg',
-      'https://images.wallpaperscraft.ru/image/single/chelovek_gory_ozero_134771_1080x1920.jpg',
-    ],
+    isHost: false,
+    startDate: new Date(),
   }),
+  actions: {
+    updatePairData(data: PairData) {
+      this.user1.id = data.user1.id
+      this.user1.username = data.user1.username
+      this.user1.avatar = data.user1.avatarUrl
+
+      this.user2.id = data.user2.id
+      this.user2.username = data.user2.username
+      this.user2.avatar = data.user2.avatarUrl
+
+      this.isHost = data.isHost
+      this.startDate = new Date(data.startDate)
+    },
+    startPairPolling(pollInterval: number = 3000) {
+      console.warn('Starting pair polling')
+
+      const { start, stop: _stop } = usePolling()
+      const _api = useApi()
+
+      const handlePollingResponse = async (data: any) => {
+        this.updatePairData(data)
+      }
+
+      start('/pair', handlePollingResponse, pollInterval)
+    },
+    stopPairPolling() {
+      const { stop } = usePolling()
+      stop()
+    },
+  },
 })

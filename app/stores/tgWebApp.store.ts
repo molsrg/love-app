@@ -3,6 +3,7 @@ import { useCloudStorage, useMiniApp } from 'vue-tg/latest'
 import { useApi } from '~/composables/useApi'
 
 import { useTokenStore } from '~/stores/token.store'
+import { usePairStore } from '~/stores/pair.store'
 
 interface WebAppData {
   platform: string
@@ -31,11 +32,13 @@ export const useTgWebAppStore = defineStore('tgWebAppStore', {
 
     isCreatePair: false,
     userInPair: false,
+    isInitialized: false,
   }),
 
   actions: {
     async init() {
       await this.setInitData()
+      this.isInitialized = true
     },
 
     setWebAppData() {
@@ -65,22 +68,39 @@ export const useTgWebAppStore = defineStore('tgWebAppStore', {
 
       useTokenStore().setToken(accessToken)
 
-      // Determine initial navigation based on pairing status and start_param
-      if (this.userInPair) {
-        // If user is already paired, always go to home page
-        // console.warn('User is already paired, navigating to /')
-        // await navigateTo('/')
+      
+      if(this.userInPair) {
+        usePairStore().startPairPolling()
+        return 
       }
+
       if (this.initDataUnsafe?.start_param) {
-        // If not paired, but initiating pair via start_param, go to wait
-        // console.warn('start_param detected (not paired), navigating to /wait')
-        this.isCreatePair = true
-        // await navigateTo('/wait')
+        // Validate start_param format: ID_YYYY-MM-DD
+        const startParamRegex = /^\d+_\d{4}-\d{2}-\d{2}$/
+        if (startParamRegex.test(this.initDataUnsafe.start_param)) {
+          // Only set isCreatePair if user is NOT already paired
+          if (!this.userInPair) {
+            console.warn('start_param detected and valid (not paired), setting isCreatePair.')
+            this.isCreatePair = true
+          }
+          else {
+            console.warn('start_param detected but user is already paired. Ignoring isCreatePair.')
+            this.isCreatePair = false // Ensure it's false if user is paired
+          }
+        }
+        else {
+          console.warn('Invalid start_param format detected:', this.initDataUnsafe.start_param, 'Expected format: ID_YYYY-MM-DD')
+          this.isCreatePair = false // Ensure it's false if format is invalid
+        }
       }
       else {
-        // If not paired and no start_param, middleware will handle /connect or default to /
-        console.warn('User not paired and no start_param. Middleware should handle.')
+        console.warn('No start_param detected.')
+        this.isCreatePair = false // Ensure isCreatePair is false if no start_param
       }
+
+      console.warn('After start_param check. userInPair:', this.userInPair, 'isCreatePair:', this.isCreatePair)
+
+      // The middleware will now handle navigation based on userInPair and isCreatePair
     },
   },
 })

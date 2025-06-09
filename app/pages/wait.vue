@@ -48,6 +48,10 @@ async function handleAccept() {
       })
       console.warn('Pair connected successfully.')
     }
+    navigateTo('/')
+    useTgWebAppStore().userInPair = true
+    useTgWebAppStore().isCreatePair = false
+    usePairStore().startPairPolling()
   }
   catch (error) {
     console.error('Error connecting pair:', error)
@@ -57,17 +61,11 @@ async function handleAccept() {
 }
 
 function handleDecline() {
+  useTgWebAppStore().isCreatePair = false 
   navigateTo('/connect')
 }
 
-function _handlePingResponse(data: any) {
-  if (data?.ready) {
-    stop()
-    navigateTo('/success')
-  }
-}
 
-const _config = useRuntimeConfig()
 onMounted(async () => {
   await loadPartnerInfo()
   // _start(_config.public.initUrl, _handlePingResponse, 3000)

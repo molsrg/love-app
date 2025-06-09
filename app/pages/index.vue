@@ -45,25 +45,28 @@ onUnmounted(() => {
 
 const timeLeft = computed<TimeLeft>(() => getTimeLeft(now.value, pair.startDate))
 const daysTogether = computed<number>(() => getDaysTogether(now.value, pair.startDate))
-const stats = computed<Stat[]>(() => [
-  { label: config.stats.tasks, value: pair.stats.tasks, color: 'muted' },
-  { label: config.stats.days, value: daysTogether.value, color: 'toned' },
-  { label: config.stats.challenges, value: pair.stats.challenges, color: 'muted' },
-])
+const stats = computed<Stat[]>(() => {
+  const statsArray: Stat[] = [
+    { label: config.stats.tasks, value: 0, color: 'muted' },
+    { label: config.stats.days, value: daysTogether.value, color: 'toned' },
+    { label: config.stats.challenges, value: 0, color: 'muted' },
+  ]
+  return statsArray
+})
 </script>
 
 <template>
   <div class="space-y-3">
     <div class="flex justify-center">
       <UAvatarGroup size="3xl" :ui="{ base: 'size-25 ring-3 -me-3' }" class="animate-fade-in">
-        <UAvatar :src="pair.user1.avatar" :alt="pair.user1.name" />
-        <UAvatar :src="pair.user2.avatar" :alt="pair.user2.name" />
+        <UAvatar :src="pair.user1.avatar" :alt="pair.user1.username" />
+        <UAvatar :src="pair.user2.avatar" :alt="pair.user2.username" />
       </UAvatarGroup>
     </div>
 
     <h2 class="text-3xl font-bold text-primary text-center animate-fade-in">
-      {{ pair.user1.name }} и
-      <span class="text-white">{{ pair.user2.name }}</span>
+      {{ pair.user1.username }} и
+      <span class="text-white">{{ pair.user2.username }}</span>
     </h2>
 
     <!-- Статистика -->

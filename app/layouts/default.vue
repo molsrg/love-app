@@ -10,10 +10,10 @@ interface TabItem extends TabsItem {
 }
 
 const items: TabItem[] = [
-  {
-    icon: 'i-material-symbols:add-link',
-    value: '/connect',
-  },
+  // {
+  //   icon: 'i-material-symbols:add-link',
+  //   value: '/connect',
+  // },
   // {
   //   icon: 'i-material-symbols:indeterminate-question-box-rounded',
   //   value: '/activity',

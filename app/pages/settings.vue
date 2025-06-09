@@ -5,6 +5,7 @@ import type { Profile, Theme } from '~/types/settings'
 import { parseDate } from '@internationalized/date'
 import { useI18n } from 'vue-i18n'
 import { useCloudStorage } from 'vue-tg/latest'
+import { useApi } from '~/composables/useApi'
 
 import { SETTINGS_SECTIONS, THEMES } from '~/config/settings'
 
@@ -12,6 +13,7 @@ const { t } = useI18n()
 const { telegramSelectionChanged, telegramNotificationOccurred } = useHapticFeedback()
 const appConfig = useAppConfig()
 const toast = useToast()
+const api = useApi()
 
 const userProfile = ref<Profile>({
   name: 'Пользователь 1',
@@ -80,8 +82,15 @@ function handleAvatarChange(event: Event) {
 function handleBreakUp() {
   telegramSelectionChanged()
   if (confirm(t('settings.partner.confirmations.breakUp'))) {
-    console.warn('Breaking up the pair')
-    // TODO: Здесь будет логика разрыва пары
+    api.delete('/pair')
+      .then(() => {
+        useTgWebAppStore().userInPair = false 
+        usePairStore().stopPairPolling()
+        navigateTo('/connect')
+      })
+      .catch((error) => {
+        console.error('Failed to break up the pair:', error)
+      })
   }
 }
 

@@ -7,6 +7,7 @@ interface ApiOptions {
   method?: HttpMethod
   body?: any
   query?: Record<string, any>
+  showToastForMethods?: HttpMethod[]
 }
 
 interface ApiResponse<T> {
@@ -25,25 +26,33 @@ export function useApi() {
     headers: {
       'Content-Type': 'application/json',
     },
+    showToastForMethods: ['POST', 'PUT', 'PATCH'],
   }
 
   const handleResponse = <T>(response: ApiResponse<T> | T, options: ApiOptions) => {
-    // If response is already the data (not wrapped in ApiResponse)
-    if (!('data' in response)) {
-      return response
+    // If response is null or undefined, return it directly
+    if (response === null || typeof response === 'undefined') {
+      return response as T
     }
 
-    if (options.showSuccessToast && response.message) {
-      toast.add({
-        color: 'success',
-        title: response.message,
-      })
+    // Check if it's an ApiResponse (object with 'data' property)
+    if (typeof response === 'object' && 'data' in response) {
+      // It's ApiResponse<T>
+      if (options.showSuccessToast && (response as ApiResponse<T>).message && options.method && options.showToastForMethods?.includes(options.method)) {
+        toast.add({
+          color: 'success',
+          title: (response as ApiResponse<T>).message,
+        })
+      }
+      return (response as ApiResponse<T>).data
     }
-    return response.data
+
+    // Otherwise, it's already the raw data T (e.g., for DELETE that returns true)
+    return response as T
   }
 
   const handleError = (error: any, options: ApiOptions) => {
-    if (options.showErrorToast) {
+    if (options.showErrorToast && options.method && options.showToastForMethods?.includes(options.method)) {
       toast.add({
         color: 'error',
         title: error.data?.message?.[0] || error.data?.message || 'Unknown error',
