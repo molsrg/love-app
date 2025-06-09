@@ -1,13 +1,8 @@
 <script lang="ts" setup>
 import { useViewport } from 'vue-tg'
 
-const { $initApp } = useNuxtApp()
 const { contentSafeAreaInset } = useViewport()
 const app = useAppConfig()
-
-onMounted(async (): Promise<void> => {
-  await $initApp()
-})
 
 const marginTopCalculate = computed<string>(() =>
   `${contentSafeAreaInset.value.top * 2}px`,

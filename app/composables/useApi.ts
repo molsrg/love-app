@@ -1,5 +1,3 @@
-import type { UseFetchOptions } from 'nuxt/app'
-
 type HttpMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'
 
 interface ApiOptions {

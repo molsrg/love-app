@@ -1,12 +1,8 @@
 <script setup lang="ts">
 import type { DateValue } from '@internationalized/date'
-import type { Theme } from '~/types/settings'
 
-import { useStorage } from '@vueuse/core'
 import QrcodeVue from 'qrcode.vue'
-import { useI18n } from 'vue-i18n'
 import { useQrScanner } from 'vue-tg'
-import { THEMES } from '~/config/settings'
 
 definePageMeta({
   layout: 'unauthorized',
