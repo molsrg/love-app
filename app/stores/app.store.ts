@@ -1,5 +1,4 @@
 import { useCloudStorage } from 'vue-tg/latest'
-import { endpoints } from '~/constants/api/endpoints'
 
 export const useAppStore = defineStore('appStore', {
   state: () => ({

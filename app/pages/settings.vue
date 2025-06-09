@@ -51,16 +51,13 @@ const canEditPair = computed(() => pairStore.isHost)
 function handleHostTransfer() {
   if (isHostTransferEnabled.value) {
     if (confirm(t('settings.partner.confirmations.transferHost'))) {
-      
       api.post('/pair/change-host')
-      .then(() => {
-       console.log('all good');
-       
-      })
-      .catch((error) => {
-        console.error('Failed to change host:', error)
-      })
-      
+        .then(() => {
+          console.log('all good')
+        })
+        .catch((error) => {
+          console.error('Failed to change host:', error)
+        })
     }
     else {
       isHostTransferEnabled.value = false
@@ -94,7 +91,7 @@ function handleBreakUp() {
   if (confirm(t('settings.partner.confirmations.breakUp'))) {
     api.delete('/pair')
       .then(() => {
-        useTgWebAppStore().userInPair = false 
+        useTgWebAppStore().userInPair = false
         usePairStore().stopPairPolling()
         navigateTo('/connect')
       })
@@ -266,8 +263,8 @@ const { currentLocale, setLanguage, languages } = useLanguage()
               :disabled="!canEditPair"
               :trailing-icon="!canEditPair ? 'i-material-symbols-lock-outline' : ''"
               :ui="{ trailingIcon: 'ml-auto' }"
-              class="w-full h-[36px]" 
-              color="neutral" 
+              class="w-full h-[36px]"
+              color="neutral"
               icon="i-lucide-calendar"
               variant="subtle"
             >
@@ -276,18 +273,18 @@ const { currentLocale, setLanguage, languages } = useLanguage()
 
             <template #content>
               <UCalendar
-                v-model="selectedDate" 
+                v-model="selectedDate"
                 :ui="{
                   cellTrigger: ' data-today:not-data-[selected]:text-[var(--ui-deafult)]',
-                }" 
-                class="p-2 w-full" 
+                }"
+                class="p-2 w-full"
                 @update:model-value="handleDateChange"
               />
             </template>
           </UPopover>
         </div>
 
-        <div class="flex items-center justify-between" v-if="canEditPair">
+        <div v-if="canEditPair" class="flex items-center justify-between">
           <div>
             <h3 class="text-white">
               {{ $t('settings.partner.transferHost') }}

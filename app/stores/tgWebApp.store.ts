@@ -2,8 +2,8 @@ import { CalendarDate } from '@internationalized/date'
 import { useCloudStorage, useMiniApp } from 'vue-tg/latest'
 import { useApi } from '~/composables/useApi'
 
-import { useTokenStore } from '~/stores/token.store'
 import { usePairStore } from '~/stores/pair.store'
+import { useTokenStore } from '~/stores/token.store'
 
 interface WebAppData {
   platform: string
@@ -68,10 +68,9 @@ export const useTgWebAppStore = defineStore('tgWebAppStore', {
 
       useTokenStore().setToken(accessToken)
 
-      
-      if(this.userInPair) {
+      if (this.userInPair) {
         usePairStore().startPairPolling()
-        return 
+        return
       }
 
       if (this.initDataUnsafe?.start_param) {

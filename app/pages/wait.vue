@@ -61,10 +61,9 @@ async function handleAccept() {
 }
 
 function handleDecline() {
-  useTgWebAppStore().isCreatePair = false 
+  useTgWebAppStore().isCreatePair = false
   navigateTo('/connect')
 }
-
 
 onMounted(async () => {
   await loadPartnerInfo()

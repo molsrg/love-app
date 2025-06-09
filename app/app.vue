@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import { useViewport } from 'vue-tg'
 import { LoadingIndicator } from '~/components/nuxt'
-import { useTgWebAppStore } from '~/stores/tgWebApp.store'
 import { usePairStore } from '~/stores/pair.store'
+import { useTgWebAppStore } from '~/stores/tgWebApp.store'
 
 const { contentSafeAreaInset } = useViewport()
 const app = useAppConfig()
