@@ -47,13 +47,19 @@ export const usePairStore = defineStore('pair', {
   }),
   actions: {
     updatePairData(data: PairData) {
-      this.user1.id = data.user1.id
-      this.user1.username = data.user1.username
-      this.user1.avatar = data.user1.avatarUrl
+      // Determine which user is the current user based on isHost flag
+      const currentUser = data.isHost ? data.user1 : data.user2
+      const partnerUser = data.isHost ? data.user2 : data.user1
 
-      this.user2.id = data.user2.id
-      this.user2.username = data.user2.username
-      this.user2.avatar = data.user2.avatarUrl
+      // Always set user1 as current user
+      this.user1.id = currentUser.id
+      this.user1.username = currentUser.username
+      this.user1.avatar = currentUser.avatarUrl
+
+      // Set user2 as partner
+      this.user2.id = partnerUser.id
+      this.user2.username = partnerUser.username
+      this.user2.avatar = partnerUser.avatarUrl
 
       this.isHost = data.isHost
       this.startDate = new Date(data.startDate)

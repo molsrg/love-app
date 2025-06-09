@@ -14,13 +14,14 @@ const { telegramSelectionChanged, telegramNotificationOccurred } = useHapticFeed
 const appConfig = useAppConfig()
 const toast = useToast()
 const api = useApi()
+const pairStore = usePairStore()
 
 const userProfile = ref<Profile>({
-  name: 'Пользователь 1',
-  partnerName: 'Пользователь 2',
-  avatar: 'https://github.com/benjamincanac.png',
-  startDate: '2025-05-05',
+  name: pairStore.user1.username,
+  partnerName: pairStore.user2.username,
+  startDate: pairStore.startDate.toISOString().split('T')[0],
   theme: 'dark',
+  ...(pairStore.user1.avatar ? { avatar: pairStore.user1.avatar } : {}),
 })
 
 const activeTheme = ref(appConfig.ui.colors.primary)
@@ -45,12 +46,21 @@ const isCalendarPopoverOpen = ref(false)
 const selectedDate = ref<DateValue | null>(parseDate(userProfile.value.startDate))
 
 const isHostTransferEnabled = ref(false)
+const canEditPair = computed(() => pairStore.isHost)
 
 function handleHostTransfer() {
   if (isHostTransferEnabled.value) {
     if (confirm(t('settings.partner.confirmations.transferHost'))) {
-      console.warn('Host transferred')
-      // TODO: Здесь будет логика передачи прав хоста
+      
+      api.post('/pair/change-host')
+      .then(() => {
+       console.log('all good');
+       
+      })
+      .catch((error) => {
+        console.error('Failed to change host:', error)
+      })
+      
     }
     else {
       isHostTransferEnabled.value = false
@@ -253,10 +263,12 @@ const { currentLocale, setLanguage, languages } = useLanguage()
           <label class="text-sm text-gray-400 mb-1 block">{{ $t('settings.partner.startDate') }}</label>
           <UPopover v-model:open="isCalendarPopoverOpen" arrow>
             <UButton
-              :disabled="isHostTransferEnabled"
-              :trailing-icon="isHostTransferEnabled ? 'i-material-symbols-lock-outline' : ''"
+              :disabled="!canEditPair"
+              :trailing-icon="!canEditPair ? 'i-material-symbols-lock-outline' : ''"
               :ui="{ trailingIcon: 'ml-auto' }"
-              class="w-full h-[36px]" color="neutral" icon="i-lucide-calendar"
+              class="w-full h-[36px]" 
+              color="neutral" 
+              icon="i-lucide-calendar"
               variant="subtle"
             >
               {{ userProfile.startDate }}
@@ -264,16 +276,18 @@ const { currentLocale, setLanguage, languages } = useLanguage()
 
             <template #content>
               <UCalendar
-                v-model="selectedDate" :ui="{
-
+                v-model="selectedDate" 
+                :ui="{
                   cellTrigger: ' data-today:not-data-[selected]:text-[var(--ui-deafult)]',
-                }" class="p-2 w-full" @update:model-value="handleDateChange"
+                }" 
+                class="p-2 w-full" 
+                @update:model-value="handleDateChange"
               />
             </template>
           </UPopover>
         </div>
 
-        <div class="flex items-center justify-between">
+        <div class="flex items-center justify-between" v-if="canEditPair">
           <div>
             <h3 class="text-white">
               {{ $t('settings.partner.transferHost') }}
