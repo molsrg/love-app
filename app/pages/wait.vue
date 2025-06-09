@@ -132,6 +132,33 @@ onUnmounted(() => {
       </UCard>
     </div>
 
+    <!-- Skeleton Loader for initial data loading -->
+    <div v-else-if="!partner && !isAccepted" class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center w-full max-w-sm">
+      <UCard class="w-full" variant="subtle">
+        <template #header>
+          <USkeleton class="h-6 w-1/2 mx-auto" />
+        </template>
+
+        <div class="flex flex-col items-center gap-3">
+          <USkeleton class="h-24 w-24 rounded-full" />
+
+          <div class="text-center space-y-2 w-full">
+            <USkeleton class="h-8 w-3/4 mx-auto" />
+            <USkeleton class="h-4 w-full mx-auto" />
+            <USkeleton class="h-4 w-[80%] mx-auto" />
+          </div>
+        </div>
+
+        <template #footer>
+          <div class="flex gap-3 w-full">
+            <USkeleton class="h-10 w-full" />
+            <USkeleton class="h-10 w-full" />
+          </div>
+        </template>
+      </UCard>
+    </div>
+
+    <!-- Existing loading/processing state -->
     <div v-else class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center w-full">
       <UCard class="w-full max-w-sm" variant="subtle">
         <div class="flex flex-col items-center">
