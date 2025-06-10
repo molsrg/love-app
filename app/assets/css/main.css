@@ -7,16 +7,13 @@
 }
 
 :root {
-    /* --ui-bg: var(--color-pink-200); */
-    /*--ui-bg-inverted: var(--color-rose-400, oklch(71.2% 0.194 13.428));*/
-    /*--ui-bg-accented: var(--color-gray-500);*/
 
 
     -webkit-user-select: none;
     -moz-user-select: none;
     user-select: none;
 
-
+/* Tg Padding Variable */
     padding-top: calc(var(--tg-safe-area-inset-top, 0px) + var(--tg-content-safe-area-inset-top));
     padding-right: var(--tg-safe-area-inset-right, 0px);
     padding-bottom: max(var(--tg-safe-area-inset-bottom, 5px), 5px);
@@ -26,36 +23,47 @@
 }
 
 
+/* Animate navigation */
+.page-enter-active,
+.page-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.page-enter-from,
+.page-leave-to {
+  opacity: 0;
+}
 
 
+/* Animate blocks */
 .animate-fade-in {
     animation: fadeIn 1s ease-in;
   }
   
-  .animate-slide-up {
-    animation: slideUp 0.8s ease-out forwards;
+.animate-slide-up {
+  animation: slideUp 0.8s ease-out forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
   }
-  
-  @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
-  
-  @keyframes slideUp {
-    from {
-      opacity: 0;
-      transform: translateY(20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
+}
 
 
 
-  @keyframes float {
-    0% { transform: translateY(0px); }
-    50% { transform: translateY(-10px); }
-    100% { transform: translateY(0px); }
-  }
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}

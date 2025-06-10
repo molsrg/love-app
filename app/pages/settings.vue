@@ -3,10 +3,7 @@ import type { CalendarDate, DateValue } from '@internationalized/date'
 
 import type { Profile, Theme } from '~/types/settings'
 import { parseDate } from '@internationalized/date'
-import { useI18n } from 'vue-i18n'
 import { useCloudStorage } from 'vue-tg/latest'
-import { useApi } from '~/composables/useApi'
-
 import { SETTINGS_SECTIONS, THEMES } from '~/config/settings'
 
 const { t } = useI18n()
@@ -135,8 +132,8 @@ const { currentLocale, setLanguage, languages } = useLanguage()
 </script>
 
 <template>
-  <div class="space-y-4">
-    <h1 class="text-2xl font-bold text-white animate-fade-in mb-0">
+  <div class="space-y-3">
+    <h1 class="text-2xl font-bold text-white animate-fade-in mb-[-8px]">
       {{ $t('settings.title') }}
     </h1>
     <UCard class="animate-slide-up opacity-0 translate-y-5" style="animation-delay: 0.2s" variant="subtle">
