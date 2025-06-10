@@ -24,11 +24,6 @@ export const useTgWebAppStore = defineStore('tgWebAppStore', {
     initDataUnsafe: null as InitDataUnsafe | null,
     initData: null as string | null,
 
-    registrationDate: new CalendarDate(2024, 11, 1),
-
-    user: null,
-    isRegistered: false,
-
     isCreatePair: false,
     userInPair: false,
     isInitialized: false,

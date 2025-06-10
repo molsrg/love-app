@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import type { DateValue } from '@internationalized/date'
-
 import type { Profile, Theme } from '~/types/settings'
-import { parseDate } from '@internationalized/date'
+import { CalendarDate, parseDate } from '@internationalized/date'
+
 import { useCloudStorage } from 'vue-tg/latest'
 import { SETTINGS_SECTIONS, THEMES } from '~/config/settings'
 
@@ -16,7 +16,7 @@ const pairStore = usePairStore()
 const userProfile = ref<Profile>({
   name: pairStore.user1.username ?? '',
   partnerName: pairStore.user2.username ?? '',
-  startDate: pairStore.startDate.toISOString().split('T')[0],
+  startDate: new Date(pairStore.startDate).toLocaleDateString('en-CA'),
   theme: 'dark',
   ...(pairStore.user1.avatar ? { avatar: pairStore.user1.avatar } : {}),
 })
@@ -74,12 +74,13 @@ function handleAvatarClick() {
   input?.click()
 }
 
-function handleAvatarChange(event: Event) {
+async function handleAvatarChange(event: Event) {
   const target = event.target as HTMLInputElement
   const file = target.files?.[0]
   if (file) {
-    console.warn('Selected avatar file:', file)
-    // TODO: Здесь будет логика загрузки файла на сервер
+    const formData = new FormData()
+    formData.append('avatar', file)
+    // await api.postFormData('/pair/avatar', formData)
   }
 }
 
@@ -98,13 +99,21 @@ function handleBreakUp() {
   }
 }
 
-function handleDateChange(date: DateValue | null | undefined) {
+async function handleDateChange(date: DateValue | null | undefined) {
   if (!date || typeof date !== 'object' || 'start' in date || Array.isArray(date))
     return
+
   selectedDate.value = date
   userProfile.value.startDate = date.toString()
   telegramSelectionChanged()
   isCalendarPopoverOpen.value = false
+
+  try {
+    await api.post('/pair/change-date', { date: date.toString() })
+  }
+  catch (error) {
+    console.error('Error connecting pair:', error)
+  }
 }
 
 const debouncedUpdateName = useDebounce((_name: string) => {
@@ -127,6 +136,15 @@ watch(() => userProfile.value.name, (newName, oldName) => {
 })
 
 const { currentLocale, setLanguage, languages } = useLanguage()
+
+function isDateDisabled(date: CalendarDate) {
+  const today = new CalendarDate(
+    new Date().getFullYear(),
+    new Date().getMonth() + 1,
+    new Date().getDate(),
+  )
+  return date.compare(today) > 0
+}
 </script>
 
 <template>
@@ -269,6 +287,7 @@ const { currentLocale, setLanguage, languages } = useLanguage()
             <template #content>
               <UCalendar
                 v-model="selectedDate"
+                :is-date-disabled="isDateDisabled"
                 :ui="{
                   cellTrigger: ' data-today:not-data-[selected]:text-[var(--ui-deafult)]',
                 }"

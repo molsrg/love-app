@@ -50,7 +50,7 @@ const STATS_CONFIG: Record<string, StatConfig> = {
     disabled: true,
     classes: {
       value: 'text-dimmed',
-      label: 'text-dimmed',
+      label: 'text-dimmed line-through',
       container: 'bg-elevated/50',
     },
   },
@@ -70,7 +70,7 @@ const STATS_CONFIG: Record<string, StatConfig> = {
     disabled: true,
     classes: {
       value: 'text-dimmed',
-      label: 'text-dimmed',
+      label: 'text-dimmed line-through',
       container: 'bg-elevated/50',
     },
   },

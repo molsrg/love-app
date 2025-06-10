@@ -60,7 +60,7 @@ async function openPhotoModal(day: any) {
 
     <div class="absolute inset-0 flex items-center justify-center">
       <UBadge
-        variant="subtle"
+
         :label="t('calendar.inDevelopment')"
         size="xl"
         :ui="{
