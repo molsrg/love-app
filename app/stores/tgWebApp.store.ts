@@ -90,10 +90,6 @@ export const useTgWebAppStore = defineStore('tgWebAppStore', {
         console.warn('No start_param detected.')
         this.isCreatePair = false // Ensure isCreatePair is false if no start_param
       }
-
-      console.warn('After start_param check. userInPair:', this.userInPair, 'isCreatePair:', this.isCreatePair)
-
-      // The middleware will now handle navigation based on userInPair and isCreatePair
     },
   },
 })

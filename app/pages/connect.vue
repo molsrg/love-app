@@ -39,6 +39,7 @@ const qrUrl = computed(() => `https://t.me/${config.public.botUrl}?startapp=${tg
 const isQrOpen = ref(false)
 const { $isMobile } = useNuxtApp()
 const qrScannerInstance = useQrScanner()
+const qrData = ref<{ userId: string, date: string } | null>(null)
 
 function openQrScanner(): void {
   qrScannerInstance?.show?.({ text: 'Наведите камеру на QR-код партнёра' })
@@ -46,8 +47,9 @@ function openQrScanner(): void {
 
 function handleQrScan(eventData: { data: string }) {
   console.warn('QR scanned:', eventData.data)
+  const [userId, date] = eventData.data.split('_')
+  qrData.value = { userId, date }
   qrScannerInstance?.close?.()
-  navigateTo('/wait')
 }
 
 onMounted(() => {
@@ -215,15 +217,11 @@ function onSelect(index: number) {
           <UCarousel
             ref="carousel"
             v-slot="{ item }"
-
             :items="items"
             class="w-full"
             @select="onSelect"
           >
-            <!-- body: 'p-2', header: 'p-2' -->
-            <UCard
-              variant="subtle" :ui="{ root: 'rounded-xl h-85' }"
-            >
+            <UCard variant="subtle" :ui="{ root: 'rounded-xl h-85' }">
               <template #header>
                 <h2 class="text-lg font-semibold text-white text-center">
                   {{ item.title }}
@@ -244,13 +242,21 @@ function onSelect(index: number) {
               <div v-else class="flex flex-col items-center gap-4">
                 <QrcodeVue :value="qrUrl" :size="200" />
 
+                <div v-if="qrData" class="text-center space-y-2">
+                  <p class="text-primary">
+                    Данные из QR-кода:
+                  </p>
+                  <p>ID пользователя: {{ qrData.userId }}</p>
+                  <p>Дата: {{ qrData.date }}</p>
+                </div>
+
                 <div class="flex items-center justify-center gap-2 text-sm text-gray-400">
                   <UIcon name="i-heroicons-users" class="w-4 h-4" />
                   <p>Попробуй прямо сейчас! </p>
                 </div>
               </div>
             </UCard>
-          </uCarousel>
+          </UCarousel>
         </div>
       </template>
     </UDrawer>
