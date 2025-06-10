@@ -26,6 +26,18 @@
       "nameUpdated": {
         "title": "Имя обновлено",
         "description": "Ваше имя было успешно обновлено"
+      },
+      "nameError": {
+        "title": "Ошибка обновления",
+        "description": "Не удалось обновить имя"
+      },
+      "avatarUpdated": {
+        "title": "Аватар обновлен",
+        "description": "Ваш аватар был успешно обновлен"
+      },
+      "avatarError": {
+        "title": "Ошибка загрузки",
+        "description": "Не удалось загрузить аватар"
       }
     },
     "partner": {

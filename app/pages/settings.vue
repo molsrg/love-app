@@ -13,13 +13,16 @@ const toast = useToast()
 const api = useApi()
 const pairStore = usePairStore()
 
-const userProfile = ref<Profile>({
-  name: pairStore.user1.username ?? '',
+const initialName = ref(pairStore.user1.username ?? '')
+const userName = ref(pairStore.user1.username ?? '')
+
+const userProfile = computed<Profile>(() => ({
+  name: userName.value,
   partnerName: pairStore.user2.username ?? '',
   startDate: new Date(pairStore.startDate).toLocaleDateString('en-CA'),
   theme: 'dark',
   ...(pairStore.user1.avatar ? { avatar: pairStore.user1.avatar } : {}),
-})
+}))
 
 const activeTheme = ref(appConfig.ui.colors.primary)
 const isThemePopoverOpen = ref(false)
@@ -78,9 +81,32 @@ async function handleAvatarChange(event: Event) {
   const target = event.target as HTMLInputElement
   const file = target.files?.[0]
   if (file) {
-    const formData = new FormData()
-    formData.append('avatar', file)
-    // await api.postFormData('/pair/avatar', formData)
+    try {
+      const formData = new FormData()
+      formData.append('file', file)
+      usePairStore().stopPairPolling()
+      await api.postFormData('/user/change-avatar', formData)
+      usePairStore().startPairPolling()
+      toast.add({
+        title: t('settings.profile.avatarUpdated.title'),
+        description: t('settings.profile.avatarUpdated.description'),
+        color: 'success',
+      })
+
+      telegramNotificationOccurred('success')
+    }
+    catch (error) {
+      console.error('Failed to upload avatar:', error)
+      usePairStore().startPairPolling()
+      toast.add({
+        title: t('settings.profile.avatarError.title'),
+        description: t('settings.profile.avatarError.uploadFailed'),
+        color: 'error',
+      })
+    }
+    finally {
+      target.value = ''
+    }
   }
 }
 
@@ -116,20 +142,43 @@ async function handleDateChange(date: DateValue | null | undefined) {
   }
 }
 
-const debouncedUpdateName = useDebounce((_name: string) => {
-  updateNameOnBackend(_name)
+const debouncedUpdateName = useDebounce(async (name: string) => {
+  // Don't send request if name hasn't changed
+  if (name === initialName.value)
+    return
+
+  try {
+    usePairStore().stopPairPolling()
+    await api.post('/user/change-name', { username: name })
+
+    // Update name in pairStore and local ref
+    pairStore.user1.username = name
+    userName.value = name
+    initialName.value = name // Update initial name after successful update
+
+    telegramNotificationOccurred('success')
+    toast.add({
+      title: t('settings.profile.nameUpdated.title'),
+      description: t('settings.profile.nameUpdated.description'),
+      color: 'success',
+    })
+  }
+  catch (error) {
+    console.error('Failed to update name:', error)
+    // Revert name on error
+    userName.value = pairStore.user1.username
+    toast.add({
+      title: t('settings.profile.nameError.title'),
+      description: t('settings.profile.nameError.description'),
+      color: 'error',
+    })
+  }
+  finally {
+    usePairStore().startPairPolling()
+  }
 }, 600)
 
-function updateNameOnBackend(_newName: string) {
-  telegramNotificationOccurred('success')
-  toast.add({
-    title: t('settings.profile.nameUpdated.title'),
-    description: t('settings.profile.nameUpdated.description'),
-    color: 'success',
-  })
-}
-
-watch(() => userProfile.value.name, (newName, oldName) => {
+watch(() => userName.value, (newName, oldName) => {
   if (newName !== oldName) {
     debouncedUpdateName(newName)
   }
@@ -166,7 +215,7 @@ function isDateDisabled(date: CalendarDate) {
         <div>
           <label class="text-sm text-gray-400 mb-1 block">{{ t('settings.profile.name') }}</label>
           <UInput
-            v-model="userProfile.name"
+            v-model="userName"
             :placeholder="t('settings.profile.namePlaceholder')"
             class="w-full"
             size="lg"

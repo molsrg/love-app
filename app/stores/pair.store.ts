@@ -13,6 +13,7 @@ export interface PairState {
   user2: PairUser
   isHost: boolean
   startDate: Date
+  stopPolling: (() => void) | null
 }
 
 interface PairData {
@@ -44,6 +45,7 @@ export const usePairStore = defineStore('pair', {
     },
     isHost: false,
     startDate: new Date(),
+    stopPolling: null,
   }),
   actions: {
     updatePairData(data: PairData) {
@@ -79,18 +81,22 @@ export const usePairStore = defineStore('pair', {
     startPairPolling(pollInterval: number = 3000) {
       console.warn('Starting pair polling')
 
-      const { start, stop: _stop } = usePolling()
-      const _api = useApi()
+      const { start, stop } = usePolling()
+      const api = useApi()
 
       const handlePollingResponse = async (data: any) => {
         this.updatePairData(data)
       }
 
+      // Store stop function in the store
+      this.stopPolling = stop
       start('/pair', handlePollingResponse, pollInterval)
     },
     stopPairPolling() {
-      const { stop } = usePolling()
-      stop()
+      if (this.stopPolling) {
+        this.stopPolling()
+        this.stopPolling = null
+      }
     },
   },
 })

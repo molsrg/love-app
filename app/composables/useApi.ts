@@ -64,6 +64,11 @@ export function useApi() {
   const getHeaders = (options: ApiOptions): Record<string, string> => {
     const headers = { ...defaultOptions.headers, ...options.headers } as Record<string, string>
 
+    // Remove Content-Type for FormData requests
+    if (options.body instanceof FormData) {
+      delete headers['Content-Type']
+    }
+
     if (tokenStore.getStatus) {
       headers.Authorization = `Bearer ${tokenStore.getToken}`
     }
@@ -76,6 +81,11 @@ export function useApi() {
       ...defaultOptions,
       ...options,
       headers: getHeaders(options),
+    }
+
+    // Remove Content-Type for FormData requests
+    if (options.body instanceof FormData) {
+      delete mergedOptions.headers['Content-Type']
     }
 
     try {
@@ -112,10 +122,6 @@ export function useApi() {
       ...options,
       method: 'POST',
       body: formData,
-      headers: {
-        ...getHeaders(options),
-        'Content-Type': 'multipart/form-data',
-      },
     })
   }
 

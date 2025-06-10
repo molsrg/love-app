@@ -26,6 +26,18 @@
       "nameUpdated": {
         "title": "Name updated",
         "description": "Your name has been successfully updated"
+      },
+      "nameError": {
+        "title": "Update error",
+        "description": "Failed to update name"
+      },
+      "avatarUpdated": {
+        "title": "Avatar updated",
+        "description": "Your avatar has been successfully updated"
+      },
+      "avatarError": {
+        "title": "Upload error",
+        "description": "Failed to upload avatar"
       }
     },
     "partner": {

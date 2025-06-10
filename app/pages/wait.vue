@@ -24,7 +24,7 @@ async function loadPartnerInfo() {
     partnerId.value = id || ''
     startDate.value = date || ''
 
-    const res = await api.get<Partner>('/auth/user', {
+    const res = await api.get<Partner>('/user/info', {
       query: {
         telegramId: id,
       },
@@ -42,7 +42,7 @@ async function handleAccept() {
 
   try {
     if (partner.value) {
-      await api.post('/auth/pair', {
+      await api.post('/pair', {
         partnerId: partner.value.id,
         date: new Date(startDate.value).toISOString(),
       })
