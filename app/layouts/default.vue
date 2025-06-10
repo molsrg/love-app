@@ -7,13 +7,12 @@ const route = useRoute()
 
 interface TabItem extends TabsItem {
   value: string
+  icon: string
 }
 
+type NavigationResult = Promise<void> | void
+
 const items: TabItem[] = [
-  // {
-  //   icon: 'i-material-symbols:add-link',
-  //   value: '/connect',
-  // },
   // {
   //   icon: 'i-material-symbols:indeterminate-question-box-rounded',
   //   value: '/activity',
@@ -31,42 +30,47 @@ const items: TabItem[] = [
     icon: 'i-lucide-settings',
     value: '/settings',
   },
-]
+] as const
 
 let isNavigating = false
+
+async function handleNavigation(value: string): Promise<void> {
+  if (isNavigating || value === route.path)
+    return
+
+  isNavigating = true
+  telegramSelectionChanged()
+
+  try {
+    const result = navigateTo(value) as NavigationResult
+    if (result instanceof Promise) {
+      await result
+    }
+  }
+  finally {
+    isNavigating = false
+  }
+}
+
 const active = computed<string>({
   get(): string {
     return route.path
   },
   set(value: string): void {
-    if (isNavigating || value === route.path)
-      return
-    isNavigating = true
-    telegramSelectionChanged()
-    const result = navigateTo(value)
-    if (result && typeof (result as Promise<any>).finally === 'function') {
-      (result as Promise<any>).finally(() => {
-        isNavigating = false
-      })
-    }
-    else {
-      isNavigating = false
-    }
+    handleNavigation(value)
   },
 })
 </script>
 
 <template>
-  <div class="flex flex-col">
-    <div class="flex-1 pb-[56px]">
-      <slot />
-    </div>
-    <UTabs
-      v-model="active"
-      :content="false"
-      size="xl"
-      class="fixed w-full px-3.5 z-50" :class="[$isMobile ? 'bottom-5' : 'bottom-1']"
-      :items="items"
-    />
+  <div class="pb-[56px]">
+    <slot />
   </div>
+  <UTabs
+    v-model="active"
+    :content="false"
+    size="xl"
+    class="fixed w-full px-3.5 z-50" :class="[$isMobile ? 'bottom-5' : 'bottom-1']"
+    :items="items"
+  />
 </template>
