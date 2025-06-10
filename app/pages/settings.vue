@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type { CalendarDate, DateRange, DateValue } from '@internationalized/date'
+import type { DateValue } from '@internationalized/date'
 
 import type { Profile, Theme } from '~/types/settings'
 import { parseDate } from '@internationalized/date'

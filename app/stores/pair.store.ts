@@ -62,14 +62,17 @@ export const usePairStore = defineStore('pair', {
       this.user2.avatar = partnerUser.avatarUrl
 
       this.isHost = data.isHost
-      
+
       // Convert UTC date to local date, preserving the time as 00:00:00
       const utcDate = new Date(data.startDate)
       const localDate = new Date(
         utcDate.getUTCFullYear(),
         utcDate.getUTCMonth(),
         utcDate.getUTCDate(),
-        0, 0, 0, 0
+        0,
+        0,
+        0,
+        0,
       )
       this.startDate = localDate
     },
