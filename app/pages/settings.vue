@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type { CalendarDate, DateValue } from '@internationalized/date'
+import type { CalendarDate, DateRange, DateValue } from '@internationalized/date'
 
 import type { Profile, Theme } from '~/types/settings'
 import { parseDate } from '@internationalized/date'
@@ -14,8 +14,8 @@ const api = useApi()
 const pairStore = usePairStore()
 
 const userProfile = ref<Profile>({
-  name: pairStore.user1.username,
-  partnerName: pairStore.user2.username,
+  name: pairStore.user1.username ?? '',
+  partnerName: pairStore.user2.username ?? '',
   startDate: pairStore.startDate.toISOString().split('T')[0],
   theme: 'dark',
   ...(pairStore.user1.avatar ? { avatar: pairStore.user1.avatar } : {}),
@@ -48,9 +48,9 @@ const canEditPair = computed(() => pairStore.isHost)
 function handleHostTransfer() {
   if (isHostTransferEnabled.value) {
     if (confirm(t('settings.partner.confirmations.transferHost'))) {
-      api.post('/pair/change-host')
+      api.post('/pair/change-host', {})
         .then(() => {
-          console.log('all good')
+          // Success
         })
         .catch((error) => {
           console.error('Failed to change host:', error)
@@ -85,7 +85,7 @@ function handleAvatarChange(event: Event) {
 
 function handleBreakUp() {
   telegramSelectionChanged()
-  if (confirm(t('settings.partner.confirmations.breakUp'))) {
+  if (confirm(t('settings.partner.confirmations.breakup'))) {
     api.delete('/pair')
       .then(() => {
         useTgWebAppStore().userInPair = false
@@ -98,25 +98,23 @@ function handleBreakUp() {
   }
 }
 
-function handleDateChange(date: CalendarDate) {
+function handleDateChange(date: DateValue | null | undefined) {
   if (!date || typeof date !== 'object' || 'start' in date || Array.isArray(date))
     return
   selectedDate.value = date
   userProfile.value.startDate = date.toString()
   telegramSelectionChanged()
   isCalendarPopoverOpen.value = false
-
-  console.log('new date - ', date)
 }
 
-const debouncedUpdateName = useDebounce((name: string) => {
-  updateNameOnBackend(name)
+const debouncedUpdateName = useDebounce((_name: string) => {
+  updateNameOnBackend(_name)
 }, 600)
 
-function updateNameOnBackend(newName: string) {
+function updateNameOnBackend(_newName: string) {
   telegramNotificationOccurred('success')
   toast.add({
-    title: t('settings.profile.nameUpdated.title', { name: newName }),
+    title: t('settings.profile.nameUpdated.title'),
     description: t('settings.profile.nameUpdated.description'),
     color: 'success',
   })
@@ -134,31 +132,31 @@ const { currentLocale, setLanguage, languages } = useLanguage()
 <template>
   <div class="space-y-3">
     <h1 class="text-2xl font-bold text-white animate-fade-in mb-[-8px]">
-      {{ $t('settings.title') }}
+      {{ t('settings.title') }}
     </h1>
     <UCard class="animate-slide-up opacity-0 translate-y-5" style="animation-delay: 0.2s" variant="subtle">
       <template #header>
         <div class="flex items-center gap-2">
           <UIcon :name="SETTINGS_SECTIONS.profile.icon" class="text-primary size-6" />
           <h2 class="text-lg font-semibold text-white">
-            {{ $t(SETTINGS_SECTIONS.profile.title) }}
+            {{ t(SETTINGS_SECTIONS.profile.title) }}
           </h2>
         </div>
       </template>
 
       <div class="space-y-4">
         <div>
-          <label class="text-sm text-gray-400 mb-1 block">{{ $t('settings.profile.name') }}</label>
+          <label class="text-sm text-gray-400 mb-1 block">{{ t('settings.profile.name') }}</label>
           <UInput
             v-model="userProfile.name"
-            :placeholder="$t('settings.profile.namePlaceholder')"
+            :placeholder="t('settings.profile.namePlaceholder')"
             class="w-full"
             size="lg"
           />
         </div>
 
         <div>
-          <label class="text-sm text-gray-400 mb-1 block">{{ $t('settings.profile.avatar') }}</label>
+          <label class="text-sm text-gray-400 mb-1 block">{{ t('settings.profile.avatar') }}</label>
           <UButton
             :avatar="{
               src: userProfile.avatar,
@@ -169,7 +167,7 @@ const { currentLocale, setLanguage, languages } = useLanguage()
             variant="subtle"
             @click="handleAvatarClick"
           >
-            {{ $t('settings.profile.changeAvatar') }}
+            {{ t('settings.profile.changeAvatar') }}
           </UButton>
           <input
             accept="image/*"
@@ -179,11 +177,11 @@ const { currentLocale, setLanguage, languages } = useLanguage()
           >
         </div>
         <div>
-          <label class="text-sm text-gray-400 mb-1 block">{{ $t('settings.profile.theme') }}</label>
+          <label class="text-sm text-gray-400 mb-1 block">{{ t('settings.profile.theme') }}</label>
 
           <UPopover v-model:open="isThemePopoverOpen" arrow>
             <UButton class="w-full h-[36px]" color="neutral" icon="i-lucide-palette" variant="subtle">
-              {{ $t(activeThemeName) }}
+              {{ t(activeThemeName) }}
             </UButton>
 
             <template #content>
@@ -193,7 +191,7 @@ const { currentLocale, setLanguage, languages } = useLanguage()
                     v-for="theme in THEMES"
                     :key="theme.value"
                     :class="{ 'ring-1 ring-primary': activeTheme === theme.value }"
-                    :label="$t(theme.name)"
+                    :label="t(theme.name)"
                     class="text-center"
                     color="neutral"
                     variant="subtle"
@@ -209,7 +207,7 @@ const { currentLocale, setLanguage, languages } = useLanguage()
           </UPopover>
         </div>
         <div>
-          <label class="text-sm text-gray-400 mb-1 block">{{ $t('settings.profile.language') }}</label>
+          <label class="text-sm text-gray-400 mb-1 block">{{ t('settings.profile.language') }}</label>
 
           <USelect
             v-model="currentLocale"
@@ -236,17 +234,17 @@ const { currentLocale, setLanguage, languages } = useLanguage()
         <div class="flex items-center gap-2">
           <UIcon :name="SETTINGS_SECTIONS.pair.icon" class="text-primary size-6" />
           <h2 class="text-lg font-semibold text-white">
-            {{ $t(SETTINGS_SECTIONS.pair.title) }}
+            {{ t(SETTINGS_SECTIONS.pair.title) }}
           </h2>
         </div>
       </template>
 
       <div class="space-y-4">
         <div>
-          <label class="text-sm text-gray-400 mb-1 block">{{ $t('settings.partner.name') }}</label>
+          <label class="text-sm text-gray-400 mb-1 block">{{ t('settings.partner.name') }}</label>
           <UInput
             v-model="userProfile.partnerName"
-            :placeholder="$t('settings.partner.namePlaceholder')"
+            :placeholder="t('settings.partner.namePlaceholder')"
             class="w-full"
             disabled
             size="lg"
@@ -254,7 +252,7 @@ const { currentLocale, setLanguage, languages } = useLanguage()
           />
         </div>
         <div>
-          <label class="text-sm text-gray-400 mb-1 block">{{ $t('settings.partner.startDate') }}</label>
+          <label class="text-sm text-gray-400 mb-1 block">{{ t('settings.partner.startDate') }}</label>
           <UPopover v-model:open="isCalendarPopoverOpen" arrow>
             <UButton
               :disabled="!canEditPair"
@@ -284,10 +282,10 @@ const { currentLocale, setLanguage, languages } = useLanguage()
         <div v-if="canEditPair" class="flex items-center justify-between">
           <div>
             <h3 class="text-white">
-              {{ $t('settings.partner.transferHost') }}
+              {{ t('settings.partner.transferHost') }}
             </h3>
             <p class="text-sm text-gray-400">
-              {{ $t('settings.partner.hostDescription') }}
+              {{ t('settings.partner.hostDescription') }}
             </p>
           </div>
 
@@ -300,7 +298,7 @@ const { currentLocale, setLanguage, languages } = useLanguage()
 
         <div class="flex justify-center">
           <UButton
-            :label="$t('settings.partner.breakUp')"
+            :label="t('settings.partner.breakUp')"
             class="h-[36px]"
             color="error"
             leading-icon="i-material-symbols:heart-broken-outline"

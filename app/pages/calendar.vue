@@ -5,6 +5,7 @@ import { PhotoUploadModal } from '~/components/modal'
 const selectedDay = ref<any>(null)
 const overlay = useOverlay()
 const toast = useToast()
+const { t } = useI18n()
 
 const modal = overlay.create(PhotoUploadModal, {
   props: {
@@ -13,7 +14,7 @@ const modal = overlay.create(PhotoUploadModal, {
 })
 
 async function openPhotoModal(day: any) {
-  console.log('Selected day:', day) // Debug log
+  console.warn('Selected day:', day)
   selectedDay.value = day
   modal.patch({ day })
   const instance = modal.open()
@@ -38,19 +39,34 @@ async function openPhotoModal(day: any) {
 </script>
 
 <template>
-  <div class="flex flex-col gap-4">
-    <UBadge
-      variant="subtle"
-      label="Здесь будут ваши совместные фото, попробуй прямо сейчас!"
-      size="xl"
-      :ui="{
-        label: 'whitespace-normal text-center',
-      }"
-    />
+  <div class="relative">
+    <div class="opacity-10 pointer-events-none">
+      <div class="flex flex-col gap-4">
+        <UBadge
+          variant="subtle"
+          label="Здесь будут ваши совместные фото, попробуй прямо сейчас!"
+          size="xl"
+          :ui="{
+            label: 'whitespace-normal text-center',
+          }"
+        />
 
-    <CalendarApp
-      icon-name="i-material-symbols-android-camera-outline"
-      @update:day-click="openPhotoModal"
-    />
+        <CalendarApp
+          icon-name="i-material-symbols-android-camera-outline"
+          @update:day-click="openPhotoModal"
+        />
+      </div>
+    </div>
+
+    <div class="absolute inset-0 flex items-center justify-center">
+      <UBadge
+        variant="subtle"
+        :label="t('calendar.inDevelopment')"
+        size="xl"
+        :ui="{
+          label: 'whitespace-normal text-center',
+        }"
+      />
+    </div>
   </div>
 </template>

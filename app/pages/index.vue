@@ -1,7 +1,9 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
 import { RelationshipProgress } from '~/components/progress'
 import { getDaysTogether, getTimeLeft } from '~/helpers/stats'
 
+const { t } = useI18n()
 const pair = usePairStore()
 const now = ref<Date>(new Date())
 let intervalId: ReturnType<typeof setInterval>
@@ -10,6 +12,25 @@ interface RelationshipGoal {
   days: number
   label: string
 }
+
+const RELATIONSHIP_GOALS: RelationshipGoal[] = [
+  { days: 30, label: t('index.goals.month') },
+  { days: 100, label: t('index.goals.hundredDays') },
+  { days: 180, label: t('index.goals.halfYear') },
+  { days: 365, label: t('index.goals.year') },
+  { days: 1460, label: t('index.goals.threeYears') },
+  { days: 5840, label: t('index.goals.fiveYears') },
+] as const
+
+const COUNTDOWN_CONFIG = {
+  title: t('index.countdown.title'),
+  units: [
+    t('index.countdown.units.days'),
+    t('index.countdown.units.hours'),
+    t('index.countdown.units.minutes'),
+    t('index.countdown.units.seconds'),
+  ],
+} as const
 
 interface StatConfig {
   label: string
@@ -22,6 +43,39 @@ interface StatConfig {
   }
 }
 
+const STATS_CONFIG: Record<string, StatConfig> = {
+  tasks: {
+    label: t('index.stats.tasks'),
+    value: t('index.stats.soon'),
+    disabled: true,
+    classes: {
+      value: 'text-dimmed',
+      label: 'text-dimmed',
+      container: 'bg-elevated/50',
+    },
+  },
+  days: {
+    label: t('index.stats.days'),
+    value: 0,
+    disabled: false,
+    classes: {
+      value: 'text-primary',
+      label: 'text-highlighted',
+      container: 'bg-elevated',
+    },
+  },
+  challenges: {
+    label: t('index.stats.challenges'),
+    value: t('index.stats.soon'),
+    disabled: true,
+    classes: {
+      value: 'text-dimmed',
+      label: 'text-dimmed',
+      container: 'bg-elevated/50',
+    },
+  },
+} as const
+
 onMounted(() => {
   intervalId = setInterval(() => {
     now.value = new Date()
@@ -33,53 +87,6 @@ onUnmounted(() => {
     clearInterval(intervalId)
   }
 })
-
-const RELATIONSHIP_GOALS: RelationshipGoal[] = [
-  { days: 30, label: '1 месяц' },
-  { days: 100, label: '100 дней' },
-  { days: 180, label: 'полгода' },
-  { days: 365, label: 'год' },
-  { days: 1460, label: 'три года' },
-  { days: 5840, label: 'пять лет' },
-] as const
-
-const COUNTDOWN_CONFIG = {
-  title: 'До годовщины осталось',
-  units: ['дней', 'часов', 'минут', 'секунд'],
-} as const
-
-const STATS_CONFIG: Record<string, StatConfig> = {
-  tasks: {
-    label: 'выполненных заданий',
-    value: 'скоро',
-    disabled: true,
-    classes: {
-      value: 'text-dimmed',
-      label: 'text-dimmed',
-      container: 'bg-elevated/50 ',
-    },
-  },
-  days: {
-    label: 'дней вместе',
-    value: 0,
-    disabled: false,
-    classes: {
-      value: 'text-primary',
-      label: 'text-highlighted',
-      container: 'bg-elevated ',
-    },
-  },
-  challenges: {
-    label: 'совместных челденджей',
-    value: 'скоро',
-    disabled: true,
-    classes: {
-      value: 'text-dimmed',
-      label: 'text-dimmed',
-      container: 'bg-elevated/50 ',
-    },
-  },
-} as const
 
 const timeLeft = computed(() => getTimeLeft(now.value, pair.startDate))
 const daysTogether = computed<number>(() => getDaysTogether(now.value, pair.startDate))
