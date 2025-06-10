@@ -95,13 +95,13 @@ const stats = computed(() => {
 <template>
   <div class="space-y-3">
     <div class="flex justify-center">
-      <UAvatarGroup size="3xl" :ui="{ base: 'size-25 ring-3 -me-3' }" class="animate-fade-in">
+      <UAvatarGroup size="3xl" :ui="{ base: 'size-25 ring-3 -me-3' }" class="animate-fade-in translate-y-3">
         <UAvatar :src="pair.user1.avatar" :alt="pair.user1.username" />
         <UAvatar :src="pair.user2.avatar" :alt="pair.user2.username" />
       </UAvatarGroup>
     </div>
 
-    <h2 class="text-3xl font-bold text-primary text-center animate-fade-in">
+    <h2 class="text-3xl font-bold text-primary text-center animate-fade-in translate-y-3">
       {{ pair.user1.username }} и
       <span class="text-white">{{ pair.user2.username }}</span>
     </h2>
@@ -111,9 +111,8 @@ const stats = computed(() => {
       <div
         v-for="(stat, index) in stats"
         :key="stat.label"
-        class="rounded-lg p-4 flex flex-col items-center animate-slide-up "
-        :class="[stat.classes.container]"
-        :style="{ animationDelay: `${0.2 + index * 0.1}s` }"
+        class="rounded-lg p-4 flex flex-col items-center animate-initial animate-slide-up"
+        :class="[stat.classes.container, `delay-${(index + 2) * 100}`]"
       >
         <h3
           class="text-2xl font-bold"
@@ -129,8 +128,7 @@ const stats = computed(() => {
 
     <!-- Счётчик до годовщины -->
     <div
-      class="w-full bg-elevated/50 rounded-lg p-4 animate-slide-up opacity-0 translate-y-3"
-      style="animation-delay: 0.5s"
+      class="w-full bg-elevated/50 rounded-lg p-4 animate-initial animate-slide-up delay-500 translate-y-3"
     >
       <h3 class="text-xl font-bold text-white mb-4 text-center">
         {{ COUNTDOWN_CONFIG.title }}
@@ -158,7 +156,7 @@ const stats = computed(() => {
         v-for="(goal, index) in RELATIONSHIP_GOALS"
         :key="goal.days"
         class="bg-elevated/50 rounded-lg p-2 flex flex-col items-center animate-slide-up opacity-0 translate-y-3"
-        :style="{ animationDelay: `${0.5 + index * 0.1}s` }"
+        :style="{ animationDelay: `${0.5 + index * 0.2}s` }"
       >
         <RelationshipProgress
           :current-days="daysTogether"
