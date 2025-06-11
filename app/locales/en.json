@@ -103,5 +103,28 @@
       "threeYears": "three years",
       "fiveYears": "five years"
     }
+  },
+  "connect": {
+    "features": {
+      "dates": "Don't miss important dates",
+      "dates_planning": "Plan dates together",
+      "romantic_ideas": "Ideas for romantic evenings",
+      "challenges": "Fun challenges for two"
+    }
+  },
+  "wait": {
+    "invitation": "You have an invitation",
+    "invites_to": "invites you to LoveMe",
+    "what_awaits": "What awaits you",
+    "decline": "Decline",
+    "accept": "Accept",
+    "loading": {
+      "title": "Please wait",
+      "description": "We are loading information about your partner"
+    },
+    "processing": {
+      "almost_done": "Almost done!",
+      "wait_partner": "Wait for your partner to complete the setup"
+    }
   }
 }

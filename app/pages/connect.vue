@@ -3,6 +3,7 @@ import type { DateValue } from '@internationalized/date'
 
 import QrcodeVue from 'qrcode.vue'
 import { useQrScanner } from 'vue-tg'
+import { features } from '~/constants/app/connect'
 
 definePageMeta({
   layout: 'unauthorized',
@@ -32,6 +33,8 @@ interface CarouselItem {
     }
   }
 }
+
+const { t } = useI18n()
 const config = useRuntimeConfig()
 const tgUserStore = useTgWebAppStore().initDataUnsafe.user
 const selectedDate = ref<DateValue | null>(null)
@@ -67,12 +70,7 @@ const carouselItems: CarouselItem[] = [
     subtitle: tgUserStore.first_name,
     badge: 'И ещё многое другое ждёт тебя в LoveApp',
     main: 'Мы рады представить тебе новое приложение для отслеживания <b>ваших</b> отношений',
-    features: [
-      { icon: 'i-heroicons-bell', text: 'Не пропустите важные даты', color: 'text-primary' },
-      { icon: 'i-heroicons-calendar', text: 'Планируйте свидания вместе', color: 'text-primary' },
-      { icon: 'i-heroicons-light-bulb', text: 'Идеи для романтических вечеров', color: 'text-primary' },
-      { icon: 'i-heroicons-trophy', text: 'Весёлые челленджи для двоих', color: 'text-primary' },
-    ],
+    features,
   },
   {
     title: 'Создайте вашу',
@@ -146,7 +144,7 @@ function onSelect(index: number) {
               <ul v-if="item.features" class="space-y-1 text-left">
                 <li v-for="feature in item.features" :key="feature.text" class="flex items-center gap-2">
                   <UIcon :name="feature.icon" class="w-5 h-5" :class="[feature.color]" />
-                  <span>{{ feature.text }}</span>
+                  <span>{{ t(feature.text) }}</span>
                 </li>
               </ul>
 

@@ -30,9 +30,9 @@ export default defineNuxtPlugin(async () => {
   }
 
   window.Telegram.WebApp.disableVerticalSwipes()
-  window.Telegram.WebApp.SettingsButton.show()
-  window.Telegram.WebApp.SettingsButton.onClick(() =>
-    navigateTo('/settings'))
+  // window.Telegram.WebApp.SettingsButton.show()
+  // window.Telegram.WebApp.SettingsButton.onClick(() =>
+  //   navigateTo('/settings'))
 
   if (webAppData.value.version > '6.0') {
     window.Telegram.WebApp.lockOrientation('portrait')
