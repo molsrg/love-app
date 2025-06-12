@@ -110,6 +110,9 @@
       "dates_planning": "Plan dates together",
       "romantic_ideas": "Ideas for romantic evenings",
       "challenges": "Fun challenges for two"
+    },
+    "scanner": {
+      "text": "Point your camera at your partner's QR code"
     }
   },
   "wait": {

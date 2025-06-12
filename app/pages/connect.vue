@@ -45,23 +45,47 @@ const qrScannerInstance = useQrScanner()
 const qrData = ref<{ userId: string, date: string } | null>(null)
 
 function openQrScanner(): void {
-  qrScannerInstance?.show?.({ text: 'Наведите камеру на QR-код партнёра' })
+  qrScannerInstance?.show?.({ text: t('connect.scanner.text') })
 }
 
+const qrScanner = useQrScanner()
+
+function startScanner(): void {
+  qrScanner?.show({ text: 'Наведите камеру на QRasdasd-код партнёра' })
+}
+
+qrScanner?.onScan((eventData: { data: string }) => {
+  data.value = eventData
+  qrScanner?.close()
+})
+
+const data = ref('123')
 function handleQrScan(eventData: { data: string }) {
   console.warn('QR scanned:', eventData.data)
-  const [userId, date] = eventData.data.split('_')
-  qrData.value = { userId, date }
+
+  data.value = eventData
+  // const [userId, date] = eventData.data.split('_')
+  // if (userId && date) {
+  //   qrData.value = { userId, date }
+  //   qrScannerInstance?.close?.()
+  //   isQrOpen.value = true
+  //   select(1)
+  // }
   qrScannerInstance?.close?.()
 }
 
 onMounted(() => {
-  qrScannerInstance?.onScan?.(handleQrScan)
+  // qrScannerInstance.onScan()
+  // qrScannerInstance?.onScan?.(handleQrScan)
+  // qrScannerInstance?.onClose?.(() => {
+  //   console.log('QR scanner closed')
+  // })
 })
 
 onUnmounted(() => {
   qrScannerInstance?.close?.()
-  qrScannerInstance?.offScan?.(handleQrScan)
+  qrScannerInstance?.onScan?.(handleQrScan)
+  qrScannerInstance?.onClose?.(() => {})
 })
 
 const carouselItems: CarouselItem[] = [
@@ -81,7 +105,7 @@ const carouselItems: CarouselItem[] = [
       primary: {
         icon: 'i-heroicons-qr-code',
         label: 'Сканировать QR партнёра',
-        action: openQrScanner,
+        action: startScanner,
       },
       secondary: {
         icon: 'i-heroicons-share',
@@ -130,6 +154,7 @@ function onSelect(index: number) {
   <div>
     <div class="relative" style="height: 75vh;">
       <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center w-full">
+        {{ data }}
         <UCarousel v-slot="{ item }" dots :items="carouselItems" class="w-full">
           <UCard variant="subtle" class="p-2" :ui="{ root: 'rounded-xl' }">
             <div class="space-y-4">
