@@ -198,6 +198,7 @@ function isDateDisabled(date: CalendarDate) {
 
 <template>
   <div class="space-y-3">
+  
     <h1 class="text-2xl font-bold text-white animate-fade-in mb-[-8px]">
       {{ t('settings.title') }}
     </h1>

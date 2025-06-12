@@ -39,8 +39,12 @@ async function openPhotoModal(day: any) {
 </script>
 
 <template>
-  <div class="relative">
-    <div class="opacity-10 pointer-events-none">
+
+  <div >
+    <DevelopmentPage
+      :text="t('development.title')"
+      :subtitle="t('development.subtitle')"
+    />
       <div class="flex flex-col gap-4">
         <UBadge
           variant="subtle"
@@ -58,15 +62,5 @@ async function openPhotoModal(day: any) {
       </div>
     </div>
 
-    <div class="absolute inset-0 flex items-center justify-center">
-      <UBadge
-
-        :label="t('calendar.inDevelopment')"
-        size="xl"
-        :ui="{
-          label: 'whitespace-normal text-center',
-        }"
-      />
-    </div>
-  </div>
+    
 </template>

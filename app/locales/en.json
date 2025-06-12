@@ -53,6 +53,11 @@
       }
     }
   },
+  "development": {
+    "title": "In Development",
+    "subtitle": "This feature will be available soon",
+    "icon": "i-heroicons-wrench-screwdriver"
+  },
   "calendar": {
     "inDevelopment": "Page in development",
     "day": {

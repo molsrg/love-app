@@ -55,6 +55,11 @@
       }
     }
   },
+  "development": {
+    "title": "В разработке",
+    "subtitle": "Эта функция будет доступна в ближайшее время",
+    "icon": "i-heroicons-wrench-screwdriver"
+  },
   "calendar": {
     "inDevelopment": "Страница в разработке",
     "day": {

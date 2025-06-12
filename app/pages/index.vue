@@ -108,7 +108,7 @@ const stats = computed(() => {
       </UAvatarGroup>
     </div>
 
-    <h2 class="text-3xl font-bold text-primary text-center animate-fade-in translate-y-3">
+    <h2 class="text-3xl font-bold text-primary text-center animate-fade-in translate-y-3 break-all">
       {{ pair.user1.username }} и
       <span class="text-white">{{ pair.user2.username }}</span>
     </h2>
