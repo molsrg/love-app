@@ -13,10 +13,6 @@ interface TabItem extends TabsItem {
 type NavigationResult = Promise<void> | void
 
 const items: TabItem[] = [
-  // {
-  //   icon: 'i-material-symbols:indeterminate-question-box-rounded',
-  //   value: '/activity',
-  // },
   {
     icon: 'i-streamline-interface-calendar-heart-calendar-date-day-favorite-heart-like-month',
     value: '/calendar',
@@ -33,7 +29,6 @@ const items: TabItem[] = [
 ] as const
 
 let isNavigating = false
-
 async function handleNavigation(value: string): Promise<void> {
   if (isNavigating || value === route.path)
     return

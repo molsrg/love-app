@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { PropType } from 'vue'
 import { useLoadingIndicator } from '#imports'
+import { useViewport } from 'vue-tg'
 
 const props = defineProps({
   throttle: {
@@ -38,6 +39,11 @@ const { progress, isLoading, error } = useLoadingIndicator({
   throttle: props.throttle,
   estimatedProgress: props.estimatedProgress,
 })
+
+const { contentSafeAreaInset } = useViewport()
+const marginTopCalculate = computed<string>(() =>
+  `${contentSafeAreaInset.value.top * 2}px`,
+)
 </script>
 
 <template>
@@ -45,7 +51,7 @@ const { progress, isLoading, error } = useLoadingIndicator({
     class="custom-loading-indicator"
     :style="{
       position: 'fixed',
-      top: 0,
+      top: marginTopCalculate,
       right: 0,
       left: 0,
       pointerEvents: 'none',

@@ -1,10 +1,5 @@
-export default defineNuxtRouteMiddleware(async (to, from) => {
-  // console.warn('Middleware From:', from.path)
-  // console.warn('Middleware To:', to.path)
-
+export default defineNuxtRouteMiddleware(async (to) => {
   const tgWebAppStore = useTgWebAppStore()
-  // console.warn('Middleware isCreatePair:', tgWebAppStore.isCreatePair)
-  // console.warn('Middleware userInPair:', tgWebAppStore.userInPair)
 
   // Wait for tgWebAppStore to be initialized
   if (!tgWebAppStore.isInitialized) {
@@ -30,6 +25,4 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     console.warn('Middleware: User not paired and not creating pair, navigating to /connect')
     return navigateTo('/connect')
   }
-
-  // If none of the above, allow navigation to proceed (or return undefined implicitly)
 })

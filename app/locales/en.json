@@ -46,7 +46,10 @@
         "tooShort": "Name must be at least 2 characters",
         "tooLong": "Name cannot be longer than 30 characters",
         "sameName": "New name cannot be the same as current name"
-      }
+      },
+      "change": "Change",
+      "saveNewName": "Save new name",
+      "selectTheme": "Select theme"
     },
     "partner": {
       "name": "Partner's name",
@@ -63,7 +66,7 @@
   },
   "development": {
     "title": "In Development",
-    "subtitle": "This feature will be available soon",
+    "subtitle": "This page will be available soon",
     "icon": "i-heroicons-wrench-screwdriver"
   },
   "calendar": {

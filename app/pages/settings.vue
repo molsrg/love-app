@@ -245,13 +245,13 @@ function isDateDisabled(date: CalendarDate) {
         <div>
           <div class="flex gap-2 items-center mb-1">
             <label class="text-sm text-gray-400  block">{{ t('settings.profile.name') }}</label>
-            <UButton label="Change" color="primary" size="xs" variant="outline" @click="isOpenChangeName = !isOpenChangeName " />
+            <UButton :label="t('settings.profile.change')" color="primary" size="xs" variant="outline" @click="isOpenChangeName = !isOpenChangeName " />
           </div>
 
           <UInput
             v-model="userName"
             disabled
-            
+
             :placeholder="t('settings.profile.namePlaceholder')"
             class="w-full"
             size="lg"
@@ -331,8 +331,6 @@ function isDateDisabled(date: CalendarDate) {
           />
         </div>
       </div>
-
-     
     </UCard>
     <UCard class="animate-slide-up opacity-0 translate-y-5" style="animation-delay: 0.4s" variant="subtle">
       <template #header>
@@ -348,8 +346,8 @@ function isDateDisabled(date: CalendarDate) {
         <div>
           <label class="text-sm text-gray-400 mb-1 block">{{ t('settings.partner.name') }}</label>
           <UInput
-          variant="subtle"
             v-model="userProfile.partnerName"
+            variant="subtle"
             :placeholder="t('settings.partner.namePlaceholder')"
             class="w-full"
             disabled
@@ -417,39 +415,39 @@ function isDateDisabled(date: CalendarDate) {
       </div>
     </UCard>
     <UDrawer v-model:open="isOpenChangeName">
-        <template #content>
-          <div class="p-4 space-y-3 pb-12">
-            <div>
-              <label class="text-sm text-gray-400 mb-1 block">{{ t('settings.profile.oldName') }}</label>
-              <UInput
-                v-model="userName"
-                disabled
-                :placeholder="t('settings.profile.namePlaceholder')"
-                class="w-full"
-                size="lg"
-              />
-            </div>
-            <div>
-              <label class="text-sm text-gray-400 mb-1 block">{{ t('settings.profile.newName') }}</label>
-              <UInput
-                v-model="newUserName"
-                :placeholder="t('settings.profile.namePlaceholder')"
-                class="w-full"
-                size="lg"
-              />
-              <UBadge v-if="nameError" class="mt-1 ml-1" color="error" :label="nameError" variant="outline" />
-            </div>
-            <div class="flex justify-end">
-              <UButton 
-                :disabled="!!nameError"
-                label="Save new name" 
-                color="primary" 
-                variant="subtle" 
-                @click="handleNameChange"
-              />
-            </div>
+      <template #content>
+        <div class="p-4 space-y-3 pb-8">
+          <div>
+            <label class="text-sm text-gray-400 mb-1 block">{{ t('settings.profile.oldName') }}</label>
+            <UInput
+              v-model="userName"
+              disabled
+              :placeholder="t('settings.profile.namePlaceholder')"
+              class="w-full"
+              size="lg"
+            />
           </div>
-        </template>
-      </UDrawer>
+          <div>
+            <label class="text-sm text-gray-400 mb-1 block">{{ t('settings.profile.newName') }}</label>
+            <UInput
+              v-model="newUserName"
+              :placeholder="t('settings.profile.namePlaceholder')"
+              class="w-full"
+              size="lg"
+            />
+            <UBadge v-if="nameError" class="mt-1 ml-1" color="error" :label="nameError" variant="outline" />
+          </div>
+          <div class="flex justify-end">
+            <UButton
+              :disabled="!!nameError"
+              :label="t('settings.profile.saveNewName')"
+              color="primary"
+              variant="subtle"
+              @click="handleNameChange"
+            />
+          </div>
+        </div>
+      </template>
+    </UDrawer>
   </div>
 </template>
