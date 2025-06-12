@@ -2,6 +2,10 @@
 import { ref } from 'vue'
 import { PhotoUploadModal } from '~/components/modal'
 
+definePageMeta({
+  pageTransition: false
+})
+
 const selectedDay = ref<any>(null)
 const overlay = useOverlay()
 const toast = useToast()
@@ -39,28 +43,25 @@ async function openPhotoModal(day: any) {
 </script>
 
 <template>
-
-  <div >
+  <div>
     <DevelopmentPage
       :text="t('development.title')"
       :subtitle="t('development.subtitle')"
     />
-      <div class="flex flex-col gap-4">
-        <UBadge
-          variant="subtle"
-          label="Здесь будут ваши совместные фото, попробуй прямо сейчас!"
-          size="xl"
-          :ui="{
-            label: 'whitespace-normal text-center',
-          }"
-        />
+    <div class="flex flex-col gap-4">
+      <UBadge
+        variant="subtle"
+        label="Здесь будут ваши совместные фото, попробуй прямо сейчас!"
+        size="xl"
+        :ui="{
+          label: 'whitespace-normal text-center',
+        }"
+      />
 
-        <CalendarApp
-          icon-name="i-material-symbols-android-camera-outline"
-          @update:day-click="openPhotoModal"
-        />
-      </div>
+      <CalendarApp
+        icon-name="i-material-symbols-android-camera-outline"
+        @update:day-click="openPhotoModal"
+      />
     </div>
-
-    
+  </div>
 </template>

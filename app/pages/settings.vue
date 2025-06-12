@@ -142,19 +142,56 @@ async function handleDateChange(date: DateValue | null | undefined) {
   }
 }
 
-const debouncedUpdateName = useDebounce(async (name: string) => {
-  // Don't send request if name hasn't changed
-  if (name === initialName.value)
+const isOpenChangeName = ref(false)
+const newUserName = ref('')
+const nameError = ref('')
+
+// Add watch for drawer state to reset values
+watch(isOpenChangeName, (isOpen) => {
+  if (!isOpen) {
+    newUserName.value = ''
+    nameError.value = ''
+  }
+})
+
+function validateName(name: string): boolean {
+  if (!name) {
+    nameError.value = t('settings.profile.errors.empty')
+    return false
+  }
+  if (name.length < 2) {
+    nameError.value = t('settings.profile.errors.tooShort')
+    return false
+  }
+  if (name.length > 30) {
+    nameError.value = t('settings.profile.errors.tooLong')
+    return false
+  }
+  if (name === userName.value) {
+    nameError.value = t('settings.profile.errors.sameName')
+    return false
+  }
+  nameError.value = ''
+  return true
+}
+
+// Add watch for real-time validation
+watch(newUserName, (newValue) => {
+  validateName(newValue)
+})
+
+async function handleNameChange() {
+  if (!validateName(newUserName.value))
     return
 
   try {
     usePairStore().stopPairPolling()
-    await api.post('/user/change-name', { username: name })
+    await api.post('/user/change-name', { username: newUserName.value })
 
     // Update name in pairStore and local ref
-    pairStore.user1.username = name
-    userName.value = name
-    initialName.value = name // Update initial name after successful update
+    pairStore.user1.username = newUserName.value
+    userName.value = newUserName.value
+    initialName.value = newUserName.value
 
     telegramNotificationOccurred('success')
     toast.add({
@@ -162,11 +199,10 @@ const debouncedUpdateName = useDebounce(async (name: string) => {
       description: t('settings.profile.nameUpdated.description'),
       color: 'success',
     })
+    isOpenChangeName.value = false
   }
   catch (error) {
     console.error('Failed to update name:', error)
-    // Revert name on error
-    userName.value = pairStore.user1.username
     toast.add({
       title: t('settings.profile.nameError.title'),
       description: t('settings.profile.nameError.description'),
@@ -176,13 +212,7 @@ const debouncedUpdateName = useDebounce(async (name: string) => {
   finally {
     usePairStore().startPairPolling()
   }
-}, 600)
-
-watch(() => userName.value, (newName, oldName) => {
-  if (newName !== oldName) {
-    debouncedUpdateName(newName)
-  }
-})
+}
 
 const { currentLocale, setLanguage, languages } = useLanguage()
 
@@ -198,7 +228,6 @@ function isDateDisabled(date: CalendarDate) {
 
 <template>
   <div class="space-y-3">
-  
     <h1 class="text-2xl font-bold text-white animate-fade-in mb-[-8px]">
       {{ t('settings.title') }}
     </h1>
@@ -214,9 +243,14 @@ function isDateDisabled(date: CalendarDate) {
 
       <div class="space-y-4">
         <div>
-          <label class="text-sm text-gray-400 mb-1 block">{{ t('settings.profile.name') }}</label>
+          <div class="flex gap-2 items-center mb-1">
+            <label class="text-sm text-gray-400  block">{{ t('settings.profile.name') }}</label>
+            <UButton label="Change" color="primary" size="xs" variant="outline" @click="isOpenChangeName = !isOpenChangeName " />
+          </div>
+
           <UInput
             v-model="userName"
+            disabled
             :placeholder="t('settings.profile.namePlaceholder')"
             class="w-full"
             size="lg"
@@ -296,6 +330,42 @@ function isDateDisabled(date: CalendarDate) {
           />
         </div>
       </div>
+
+      <UDrawer v-model:open="isOpenChangeName">
+        <template #content>
+          <div class="p-4 space-y-3">
+            <div>
+              <label class="text-sm text-gray-400 mb-1 block">{{ t('settings.profile.oldName') }}</label>
+              <UInput
+                v-model="userName"
+                disabled
+                :placeholder="t('settings.profile.namePlaceholder')"
+                class="w-full"
+                size="lg"
+              />
+            </div>
+            <div>
+              <label class="text-sm text-gray-400 mb-1 block">{{ t('settings.profile.newName') }}</label>
+              <UInput
+                v-model="newUserName"
+                :placeholder="t('settings.profile.namePlaceholder')"
+                class="w-full"
+                size="lg"
+              />
+              <UBadge v-if="nameError" class="mt-1 ml-1" color="error" :label="nameError" variant="outline" />
+            </div>
+            <div class="flex justify-end">
+              <UButton 
+                :disabled="!!nameError"
+                label="Save new name" 
+                color="primary" 
+                variant="subtle" 
+                @click="handleNameChange"
+              />
+            </div>
+          </div>
+        </template>
+      </UDrawer>
     </UCard>
     <UCard class="animate-slide-up opacity-0 translate-y-5" style="animation-delay: 0.4s" variant="subtle">
       <template #header>

@@ -5,7 +5,6 @@ defineProps<{
 }>()
 
 const { t } = useI18n()
-
 </script>
 
 <template>
@@ -19,9 +18,9 @@ const { t } = useI18n()
         variant="solid"
         size="lg"
       />
-        
+
       <UBadge
-      v-if="subtitle"
+        v-if="subtitle"
         :label="subtitle || t('development.subtitle')"
         color="neutral"
         variant="subtle"
@@ -30,5 +29,3 @@ const { t } = useI18n()
     </div>
   </div>
 </template>
-
-

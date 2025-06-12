@@ -1,4 +1,3 @@
-import { CalendarDate } from '@internationalized/date'
 import { useCloudStorage, useMiniApp } from 'vue-tg/latest'
 import { useApi } from '~/composables/useApi'
 

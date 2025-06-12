@@ -1,5 +1,3 @@
-import { navigateTo } from '#app'
-
 declare global {
   interface Window {
     Telegram: {

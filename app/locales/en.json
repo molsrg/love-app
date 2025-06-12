@@ -38,6 +38,14 @@
       "avatarError": {
         "title": "Upload error",
         "description": "Failed to upload avatar"
+      },
+      "oldName": "Current name",
+      "newName": "New name",
+      "errors": {
+        "empty": "Name cannot be empty",
+        "tooShort": "Name must be at least 2 characters",
+        "tooLong": "Name cannot be longer than 30 characters",
+        "sameName": "New name cannot be the same as current name"
       }
     },
     "partner": {
