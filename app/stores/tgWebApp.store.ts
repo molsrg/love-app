@@ -78,13 +78,7 @@ export const useTgWebAppStore = defineStore('tgWebAppStore', {
       }
 
       if (this.initDataUnsafe?.start_param) {
-        console.log(
-          this.initDataUnsafe?.start_param,
-        )
-
         this.startParam = this.initDataUnsafe?.start_param
-
-        console.log(this.startParam)
 
         // Validate start_param format: ID_YYYY-MM-DD
         const startParamRegex = /^\d+_\d{4}-\d{2}-\d{2}$/
