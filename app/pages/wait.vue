@@ -23,6 +23,8 @@ const isAccepted = ref(false)
 const partnerId = ref<string>('')
 const startDate = ref<string>('')
 
+const startParam = computed(() => tgWebAppStore.startParam)
+
 function parseStartParams(startParam: string): StartParams {
   const [id, date] = startParam.split('_')
   return {
@@ -30,15 +32,15 @@ function parseStartParams(startParam: string): StartParams {
     date: date || '',
   }
 }
-const startParam = tgWebAppStore.start_param
+
 async function loadPartnerInfo() {
   // Add 2 second delay
   await new Promise(resolve => setTimeout(resolve, 2000))
 
-  if (!startParam)
+  if (!startParam.value)
     return
 
-  const { id, date } = parseStartParams(startParam)
+  const { id, date } = parseStartParams(startParam.value)
   partnerId.value = id
   startDate.value = date
 
