@@ -30,12 +30,11 @@ function parseStartParams(startParam: string): StartParams {
     date: date || '',
   }
 }
-
+const startParam = tgWebAppStore.start_param
 async function loadPartnerInfo() {
   // Add 2 second delay
   await new Promise(resolve => setTimeout(resolve, 2000))
 
-  const startParam = tgWebAppStore.start_param
   if (!startParam)
     return
 
@@ -91,6 +90,7 @@ onMounted(async () => {
 
 <template>
   <div class="relative" style="height: 80vh;">
+    {{ startParam }}
     <div v-if="partner && !isAccepted" class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center w-full max-w-sm">
       <UCard class="w-full" variant="subtle">
         <template #header>
