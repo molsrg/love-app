@@ -35,7 +35,7 @@ async function loadPartnerInfo() {
   // Add 2 second delay
   await new Promise(resolve => setTimeout(resolve, 2000))
 
-  const startParam = tgWebAppStore.initDataUnsafe?.start_param
+  const startParam = tgWebAppStore.start_param
   if (!startParam)
     return
 

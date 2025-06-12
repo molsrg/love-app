@@ -52,11 +52,40 @@ function startScanner(): void {
 
 qrScanner?.onScan((eventData: { data: string }) => {
   dataQR.value = eventData
+  const qrText = eventData.data
+  const startParam = qrText.split('startapp=')[1]
 
-  const [userId, date] = eventData.data.split('_')
-  if (userId && date) {
-    qrData.value = { userId, date }
-    qrScanner?.close()
+  if (startParam) {
+    const [userId, date] = startParam.split('_')
+    if (userId && date) {
+      // qrData.value = {
+      //   userId: userId.trim(),
+      //   date: date.trim(),
+      // }
+
+      const tgWebAppStore = useTgWebAppStore()
+      const startParamRegex = /^\d+_\d{4}-\d{2}-\d{2}$/
+
+      if (startParamRegex.test(startParam)) {
+        if (!tgWebAppStore.userInPair) {
+          console.warn('Valid QR code detected, user not paired')
+          tgWebAppStore.isCreatePair = true
+
+          tgWebAppStore.startParam = startParam
+          navigateTo('/wait')
+        }
+        else {
+          console.warn('User already paired, ignoring QR code')
+          tgWebAppStore.isCreatePair = false
+        }
+      }
+      else {
+        console.warn('Invalid QR code format:', startParam)
+        tgWebAppStore.isCreatePair = false
+      }
+
+      qrScanner?.close()
+    }
   }
 })
 
