@@ -10,6 +10,8 @@ export default antfu(
         markers: ['/'],
       }],
       'no-warning-comments': ['error', { terms: ['fixme', 'xxx'], location: 'start' }],
+      'no-alert': 'off',
+      'no-confirm': 'off',
     },
   },
 

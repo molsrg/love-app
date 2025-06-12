@@ -15,18 +15,19 @@ const pairStore = usePairStore()
 
 const initialName = ref(pairStore.user1.username ?? '')
 const userName = ref(pairStore.user1.username ?? '')
+const activeTheme = ref(appConfig.ui.colors.primary)
 
 const userProfile = computed<Profile>(() => ({
   name: userName.value,
   partnerName: pairStore.user2.username ?? '',
   startDate: new Date(pairStore.startDate).toLocaleDateString('en-CA'),
-  theme: 'dark',
+  theme: activeTheme.value,
   ...(pairStore.user1.avatar ? { avatar: pairStore.user1.avatar } : {}),
 }))
 
-const activeTheme = ref(appConfig.ui.colors.primary)
-const isThemePopoverOpen = ref(false)
+// Theme app
 
+const isThemePopoverOpen = ref(false)
 async function changeTheme(theme: Theme): Promise<void> {
   if (!appConfig?.ui?.colors)
     return
@@ -42,8 +43,9 @@ const activeThemeName = computed(() =>
   THEMES.find((theme: Theme) => theme.value === activeTheme.value)?.name || 'settings.profile.selectTheme',
 )
 
+// Start date
 const isCalendarPopoverOpen = ref(false)
-const selectedDate = ref<DateValue | null>(parseDate(userProfile.value.startDate))
+const selectedDate = ref<any>(parseDate(userProfile.value.startDate))
 
 const isHostTransferEnabled = ref(false)
 const canEditPair = computed(() => pairStore.isHost)
@@ -125,8 +127,8 @@ function handleBreakUp() {
   }
 }
 
-async function handleDateChange(date: DateValue | null | undefined) {
-  if (!date || typeof date !== 'object' || 'start' in date || Array.isArray(date))
+async function handleDateChange(date: any) {
+  if (!date || !('year' in date))
     return
 
   selectedDate.value = date
@@ -135,7 +137,9 @@ async function handleDateChange(date: DateValue | null | undefined) {
   isCalendarPopoverOpen.value = false
 
   try {
+    usePairStore().stopPairPolling()
     await api.post('/pair/change-date', { date: date.toString() })
+    usePairStore().startPairPolling()
   }
   catch (error) {
     console.error('Error connecting pair:', error)
@@ -216,7 +220,9 @@ async function handleNameChange() {
 
 const { currentLocale, setLanguage, languages } = useLanguage()
 
-function isDateDisabled(date: CalendarDate) {
+function isDateDisabled(date: DateValue) {
+  if (!('year' in date))
+    return false
   const today = new CalendarDate(
     new Date().getFullYear(),
     new Date().getMonth() + 1,

@@ -1,16 +1,16 @@
 <script setup lang="ts">
-const props = defineProps<{
-  questionId: number
-  questionText: string
-  questionsStatus: string
-}>()
+// const props = defineProps<{
+//   questionId: number
+//   questionText: string
+//   questionsStatus: string
+// }>()
 const emit = defineEmits<{ close: [boolean] }>()
 
 const myAnswer = ref('')
 const partnerAnswer = ref('')
 
 function handleSubmit() {
-  console.log('Submitting answer:', myAnswer.value)
+  // console.log('Submitting answer:', myAnswer.value)
   emit('close', true)
 }
 </script>

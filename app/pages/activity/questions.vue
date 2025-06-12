@@ -11,7 +11,7 @@ backButton?.onClick(() => {
 })
 
 const overlay = useOverlay()
-const toast = useToast()
+// const toast = useToast()
 
 const modal = overlay.create(QuestionsModal, {
   props: {

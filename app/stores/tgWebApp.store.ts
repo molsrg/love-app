@@ -89,17 +89,17 @@ export const useTgWebAppStore = defineStore('tgWebAppStore', {
           }
           else {
             console.warn('start_param detected but user is already paired. Ignoring isCreatePair.')
-            this.isCreatePair = false // Ensure it's false if user is paired
+            this.isCreatePair = false
           }
         }
         else {
           console.warn('Invalid start_param format detected:', this.initDataUnsafe.start_param, 'Expected format: ID_YYYY-MM-DD')
-          this.isCreatePair = false // Ensure it's false if format is invalid
+          this.isCreatePair = false
         }
       }
       else {
         console.warn('No start_param detected.')
-        this.isCreatePair = false // Ensure isCreatePair is false if no start_param
+        this.isCreatePair = false
       }
     },
   },

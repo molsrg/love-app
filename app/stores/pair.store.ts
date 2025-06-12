@@ -1,5 +1,4 @@
 import { defineStore } from 'pinia'
-import { useApi } from '~/composables/useApi'
 import { usePolling } from '~/composables/usePolling'
 
 export interface PairUser {
@@ -87,7 +86,6 @@ export const usePairStore = defineStore('pair', {
       console.warn('Starting pair polling')
 
       const { start, stop } = usePolling()
-      const api = useApi()
 
       const handlePollingResponse = async (data: any) => {
         this.updatePairData(data)

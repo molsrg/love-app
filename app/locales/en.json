@@ -145,5 +145,9 @@
       "almost_done": "Almost done!",
       "wait_partner": "Wait for your partner to complete the setup"
     }
+  },
+  "common": {
+    "cancel": "Cancel",
+    "confirm": "Confirm"
   }
 }

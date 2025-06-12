@@ -3,7 +3,7 @@ import { ref } from 'vue'
 import { PhotoUploadModal } from '~/components/modal'
 
 definePageMeta({
-  pageTransition: false
+  pageTransition: false,
 })
 
 const selectedDay = ref<any>(null)

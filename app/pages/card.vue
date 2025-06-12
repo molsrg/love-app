@@ -88,9 +88,9 @@ const overlayColor = computed(() => {
   if (!dragging.value || !swipeDirection.value)
     return 'transparent'
   if (swipeDirection.value === 'left')
-    return 'rgba(239,68,68,0.3)' // красный
+    return 'rgba(239,68,68,0.3)'
   if (swipeDirection.value === 'right')
-    return 'rgba(34,197,94,0.3)' // зеленый
+    return 'rgba(34,197,94,0.3)'
   return 'transparent'
 })
 </script>

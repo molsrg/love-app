@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const props = defineProps<{ day: any }>()
+// const props = defineProps<{ day: any }>()
 const emit = defineEmits<{ close: [boolean] }>()
 
 const selectedImage = ref<string | null>(null)
