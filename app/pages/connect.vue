@@ -41,51 +41,23 @@ const selectedDate = ref<DateValue | null>(null)
 const qrUrl = computed(() => `https://t.me/${config.public.botUrl}?startapp=${tgUserStore.id}_${selectedDate.value}`)
 const isQrOpen = ref(false)
 const { $isMobile } = useNuxtApp()
-const qrScannerInstance = useQrScanner()
+
 const qrData = ref<{ userId: string, date: string } | null>(null)
 
-function openQrScanner(): void {
-  qrScannerInstance?.show?.({ text: t('connect.scanner.text') })
-}
-
 const qrScanner = useQrScanner()
-
+const dataQR = ref<{ data: string } | null>(null)
 function startScanner(): void {
-  qrScanner?.show({ text: 'Наведите камеру на QRasdasd-код партнёра' })
+  qrScanner?.show({ text: 'Наведите камеру на QR-код партнёра' })
 }
 
 qrScanner?.onScan((eventData: { data: string }) => {
-  data.value = eventData
-  qrScanner?.close()
-})
+  dataQR.value = eventData
 
-const data = ref('123')
-function handleQrScan(eventData: { data: string }) {
-  console.warn('QR scanned:', eventData.data)
-
-  data.value = eventData
-  // const [userId, date] = eventData.data.split('_')
-  // if (userId && date) {
-  //   qrData.value = { userId, date }
-  //   qrScannerInstance?.close?.()
-  //   isQrOpen.value = true
-  //   select(1)
-  // }
-  qrScannerInstance?.close?.()
-}
-
-onMounted(() => {
-  // qrScannerInstance.onScan()
-  // qrScannerInstance?.onScan?.(handleQrScan)
-  // qrScannerInstance?.onClose?.(() => {
-  //   console.log('QR scanner closed')
-  // })
-})
-
-onUnmounted(() => {
-  qrScannerInstance?.close?.()
-  qrScannerInstance?.onScan?.(handleQrScan)
-  qrScannerInstance?.onClose?.(() => {})
+  const [userId, date] = eventData.data.split('_')
+  if (userId && date) {
+    qrData.value = { userId, date }
+    qrScanner?.close()
+  }
 })
 
 const carouselItems: CarouselItem[] = [
@@ -154,7 +126,7 @@ function onSelect(index: number) {
   <div>
     <div class="relative" style="height: 75vh;">
       <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center w-full">
-        {{ data }}
+        {{ dataQR?.data }}
         <UCarousel v-slot="{ item }" dots :items="carouselItems" class="w-full">
           <UCard variant="subtle" class="p-2" :ui="{ root: 'rounded-xl' }">
             <div class="space-y-4">
