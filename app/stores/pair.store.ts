@@ -49,6 +49,11 @@ export const usePairStore = defineStore('pair', {
   }),
   actions: {
     updatePairData(data: PairData) {
+      if (Object.keys(data).length === 0) {
+        this.breakPair()
+        return
+      }
+
       // Determine which user is the current user based on isHost flag
       const currentUser = data.isHost ? data.user1 : data.user2
       const partnerUser = data.isHost ? data.user2 : data.user1
@@ -97,6 +102,13 @@ export const usePairStore = defineStore('pair', {
         this.stopPolling()
         this.stopPolling = null
       }
+    },
+
+    breakPair() {
+      this.stopPairPolling()
+      useTgWebAppStore().userInPair = false
+      useTgWebAppStore().isCreatePair = false
+      navigateTo('/connect')
     },
   },
 })

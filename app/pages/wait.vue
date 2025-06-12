@@ -92,7 +92,6 @@ onMounted(async () => {
 
 <template>
   <div class="relative" style="height: 80vh;">
-    {{ startParam }}
     <div v-if="partner && !isAccepted" class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center w-full max-w-sm">
       <UCard class="w-full" variant="subtle">
         <template #header>
