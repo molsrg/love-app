@@ -72,23 +72,9 @@ qrScanner?.onScan((eventData: { data: string }) => {
   }
 })
 
-const carouselItems: CarouselItem[] = [
-  {
-    title: 'Привет,',
-    subtitle: tgUserStore.first_name,
-    badge: 'И ещё многое другое ждёт тебя в LoveApp',
-    main: 'Мы рады представить тебе новое приложение для отслеживания <b>ваших</b> отношений',
-    features,
-  },
-  {
-    title: 'Создайте вашу',
-    subtitle: 'пару',
-    main: 'Просто отсканируйте QR-код партнёра или поделитесь своим',
-    call: 'Уже более 1000 пар вместе с нами',
-    actions: {
-      primary: {
-        icon: 'i-heroicons-qr-code',
-    },
+const carousel = useTemplateRef('carousel')
+const activeIndex = ref(0)
+
 const items = [
   {
     title: 'Выбери дату начала отношений',
@@ -97,9 +83,6 @@ const items = [
     title: 'Твой готовый QR-код',
   },
 ]
-
-const carousel = useTemplateRef('carousel')
-const activeIndex = ref(0)
 
 function handleDateChange(date: any) {
   if (!date || typeof date !== 'object' || 'start' in date || Array.isArray(date))
