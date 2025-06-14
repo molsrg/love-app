@@ -10,6 +10,7 @@ export function usePolling() {
   const MAX_ERRORS = 3
   const config = useRuntimeConfig()
   const tokenStore = useTokenStore()
+  const nuxtApp = useNuxtApp()
 
   const getHeaders = (): Record<string, string> => {
     const headers: Record<string, string> = {
@@ -19,6 +20,8 @@ export function usePolling() {
     if (tokenStore.getStatus) {
       headers.Authorization = `Bearer ${tokenStore.getToken}`
     }
+
+    headers['X-App-Locale'] = nuxtApp.vueApp.config.globalProperties.$i18n.locale
 
     return headers
   }

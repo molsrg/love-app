@@ -19,7 +19,7 @@ export function useApi() {
   const config = useRuntimeConfig()
   const toast = useToast()
   const tokenStore = useTokenStore()
-  const { locale } = useI18n()
+  const nuxtApp = useNuxtApp()
 
   const defaultOptions: ApiOptions = {
     showSuccessToast: true,
@@ -75,7 +75,7 @@ export function useApi() {
     }
 
     // Add current locale to headers
-    headers['Accept-Language'] = locale.value
+    headers['X-App-Locale'] = nuxtApp.vueApp.config.globalProperties.$i18n.locale
 
     return headers
   }
