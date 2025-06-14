@@ -1,38 +1,14 @@
 <script setup lang="ts">
 import type { DateValue } from '@internationalized/date'
 
+import type { CarouselItem } from '~/types/carousel'
 import QrcodeVue from 'qrcode.vue'
 import { useQrScanner } from 'vue-tg'
-import { features } from '~/constants/app/connect'
+import { carouselItems, features } from '~/constants/app/connect'
 
 definePageMeta({
   layout: 'unauthorized',
 })
-
-interface CarouselItem {
-  title: string
-  subtitle: string
-  main: string
-  badge?: string
-  call?: string
-  features?: {
-    icon: string
-    text: string
-    color: string
-  }[]
-  actions?: {
-    primary?: {
-      icon: string
-      label: string
-      action: () => void
-    }
-    secondary?: {
-      icon: string
-      label: string
-      action: () => void
-    }
-  }
-}
 
 const { t } = useI18n()
 const config = useRuntimeConfig()
@@ -41,13 +17,20 @@ const selectedDate = ref<DateValue | null>(null)
 const qrUrl = computed(() => `https://t.me/${config.public.botUrl}?startapp=${tgUserStore.id}_${selectedDate.value}`)
 const isQrOpen = ref(false)
 const { $isMobile } = useNuxtApp()
+const { telegramSelectionChanged, telegramNotificationOccurred } = useHapticFeedback()
 
 const qrData = ref<{ userId: string, date: string } | null>(null)
-
 const qrScanner = useQrScanner()
-const dataQR = ref<{ data: string } | null>(null)
+const _dataQR = ref<{ data: string } | null>(null)
+
 function startScanner(): void {
-  qrScanner?.show({ text: 'Наведите камеру на QR-код партнёра' })
+  qrScanner?.show({ text: t('connect.scanner.text') })
+}
+
+type ActionType = 'startScanner' | 'shareQR'
+const actionHandlers: Record<ActionType, () => void> = {
+  startScanner,
+  shareQR() { isQrOpen.value = !isQrOpen.value },
 }
 
 qrScanner?.onScan((eventData: { data: string }) => {
@@ -105,18 +88,7 @@ const carouselItems: CarouselItem[] = [
     actions: {
       primary: {
         icon: 'i-heroicons-qr-code',
-        label: 'Сканировать QR партнёра',
-        action: startScanner,
-      },
-      secondary: {
-        icon: 'i-heroicons-share',
-        label: 'Поделиться моим QR',
-        action: () => { isQrOpen.value = !isQrOpen.value },
-      },
     },
-  },
-]
-const { telegramSelectionChanged, telegramNotificationOccurred } = useHapticFeedback()
 const items = [
   {
     title: 'Выбери дату начала отношений',
@@ -149,21 +121,27 @@ function onSelect(index: number) {
   }
   activeIndex.value = index
 }
+
+// Map carousel items with translations and actions
+const mappedCarouselItems = computed(() => carouselItems.map(item => ({
+  ...item,
+  subtitle: item.subtitle === '{name}' ? tgUserStore?.first_name ?? '' : item.subtitle,
+})))
 </script>
 
 <template>
   <div>
     <div class="relative" style="height: 75vh;">
       <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center w-full">
-        <UCarousel v-slot="{ item }" dots :items="carouselItems" class="w-full">
+        <UCarousel v-slot="{ item }" dots :items="mappedCarouselItems" class="w-full">
           <UCard variant="subtle" class="p-2" :ui="{ root: 'rounded-xl' }">
-            <div class="space-y-4">
+            <div class="space-y-4 animate-fade-in">
               <div class="text-center">
-                <h2 class="text-3xl font-bold text-white animate-fade-in mb-4">
-                  {{ item.title }}
-                  <span class="text-primary">{{ item.subtitle }}</span>
+                <h2 class="text-3xl font-bold text-white mb-4">
+                  {{ t(item.title) }}
+                  <span class="text-primary">{{ t(item.subtitle) }}</span>
                 </h2>
-                <p class="text-lg leading-relaxed animate-slide-up" v-html="item.main" />
+                <p class="text-lg leading-relaxed" v-html="t(item.main)" />
               </div>
 
               <ul v-if="item.features" class="space-y-1 text-left">
@@ -177,38 +155,37 @@ function onSelect(index: number) {
                 <UButton
                   v-if="item.actions.primary && $isMobile"
                   :icon="item.actions.primary.icon"
-                  :label="item.actions.primary.label"
+                  :label="t(item.actions.primary.label)"
                   size="xl"
                   variant="soft"
                   class="w-full justify-center shadow-lg focus:outline-none focus:ring-2 focus:ring-primary"
-                  @click="item.actions.primary.action"
+                  @click="actionHandlers[item.actions.primary.action as ActionType]()"
                 />
                 <UButton
                   v-if="item.actions.secondary"
                   :icon="item.actions.secondary.icon"
-                  :label="item.actions.secondary.label"
+                  :label="t(item.actions.secondary.label)"
                   size="xl"
                   color="neutral"
                   variant="subtle"
                   class="w-full justify-center focus:outline-none focus:ring-2 focus:ring-primary"
-                  @click="item.actions.secondary.action"
+                  @click="actionHandlers[item.actions.secondary.action as ActionType]()"
                 />
               </div>
-
               <UBadge
                 v-if="item.badge"
                 class="w-full"
                 variant="soft"
-                :label="item.badge"
+                :label="t(item.badge)"
                 size="xl"
                 :ui="{
-                  label: 'whitespace-normal text-center ',
+                  label: 'whitespace-normal text-center',
                 }"
               />
 
               <div v-if="item.call" class="flex items-center justify-center gap-2 text-sm text-gray-400">
                 <UIcon name="i-heroicons-users" class="w-4 h-4" />
-                <p>{{ item.call }}</p>
+                <p>{{ t(item.call) }}</p>
               </div>
             </div>
           </UCard>

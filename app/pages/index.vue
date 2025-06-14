@@ -50,10 +50,10 @@ const stats = computed(() => {
     <!-- Статистика -->
     <div class="grid grid-cols-3 gap-3 w-full translate-y-3">
       <div
-        v-for="(stat, index) in stats"
+        v-for="(stat) in stats"
         :key="stat.label"
         class="rounded-lg p-4 flex flex-col items-center animate-initial animate-slide-up"
-        :class="[stat.classes.container, `delay-${String((index + 2) * 100)}`]"
+        :class="[stat.classes.container]"
       >
         <h3
           class="text-2xl font-bold"

@@ -129,6 +129,25 @@
     },
     "scanner": {
       "text": "Point your camera at your partner's QR code"
+    },
+    "carousel": {
+      "welcome": {
+        "title": "Hello,",
+        "subtitle": "{name}",
+        "badge": "And much more awaits you in LoveApp",
+        "main": "We are pleased to present a new app for tracking <b>your</b> relationship"
+      },
+      "create": {
+        "title": "Create your",
+        "subtitle": "pair",
+        "main": "Just scan your partner's QR code or share yours",
+        "badge": "Your data is securely protected and available only to you and your partner",
+        "call": "Already more than 1000 pairs with us",
+        "actions": {
+          "primary": "Scan partner's QR",
+          "secondary": "Share my QR"
+        }
+      }
     }
   },
   "wait": {
