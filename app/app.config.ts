@@ -33,5 +33,11 @@ export default defineAppConfig({
         footer: 'justify-end',
       },
     },
+    drawer: {
+      slots: {
+        content: 'p-2 pb-6',
+        // body: 'p-4',
+      },
+    },
   },
 })

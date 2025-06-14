@@ -1,8 +1,12 @@
 <script setup lang="ts">
-import type { DateValue } from '@internationalized/date'
+import type { UStepper } from '#ui/types'
 
+import type { DateValue } from '@internationalized/date'
+import type { StepperItem } from '@nuxt/ui'
 import type { CarouselItem } from '~/types/carousel'
 import QrcodeVue from 'qrcode.vue'
+import { onMounted, ref } from 'vue'
+
 import { useQrScanner } from 'vue-tg'
 import { carouselItems, features } from '~/constants/app/connect'
 
@@ -41,11 +45,6 @@ qrScanner?.onScan((eventData: { data: string }) => {
   if (startParam) {
     const [userId, date] = startParam.split('_')
     if (userId && date) {
-      // qrData.value = {
-      //   userId: userId.trim(),
-      //   date: date.trim(),
-      // }
-
       const tgWebAppStore = useTgWebAppStore()
       const startParamRegex = /^\d+_\d{4}-\d{2}-\d{2}$/
 
@@ -74,16 +73,7 @@ qrScanner?.onScan((eventData: { data: string }) => {
 
 const carousel = useTemplateRef('carousel')
 const activeIndex = ref(0)
-
-const items = [
-  {
-    title: 'Выбери дату начала отношений',
-  },
-  {
-    title: 'Твой готовый QR-код',
-  },
-]
-
+const active = ref(0)
 function handleDateChange(date: any) {
   if (!date || typeof date !== 'object' || 'start' in date || Array.isArray(date))
     return
@@ -108,8 +98,26 @@ function onSelect(index: number) {
 // Map carousel items with translations and actions
 const mappedCarouselItems = computed(() => carouselItems.map(item => ({
   ...item,
-  subtitle: item.subtitle === '{name}' ? tgUserStore?.first_name ?? '' : item.subtitle,
+  subtitle: item.subtitle === '{name}' ? tgUserStore?.first_name ?? '' : t(item.subtitle),
 })))
+
+const itemsStep: StepperItem[] = [
+  {
+    title: 'Выбери дату начала отношений',
+    // description: 'Add your address here',
+    icon: 'i-material-symbols-calendar-apps-script',
+    slot: 'date' as const,
+  },
+  {
+    title: 'Твой готовый QR-код',
+    // description: 'Set your preferred shipping method',
+    icon: 'i-material-symbols-qr-code',
+    slot: 'qr' as const,
+  },
+
+]
+
+const stepper = useTemplateRef<{ hasPrev: boolean }>('stepper')
 </script>
 
 <template>
@@ -122,7 +130,7 @@ const mappedCarouselItems = computed(() => carouselItems.map(item => ({
               <div class="text-center">
                 <h2 class="text-3xl font-bold text-white mb-4">
                   {{ t(item.title) }}
-                  <span class="text-primary">{{ t(item.subtitle) }}</span>
+                  <span class="text-primary">{{ item.subtitle }}</span>
                 </h2>
                 <p class="text-lg leading-relaxed" v-html="t(item.main)" />
               </div>
@@ -178,51 +186,25 @@ const mappedCarouselItems = computed(() => carouselItems.map(item => ({
 
     <UDrawer v-model:open="isQrOpen">
       <template #content>
-        <div class="flex flex-col items-center px-6 py-3 space-y-4">
-          <UCarousel
-            ref="carousel"
-            v-slot="{ item }"
-            :items="items"
-            class="w-full"
-            @select="onSelect"
-          >
-            <UCard variant="subtle" :ui="{ root: 'rounded-xl h-85' }">
-              <template #header>
-                <h2 class="text-lg font-semibold text-white text-center">
-                  {{ item.title }}
-                </h2>
-              </template>
-
-              <!-- Первый слайд - выбор даты -->
-              <div v-if="activeIndex === 0" class="space-y-4">
-                <UCalendar
-                  v-model="selectedDate"
-                  :fixed-weeks="false"
-                  class="w-full"
-                  @update:model-value="handleDateChange"
-                />
-              </div>
-
-              <!-- Второй слайд - настройки -->
-              <div v-else class="flex flex-col items-center gap-4">
+        <UStepper ref="stepper" v-model="activeIndex" :disabled="!stepper?.hasPrev" :items="itemsStep" class="w-full mt-4 animate-fade-in">
+          <template #date>
+            <UCard variant="subtle" class="animate-fade-in">
+              <UCalendar
+                v-model="selectedDate"
+                :fixed-weeks="false"
+                class="w-full"
+                @update:model-value="handleDateChange"
+              />
+            </UCard>
+          </template>
+          <template #qr>
+            <UCard variant="subtle" class="animate-fade-in">
+              <div class="flex flex-col items-center gap-4">
                 <QrcodeVue :value="qrUrl" :size="200" />
-
-                <div v-if="qrData" class="text-center space-y-2">
-                  <p class="text-primary">
-                    Данные из QR-кода:
-                  </p>
-                  <p>ID пользователя: {{ qrData.userId }}</p>
-                  <p>Дата: {{ qrData.date }}</p>
-                </div>
-
-                <div class="flex items-center justify-center gap-2 text-sm text-gray-400">
-                  <UIcon name="i-heroicons-users" class="w-4 h-4" />
-                  <p>Попробуй прямо сейчас! </p>
-                </div>
               </div>
             </UCard>
-          </UCarousel>
-        </div>
+          </template>
+        </UStepper>
       </template>
     </UDrawer>
   </div>

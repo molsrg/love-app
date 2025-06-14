@@ -422,7 +422,7 @@ function isDateDisabled(date: DateValue) {
     </UCard>
     <UDrawer v-model:open="isOpenChangeName">
       <template #content>
-        <div class="p-4 space-y-3 pb-8">
+        <div class=" space-y-3 ">
           <div>
             <label class="text-sm text-gray-400 mb-1 block">{{ t('settings.profile.oldName') }}</label>
             <UInput
