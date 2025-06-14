@@ -19,6 +19,7 @@ export function useApi() {
   const config = useRuntimeConfig()
   const toast = useToast()
   const tokenStore = useTokenStore()
+  const { locale } = useI18n()
 
   const defaultOptions: ApiOptions = {
     showSuccessToast: true,
@@ -72,6 +73,9 @@ export function useApi() {
     if (tokenStore.getStatus) {
       headers.Authorization = `Bearer ${tokenStore.getToken}`
     }
+
+    // Add current locale to headers
+    headers['Accept-Language'] = locale.value
 
     return headers
   }
