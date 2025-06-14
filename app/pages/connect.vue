@@ -21,7 +21,7 @@ const { telegramSelectionChanged, telegramNotificationOccurred } = useHapticFeed
 
 const qrData = ref<{ userId: string, date: string } | null>(null)
 const qrScanner = useQrScanner()
-const _dataQR = ref<{ data: string } | null>(null)
+const dataQR = ref<{ data: string } | null>(null)
 
 function startScanner(): void {
   qrScanner?.show({ text: t('connect.scanner.text') })
