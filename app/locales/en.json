@@ -148,6 +148,14 @@
           "secondary": "Share my QR"
         }
       }
+    },
+    "steps": {
+      "date": {
+        "title": "Choose relationship start date"
+      },
+      "qr": {
+        "title": "Get your QR code"
+      }
     }
   },
   "wait": {

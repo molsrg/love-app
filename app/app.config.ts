@@ -39,5 +39,12 @@ export default defineAppConfig({
         // body: 'p-4',
       },
     },
+    // calendar: {
+    //   slots: {
+    //     root: 'bg-elevated/50 rounded-lg p-1',
+    //     cell: 'p-2',
+    //     cellTrigger: 'size-10 text-xs data-[selected]:text-[var(--ui-primary)] data-[selected]:bg-transparent data-today:not-data-[selected]:text-[var(--ui-primary)] hover:data-[selected]:bg-(--ui-primary)/20 data-unavailable:no-underline data-unavailable:text-(--ui-text-primary) data-unavailable:bg-(--ui-info)/20 data-today:data-[selected]:bg-(--ui-success)/20',
+    //   },
+    // },
   },
 })

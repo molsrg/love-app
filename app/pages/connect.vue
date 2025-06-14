@@ -1,14 +1,12 @@
 <script setup lang="ts">
-import type { UStepper } from '#ui/types'
-
 import type { DateValue } from '@internationalized/date'
 import type { StepperItem } from '@nuxt/ui'
-import type { CarouselItem } from '~/types/carousel'
-import QrcodeVue from 'qrcode.vue'
-import { onMounted, ref } from 'vue'
 
+import QrcodeVue from 'qrcode.vue'
 import { useQrScanner } from 'vue-tg'
+
 import { carouselItems, features } from '~/constants/app/connect'
+import { isNextDateDisabled } from '~/helpers/calendar.helper'
 
 definePageMeta({
   layout: 'unauthorized',
@@ -23,7 +21,6 @@ const isQrOpen = ref(false)
 const { $isMobile } = useNuxtApp()
 const { telegramSelectionChanged, telegramNotificationOccurred } = useHapticFeedback()
 
-const qrData = ref<{ userId: string, date: string } | null>(null)
 const qrScanner = useQrScanner()
 const dataQR = ref<{ data: string } | null>(null)
 
@@ -73,10 +70,8 @@ qrScanner?.onScan((eventData: { data: string }) => {
 
 const carousel = useTemplateRef('carousel')
 const activeIndex = ref(0)
-const active = ref(0)
+
 function handleDateChange(date: any) {
-  if (!date || typeof date !== 'object' || 'start' in date || Array.isArray(date))
-    return
   selectedDate.value = date
   telegramSelectionChanged()
   select(1)
@@ -87,14 +82,6 @@ function select(index: number) {
   carousel.value?.emblaApi?.scrollTo(index)
 }
 
-function onSelect(index: number) {
-  if (index === 1 && !selectedDate.value) {
-    telegramNotificationOccurred('error')
-    return
-  }
-  activeIndex.value = index
-}
-
 // Map carousel items with translations and actions
 const mappedCarouselItems = computed(() => carouselItems.map(item => ({
   ...item,
@@ -103,18 +90,15 @@ const mappedCarouselItems = computed(() => carouselItems.map(item => ({
 
 const itemsStep: StepperItem[] = [
   {
-    title: 'Выбери дату начала отношений',
-    // description: 'Add your address here',
+    title: t('connect.steps.date.title'),
     icon: 'i-material-symbols-calendar-apps-script',
     slot: 'date' as const,
   },
   {
-    title: 'Твой готовый QR-код',
-    // description: 'Set your preferred shipping method',
+    title: t('connect.steps.qr.title'),
     icon: 'i-material-symbols-qr-code',
     slot: 'qr' as const,
   },
-
 ]
 
 const stepper = useTemplateRef<{ hasPrev: boolean }>('stepper')
@@ -191,6 +175,7 @@ const stepper = useTemplateRef<{ hasPrev: boolean }>('stepper')
             <UCard variant="subtle" class="animate-fade-in">
               <UCalendar
                 v-model="selectedDate"
+                :is-date-disabled="isNextDateDisabled"
                 :fixed-weeks="false"
                 class="w-full"
                 @update:model-value="handleDateChange"
