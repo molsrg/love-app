@@ -25,6 +25,8 @@ onUnmounted(() => {
   backButton?.hide()
 })
 
+const { telegramSelectionChanged } = useHapticFeedback()
+
 const questions = [
   {
     id: 1,
@@ -57,6 +59,7 @@ const questions = [
 ]
 
 function handleQuestionClick(id: number) {
+  telegramSelectionChanged()
   const question = questions.find(q => q.id === id)
   if (question) {
     modal.open({

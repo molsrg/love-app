@@ -10,6 +10,7 @@ const selectedDay = ref<any>(null)
 const overlay = useOverlay()
 const toast = useToast()
 const { t } = useI18n()
+const { telegramSelectionChanged } = useHapticFeedback()
 
 const modal = overlay.create(PhotoUploadModal, {
   props: {
@@ -18,6 +19,7 @@ const modal = overlay.create(PhotoUploadModal, {
 })
 
 async function openPhotoModal(day: any) {
+  telegramSelectionChanged()
   console.warn('Selected day:', day)
   selectedDay.value = day
   modal.patch({ day })
@@ -58,9 +60,15 @@ async function openPhotoModal(day: any) {
         }"
       />
 
-      <CalendarApp
+      <!-- <CalendarApp
         icon-name="i-material-symbols-android-camera-outline"
         @update:day-click="openPhotoModal"
+      /> -->
+
+      <UCalendar
+
+        :fixed-weeks="false"
+        class="w-full"
       />
     </div>
   </div>

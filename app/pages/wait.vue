@@ -6,6 +6,7 @@ definePageMeta({
 })
 const tgWebAppStore = useTgWebAppStore()
 const api = useApi()
+const { telegramSelectionChanged } = useHapticFeedback()
 
 interface Partner {
   id: string
@@ -56,6 +57,7 @@ async function loadPartnerInfo() {
 }
 
 async function handleAccept() {
+  telegramSelectionChanged()
   if (!partnerId.value || !startDate.value)
     return
 
@@ -81,6 +83,7 @@ async function handleAccept() {
 }
 
 function handleDecline() {
+  telegramSelectionChanged()
   useTgWebAppStore().isCreatePair = false
   navigateTo('/connect')
 }

@@ -4,6 +4,8 @@ import { useBackButton } from 'vue-tg'
 const backButton = useBackButton()
 backButton?.hide()
 
+const { telegramSelectionChanged } = useHapticFeedback()
+
 const activities = [
   {
     title: 'Вопросы для сближения',
@@ -48,6 +50,7 @@ const activities = [
 ]
 
 function handleActivityClick(activity: typeof activities[0]) {
+  telegramSelectionChanged()
   navigateTo(`/activity/${activity.value}`)
 }
 </script>
