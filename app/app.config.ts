@@ -6,6 +6,7 @@ export default defineAppConfig({
   },
   theme: {
     radius: 0.25,
+    loading: '#FFFFFF',
   },
   ui: {
     colors: {
