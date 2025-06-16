@@ -21,6 +21,10 @@ const items: TabItem[] = [
     icon: 'i-lucide-users',
     value: '/',
   },
+  {
+    icon: 'i-lucide-users',
+    value: '/location',
+  },
 
   {
     icon: 'i-lucide-settings',

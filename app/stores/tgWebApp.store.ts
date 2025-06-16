@@ -1,8 +1,4 @@
 import { useCloudStorage, useMiniApp } from 'vue-tg/latest'
-import { useApi } from '~/composables/useApi'
-
-import { usePairStore } from '~/stores/pair.store'
-import { useTokenStore } from '~/stores/token.store'
 
 interface WebAppData {
   platform: string
