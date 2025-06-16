@@ -22,7 +22,7 @@ const items: TabItem[] = [
     value: '/',
   },
   {
-    icon: 'i-lucide-users',
+    icon: 'i-jam-gps',
     value: '/location',
   },
 
