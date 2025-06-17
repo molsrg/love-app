@@ -43,7 +43,7 @@ const routePoints = ref([
     <UserDistance
       :user1-avatar="pairStore.user1.avatar"
       :user2-avatar="pairStore.user2.avatar"
-      :distance="102"
+      :distance="402"
       class="animate-initial animate-slide-up"
     />
     <RouteMap :points="routePoints" />
