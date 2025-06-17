@@ -185,6 +185,7 @@ const stepper = useTemplateRef<{ hasPrev: boolean }>('stepper')
           <template #qr>
             <UCard variant="subtle" class="animate-fade-in">
               <div class="flex flex-col items-center gap-4">
+                {{ qrUrl }}
                 <QrcodeVue :value="qrUrl" :size="200" />
               </div>
             </UCard>

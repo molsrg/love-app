@@ -22,7 +22,7 @@ const items: TabItem[] = [
     value: '/',
   },
   {
-    icon: 'i-jam-gps',
+    icon: 'i-material-symbols-light-globe-location-pin-sharp',
     value: '/location',
   },
 

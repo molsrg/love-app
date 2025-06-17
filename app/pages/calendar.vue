@@ -46,10 +46,22 @@ async function openPhotoModal(day: any) {
 
 <template>
   <div>
-    <DevelopmentPage
-      :text="t('development.title')"
-      :subtitle="t('development.subtitle')"
-    />
+    <DevelopmentPage>
+      <UIcon name="i-heroicons-wrench-screwdriver" class="w-8 h-8 text-primary animate-bounce" />
+      <UBadge
+        :label="t('development.title')"
+        color="primary"
+        variant="solid"
+        size="lg"
+      />
+
+      <UBadge
+        :label="t('development.subtitle')"
+        color="neutral"
+        variant="subtle"
+        size="lg"
+      />
+    </DevelopmentPage>
     <div class="flex flex-col gap-4">
       <UBadge
         variant="subtle"

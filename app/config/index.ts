@@ -33,14 +33,14 @@ interface StatConfig {
 
 export const STATS_CONFIG: Record<string, StatConfig> = {
   tasks: {
-    label: 'index.stats.tasks',
-    value: null,
+    label: 'между вами',
+    value: '5 км',
     textValue: 'index.stats.soon',
-    disabled: true,
+    disabled: false,
     classes: {
-      value: 'text-dimmed',
-      label: 'text-dimmed line-through',
-      container: 'bg-elevated/50',
+      value: 'text-primary',
+      label: 'text-highlighted',
+      container: 'bg-elevated',
     },
   },
   days: {

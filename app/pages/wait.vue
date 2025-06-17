@@ -36,7 +36,7 @@ function parseStartParams(startParam: string): StartParams {
 
 async function loadPartnerInfo() {
   // Add 2 second delay
-  await new Promise(resolve => setTimeout(resolve, 2000))
+  await new Promise(resolve => setTimeout(resolve, 1000))
 
   if (!startParam.value)
     return
