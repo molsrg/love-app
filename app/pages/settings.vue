@@ -102,7 +102,7 @@ async function handleAvatarChange(event: Event) {
       usePairStore().startPairPolling()
       toast.add({
         title: t('settings.profile.avatarError.title'),
-        description: t('settings.profile.avatarError.uploadFailed'),
+        description: t('settings.profile.avatarError.description'),
         color: 'error',
       })
     }
