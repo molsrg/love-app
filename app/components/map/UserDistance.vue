@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import gsap from 'gsap'
+
 const props = defineProps<{
   user1Avatar: string
   user2Avatar: string
@@ -7,45 +9,44 @@ const props = defineProps<{
 
 const animatedDistance = ref(0)
 
-const easeOutQuad = (t: number) => t * (2 - t)
-
 watch(() => props.distance, (newValue) => {
-  const duration = 2000
-  const startTime = performance.now()
-  const startValue = animatedDistance.value
+  animatedDistance.value = newValue / 2
 
-  const animate = (currentTime: number) => {
-    const elapsed = currentTime - startTime
-    const progress = Math.min(elapsed / duration, 1)
-
-    const easedProgress = easeOutQuad(progress)
-    animatedDistance.value = Math.round(startValue + (newValue - startValue) * easedProgress)
-
-    if (progress < 1) {
-      requestAnimationFrame(animate)
-    }
-  }
-
-  requestAnimationFrame(animate)
+  gsap.to(animatedDistance, {
+    value: newValue,
+    duration: 3,
+    ease: 'power3.out',
+    snap: { value: 0.1 },
+    overwrite: true,
+    onUpdate: () => {
+      animatedDistance.value = Math.round(animatedDistance.value * 10) / 10
+    },
+  })
 }, { immediate: true })
 </script>
 
 <template>
-  <div class="rounded-lg p-4 flex w-full items-center bg-elevated/50 gap-3">
+  <div class="rounded-lg p-5 flex  items-center bg-elevated/50 gap-3">
     <UAvatar
       :src="user1Avatar"
       alt="U 1"
-      size="md"
-      class="size-10"
+      size="3xl"
     />
     <div class="flex-1">
-      <USeparator type="dashed" color="primary" :label="`${animatedDistance} км`" />
+      <USeparator
+        type="dashed"
+        size="sm" color="primary" :ui="{
+          container: 'flex-col gap-0.5 justify-center ',
+        }"
+      >
+        <h2>{{ `${Math.round(animatedDistance)} км` }}</h2>
+        <UBadge variant="outline" label="между вами" />
+      </USeparator>
     </div>
     <UAvatar
       :src="user2Avatar"
       alt="U 2"
-      size="md"
-      class="size-10"
+      size="3xl"
     />
   </div>
 </template>

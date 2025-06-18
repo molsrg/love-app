@@ -40,6 +40,17 @@ export default defineAppConfig({
         // body: 'p-4',
       },
     },
+    avatar: {
+
+      variants: {
+        size: {
+          '3xl': {
+            root: 'size-15 text-2xl',
+          },
+        },
+      },
+
+    },
     // calendar: {
     //   slots: {
     //     root: 'bg-elevated/50 rounded-lg p-1',
