@@ -139,9 +139,9 @@ watch(() => props.points, fetchRoute, { deep: true })
 
 <template>
   <div class="relative w-full h-[500px] rounded-lg overflow-hidden shadow-sm">
-    <div ref="mapContainer" class="w-full h-full" />
+    <div ref="mapContainer" class="w-full h-full z-0" />
 
-    <UCard v-if="routeInfo" class="absolute bottom-4 left-4 z-[1000] max-w-sm">
+    <UCard v-if="routeInfo" class="absolute bottom-4 left-4 z-[10] max-w-sm">
       <template #header>
         <h3 class="text-base font-semibold">
           Информация о маршруте
@@ -172,7 +172,7 @@ watch(() => props.points, fetchRoute, { deep: true })
       v-if="error"
       color="rose"
       variant="soft"
-      class="absolute top-4 left-1/2 -translate-x-1/2 z-[1000]"
+      class="absolute top-4 left-1/2 -translate-x-1/2 z-[10]"
     >
       {{ error }}
     </UAlert>
@@ -182,5 +182,18 @@ watch(() => props.points, fetchRoute, { deep: true })
 <style scoped>
 .custom-marker {
   @apply bg-transparent border-none;
+}
+
+/* Управление z-index для карты и её элементов */
+:deep(.leaflet-container) {
+  @apply z-0;
+}
+
+:deep(.leaflet-control-container) {
+  @apply z-[10];
+}
+
+:deep(.leaflet-popup) {
+  @apply z-[10];
 }
 </style>

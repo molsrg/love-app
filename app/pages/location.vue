@@ -24,7 +24,7 @@ const routePoints = ref([
 
 <template>
   <div class="space-y-3">
-    <!-- <DevelopmentPage>
+    <DevelopmentPage>
       <UIcon name="i-heroicons-wrench-screwdriver" class="w-8 h-8 text-primary animate-bounce" />
       <UBadge
         :label="t('development.title')"
@@ -39,7 +39,7 @@ const routePoints = ref([
         variant="subtle"
         size="lg"
       />
-    </DevelopmentPage> -->
+    </DevelopmentPage>
     <UserDistance
       :user1-avatar="pairStore.user1.avatar"
       :user2-avatar="pairStore.user2.avatar"
