@@ -15,7 +15,7 @@ let intervalId: ReturnType<typeof setInterval> | null = null
 
 onMounted(async () => {
   try {
-    // await locationManager.init()
+    await locationManager.init()
     startAutoUpdate()
   }
   catch {
