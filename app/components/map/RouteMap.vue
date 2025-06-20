@@ -7,6 +7,7 @@ interface Point {
   lat: number
   lng: number
   name: string
+  color?: string // добавлено свойство цвета
 }
 
 interface RouteInfo {
@@ -18,6 +19,8 @@ interface RouteInfo {
 
 const props = defineProps<{
   points: Point[]
+  markerColors?: string[] // оставляем для обратной совместимости
+  routeColor?: string // цвет линии маршрута
 }>()
 
 const API_KEY = '5b3ce3597851110001cf6248e27fb267a0444c0db60b34b0519762e6'
@@ -36,7 +39,7 @@ function initMap() {
   map.value = L.map(mapContainer.value).setView([59.94, 30.31], 10)
 
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+
   }).addTo(map.value)
 }
 
@@ -50,8 +53,8 @@ function createCustomIcon(color: string) {
         <circle fill="white" cx="12" cy="9" r="3"/>
       </svg>
     `,
-    iconSize: [24, 24],
-    iconAnchor: [12, 24],
+    iconSize: [32, 32],
+    iconAnchor: [16, 32],
   })
 }
 
@@ -90,8 +93,9 @@ async function fetchRoute() {
 
     // Добавляем маркеры
     props.points.forEach((point, index) => {
+      const markerColor = point.color || (index === 0 ? '#e74c3c' : '#3498db')
       L.marker([point.lat, point.lng], {
-        icon: createCustomIcon(index === 0 ? '#e74c3c' : '#3498db'),
+        icon: createCustomIcon(markerColor),
       })
         .bindPopup(`<b>${point.name}</b><br>Широта: ${point.lat.toFixed(5)}<br>Долгота: ${point.lng.toFixed(5)}`)
         .addTo(map.value!)
@@ -100,7 +104,7 @@ async function fetchRoute() {
     // Добавляем маршрут
     L.geoJSON(route, {
       style: {
-        color: '#9b59b6',
+        color: props.routeColor || '#9b59b6',
         weight: 5,
         opacity: 0.8,
       },
@@ -127,19 +131,25 @@ async function fetchRoute() {
   }
 }
 
-// Инициализация при монтировании
 onMounted(() => {
   initMap()
   fetchRoute()
 })
 
-// Следим за изменением точек
-watch(() => props.points, fetchRoute, { deep: true })
+// Следим за изменением точек и цветов
+watch(() => [props.points, props.markerColors, props.routeColor], fetchRoute, { deep: true })
 </script>
 
 <template>
   <div class="relative w-full h-[500px] rounded-lg overflow-hidden shadow-sm">
     <div ref="mapContainer" class="w-full h-full z-0" />
+
+    <div v-if="loading" class="absolute inset-0 z-20 flex items-center justify-center bg-white/70">
+      <div class="flex flex-col items-center gap-2">
+        <span class="loader border-4 border-primary border-t-transparent rounded-full w-10 h-10 animate-spin" />
+        <span class="text-sm text-gray-500">Загрузка карты...</span>
+      </div>
+    </div>
 
     <UCard v-if="routeInfo" class="absolute bottom-4 left-4 z-[10] max-w-sm">
       <template #header>
@@ -182,6 +192,10 @@ watch(() => props.points, fetchRoute, { deep: true })
 <style scoped>
 .custom-marker {
   @apply bg-transparent border-none;
+}
+
+.loader {
+  border-top-color: transparent;
 }
 
 /* Управление z-index для карты и её элементов */

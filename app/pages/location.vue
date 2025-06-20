@@ -9,18 +9,10 @@ definePageMeta({
 })
 const { t } = useI18n()
 const pairStore = usePairStore()
-const routePoints = ref([
-  {
-    lat: 59.867290,
-    lng: 30.307911,
-    name: 'Санкт-Петербург',
-  },
-  {
-    lat: 59.2205,
-    lng: 39.8915,
-    name: 'Вологда',
-  },
-])
+const points = [
+  { lat: 59.867290, lng: 30.307911, name: 'Санкт-Петербург', color: '#e74c3c' },
+  { lat: 59.2205, lng: 39.8915, name: 'Вологда', color: '#3498db' },
+]
 
 const locationManager = useLocationManager()
 
@@ -49,7 +41,7 @@ async function requestGeolocation() {
 
 <template>
   <div class="space-y-3">
-    <DevelopmentPage>
+    <!-- <DevelopmentPage>
       <div class="flex flex-col items-center justify-center min-h-[300px] p-6 bg-elevated/50 rounded-xl shadow-lg gap-4">
         <UIcon name="i-heroicons-map-pin" class="text-4xl text-primary" />
         <h2 class="text-xl font-bold">
@@ -62,7 +54,7 @@ async function requestGeolocation() {
           Мы не передаём ваши данные третьим лицам
         </p>
       </div>
-    </DevelopmentPage>
+    </DevelopmentPage> -->
     <UserDistance
       :user1-avatar="pairStore.user1.avatar"
       :user2-avatar="pairStore.user2.avatar"
@@ -100,6 +92,9 @@ async function requestGeolocation() {
       </div>
     </div>
 
-    <!-- <RouteMap :points="routePoints" /> -->
+    <RouteMap
+      :points="points"
+      route-color="var(--ui-color-primary-500)"
+    />
   </div>
 </template>
