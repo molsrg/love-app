@@ -1,95 +1,196 @@
 <script setup lang="ts">
-import { useLocationManager } from 'vue-tg'
+import type { DateValue } from '@internationalized/date'
+import type { StepperItem } from '@nuxt/ui'
 
-interface LocationData {
-  latitude: number
-  longitude: number
-  accuracy?: number
+import QrcodeVue from 'qrcode.vue'
+import { useQrScanner } from 'vue-tg'
+
+import { carouselItems, features } from '~/constants/app/connect'
+import { isNextDateDisabled } from '~/helpers/calendar.helper'
+
+definePageMeta({
+  layout: 'unauthorized',
+})
+
+const { t } = useI18n()
+const config = useRuntimeConfig()
+const tgUserStore = useTgWebAppStore().initDataUnsafe.user
+const selectedDate = ref<DateValue | null>(null)
+const qrUrl = computed(() => `https://t.me/${config.public.botUrl}?startapp=${tgUserStore.id}_${selectedDate.value}`)
+const isQrOpen = ref(false)
+const { $isMobile } = useNuxtApp()
+const { telegramSelectionChanged, telegramNotificationOccurred } = useHapticFeedback()
+
+const qrScanner = useQrScanner()
+const dataQR = ref<{ data: string } | null>(null)
+
+function startScanner(): void {
+  qrScanner?.show({ text: t('connect.scanner.text') })
 }
 
-const locationManager = useLocationManager()
-const location: Ref<LocationData | null> = ref(null)
-const error: Ref<string | null> = ref(null)
+type ActionType = 'startScanner' | 'shareQR'
+const actionHandlers: Record<ActionType, () => void> = {
+  startScanner,
+  shareQR() { isQrOpen.value = !isQrOpen.value },
+}
 
-let intervalId: ReturnType<typeof setInterval> | null = null
+qrScanner?.onScan((eventData: { data: string }) => {
+  dataQR.value = eventData
+  const qrText = eventData.data
+  const startParam = qrText.split('startapp=')[1]
 
-onMounted(async () => {
-  try {
-    await locationManager.init()
-  }
-  catch {
-    error.value = 'Не удалось инициализировать службы геолокации'
+  if (startParam) {
+    const [userId, date] = startParam.split('_')
+    if (userId && date) {
+      const tgWebAppStore = useTgWebAppStore()
+      const startParamRegex = /^\d+_\d{4}-\d{2}-\d{2}$/
+
+      if (startParamRegex.test(startParam)) {
+        if (!tgWebAppStore.userInPair) {
+          console.warn('Valid QR code detected, user not paired')
+          tgWebAppStore.isCreatePair = true
+
+          tgWebAppStore.startParam = startParam
+          navigateTo('/wait')
+        }
+        else {
+          console.warn('User already paired, ignoring QR code')
+          tgWebAppStore.isCreatePair = false
+        }
+      }
+      else {
+        console.warn('Invalid QR code format:', startParam)
+        tgWebAppStore.isCreatePair = false
+      }
+
+      qrScanner?.close()
+    }
   }
 })
 
-async function requestGeolocation() {
-  error.value = null
+const carousel = useTemplateRef('carousel')
+const activeIndex = ref(0)
 
-  try {
-    const loc = await locationManager.getLocation()
-    if (loc) {
-      location.value = {
-        latitude: loc.latitude,
-        longitude: loc.longitude,
-        accuracy: loc.accuracy ?? loc.horizontal_accuracy,
-      }
-    }
-    else {
-      error.value = 'Доступ к геопозиции не предоставлен'
-    }
-  }
-  catch {
-    error.value = 'Ошибка при получении геопозиции'
-  }
+function handleDateChange(date: any) {
+  selectedDate.value = date
+  telegramSelectionChanged()
+  select(1)
 }
 
-function openSettings() {
-  locationManager.openSettings()
+function select(index: number) {
+  activeIndex.value = index
+  carousel.value?.emblaApi?.scrollTo(index)
 }
+
+// Map carousel items with translations and actions
+const mappedCarouselItems = computed(() => carouselItems.map(item => ({
+  ...item,
+  subtitle: item.subtitle === '{name}' ? tgUserStore?.first_name ?? '' : t(item.subtitle),
+})))
+
+const itemsStep: StepperItem[] = [
+  {
+    title: t('connect.steps.date.title'),
+    icon: 'i-material-symbols-calendar-apps-script',
+    slot: 'date' as const,
+  },
+  {
+    title: t('connect.steps.qr.title'),
+    icon: 'i-material-symbols-qr-code',
+    slot: 'qr' as const,
+  },
+]
+
+const stepper = useTemplateRef<{ hasPrev: boolean }>('stepper')
 </script>
 
 <template>
-  <div class="flex flex-col items-center justify-center min-h-[300px] p-8 bg-elevated/50 rounded-2xl shadow-xl gap-6">
-    <UIcon name="i-heroicons-map-pin" class="text-5xl text-primary mb-2" />
-    <h2 class="text-2xl font-bold mb-1">
-      Доступ к геолокации
-    </h2>
-    {{ locationManager }}
-    <p class="text-center text-gray-500 max-w-md mb-2">
-      Для работы приложения необходимо разрешить доступ к вашей геопозиции.
-    </p>
-    <UButton
-      v-if="locationManager.isAccessGranted"
-      color="primary"
-      size="lg"
-      label="Запросить гео"
-      class="w-full max-w-xs"
-      @click="requestGeolocation"
-    />
-    <UButton
-      v-else
-      color="gray"
-      size="md"
-      label="Открыть настройки"
-      class="w-full max-w-xs"
-      @click="openSettings"
-    />
-    <div v-if="locationManager.isAccessGranted && location" class="mt-4 text-center w-full">
-      <div class="text-base font-medium">
-        Широта: <span class="font-mono">{{ location.latitude }}</span>
-      </div>
-      <div class="text-base font-medium">
-        Долгота: <span class="font-mono">{{ location.longitude }}</span>
-      </div>
-      <div v-if="location.accuracy" class="text-sm text-gray-400">
-        Точность: {{ location.accuracy }} м
+  <div>
+    <div class="relative" style="height: 75vh;">
+      <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center w-full">
+        <UCarousel v-slot="{ item }" dots :items="mappedCarouselItems" class="w-full">
+          <UCard variant="subtle" class="p-2" :ui="{ root: 'rounded-xl' }">
+            <div class="space-y-4 animate-fade-in">
+              <div class="text-center">
+                <h2 class="text-3xl font-bold text-white mb-4">
+                  {{ t(item.title) }}
+                  <span class="text-primary">{{ item.subtitle }}</span>
+                </h2>
+                <p class="text-lg leading-relaxed" v-html="t(item.main)" />
+              </div>
+
+              <ul v-if="item.features" class="space-y-1 text-left">
+                <li v-for="feature in item.features" :key="feature.text" class="flex items-center gap-2">
+                  <UIcon :name="feature.icon" class="w-5 h-5" :class="[feature.color]" />
+                  <span>{{ t(feature.text) }}</span>
+                </li>
+              </ul>
+
+              <div v-if="item.actions" class="space-y-3">
+                <UButton
+                  v-if="item.actions.primary && $isMobile"
+                  :icon="item.actions.primary.icon"
+                  :label="t(item.actions.primary.label)"
+                  size="xl"
+                  variant="soft"
+                  class="w-full justify-center shadow-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                  @click="actionHandlers[item.actions.primary.action as ActionType]()"
+                />
+                <UButton
+                  v-if="item.actions.secondary"
+                  :icon="item.actions.secondary.icon"
+                  :label="t(item.actions.secondary.label)"
+                  size="xl"
+                  color="neutral"
+                  variant="subtle"
+                  class="w-full justify-center focus:outline-none focus:ring-2 focus:ring-primary"
+                  @click="actionHandlers[item.actions.secondary.action as ActionType]()"
+                />
+              </div>
+              <UBadge
+                v-if="item.badge"
+                class="w-full"
+                variant="soft"
+                :label="t(item.badge)"
+                size="xl"
+                :ui="{
+                  label: 'whitespace-normal text-center',
+                }"
+              />
+
+              <div v-if="item.call" class="flex items-center justify-center gap-2 text-sm text-gray-400">
+                <UIcon name="i-heroicons-users" class="w-4 h-4" />
+                <p>{{ t(item.call) }}</p>
+              </div>
+            </div>
+          </UCard>
+        </UCarousel>
       </div>
     </div>
-    <p v-if="error" class="text-xs text-red-500 mt-2 text-center">
-      {{ error }}
-    </p>
-    <p class="text-xs text-gray-400 mt-2 text-center">
-      Мы не передаём ваши данные третьим лицам
-    </p>
+
+    <UDrawer v-model:open="isQrOpen">
+      <template #content>
+        <UStepper ref="stepper" v-model="activeIndex" :disabled="!stepper?.hasPrev" :items="itemsStep" class="w-full mt-4 animate-fade-in">
+          <template #date>
+            <UCard variant="subtle" class="animate-fade-in">
+              <UCalendar
+                v-model="selectedDate"
+                :is-date-disabled="isNextDateDisabled"
+                :fixed-weeks="false"
+                class="w-full"
+                @update:model-value="handleDateChange"
+              />
+            </UCard>
+          </template>
+          <template #qr>
+            <UCard variant="subtle" class="animate-fade-in">
+              <div class="flex flex-col items-center gap-4">
+                <QrcodeVue :value="qrUrl" :size="200" />
+              </div>
+            </UCard>
+          </template>
+        </UStepper>
+      </template>
+    </UDrawer>
   </div>
 </template>
