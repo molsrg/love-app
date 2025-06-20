@@ -1,6 +1,7 @@
 <script setup>
-import { ref } from 'vue'
+import { useLocationManager } from 'vue-tg'
 import RouteMap from '../components/map/RouteMap.vue'
+
 import UserDistance from '../components/map/UserDistance.vue'
 
 definePageMeta({
@@ -20,26 +21,70 @@ const routePoints = ref([
     name: 'Вологда',
   },
 ])
+
+const locationManager = useLocationManager()
+
+const location = ref(null)
+const error = ref(null)
+
+async function requestGeolocation() {
+  error.value = null
+  try {
+    if (!locationManager.isInited) {
+      await locationManager.init()
+    }
+    const loc = await locationManager.getLocation()
+    if (loc) {
+      location.value = loc
+    }
+    else {
+      error.value = 'Доступ к геопозиции не предоставлен'
+    }
+  }
+  catch {
+    error.value = 'Ошибка при получении геопозиции'
+  }
+}
+
+const isAccessGranted = computed(() => locationManager.isAccessGranted)
+const isLocationAvailable = computed(() => locationManager.isLocationAvailable)
 </script>
 
 <template>
   <div class="space-y-3">
-    <!-- <DevelopmentPage>
-      <UIcon name="i-heroicons-wrench-screwdriver" class="w-8 h-8 text-primary animate-bounce" />
-      <UBadge
-        :label="t('development.title')"
-        color="primary"
-        variant="solid"
-        size="lg"
-      />
-
-      <UBadge
-        :label="t('development.subtitle')"
-        color="neutral"
-        variant="subtle"
-        size="lg"
-      />
-    </DevelopmentPage> -->
+    {{ locationManager }}
+    <DevelopmentPage>
+      <div class="flex flex-col items-center justify-center min-h-[300px] p-6 bg-elevated/50 rounded-xl shadow-lg gap-4">
+        <UIcon name="i-heroicons-map-pin" class="text-4xl text-primary" />
+        <h2 class="text-xl font-bold">
+          Доступ к геолокации
+        </h2>
+        <p class="text-center text-gray-500 max-w-xs">
+          Для работы приложения необходимо разрешить доступ к вашей геопозиции.
+        </p>
+        <UButton
+          color="primary"
+          size="lg"
+          :disabled="!isLocationAvailable"
+          @click="requestGeolocation"
+        >
+          {{ isAccessGranted ? 'Геопозиция получена' : 'Разрешить доступ' }}
+        </UButton>
+        <p v-if="error" class="text-xs text-red-400 mt-2 text-center">
+          {{ error }}
+        </p>
+        <div v-if="location" class="mt-4 text-center">
+          <div>Широта: {{ location.latitude }}</div>
+          <div>Долгота: {{ location.longitude }}</div>
+          <div v-if="location.accuracy">
+            Точность: {{ location.accuracy }} м
+          </div>
+        </div>
+        <p class="text-xs text-gray-400 mt-2 text-center">
+          Мы не передаём ваши данные третьим лицам
+        </p>
+      </div>
+    </DevelopmentPage>
     <UserDistance
       :user1-avatar="pairStore.user1.avatar"
       :user2-avatar="pairStore.user2.avatar"
@@ -47,7 +92,7 @@ const routePoints = ref([
       class="animate-initial animate-slide-up"
     />
 
-    <div class="flex flex-col gap-3 p-4 bg-elevated/50 rounded-lg">
+    <div class="flex flex-col gap-3 p-4 bg-elevated/50 rounded-lg animate-initial animate-slide-up">
       <div class="flex items-center gap-3">
         <UChip inset :color="pairStore.user1.isOnline ? 'success' : 'error'">
           <UAvatar :src="pairStore.user1.avatar" size="xl" />
@@ -77,6 +122,6 @@ const routePoints = ref([
       </div>
     </div>
 
-    <RouteMap :points="routePoints" />
+    <!-- <RouteMap :points="routePoints" /> -->
   </div>
 </template>
