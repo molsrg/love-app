@@ -48,29 +48,32 @@ const routePoints = ref([
     />
 
     <div class="flex flex-col gap-3 p-4 bg-elevated/50 rounded-lg">
-      <div class="  flex  items-center gap-3">
-        <UChip inset>
+      <div class="flex items-center gap-3">
+        <UChip inset :color="pairStore.user1.isOnline ? 'success' : 'error'">
           <UAvatar :src="pairStore.user1.avatar" size="xl" />
         </UChip>
         <div class="flex-1">
           <USeparator
             type="dashed"
-            size="sm" color="primary"
+            size="sm"
+            :color="pairStore.user1.isOnline ? 'success' : 'error'"
           />
         </div>
-        <UBadge variant="subtle" label="5 минут назад" />
+        <UBadge :color="pairStore.user1.isOnline ? 'success' : 'error'" variant="subtle" :label="pairStore.user1.isOnline ? 'онлайн' : '2 недели назад'" />
       </div>
-      <div class=" flex  items-center gap-3">
-        <UChip inset color="success">
+      <div class="flex items-center gap-3">
+        <UChip inset :color="pairStore.user2.isOnline ? 'success' : 'false'">
           <UAvatar :src="pairStore.user2.avatar" size="xl" />
         </UChip>
         <div class="flex-1">
           <USeparator
             type="dashed"
-            size="sm" color="primary"
+            size="sm"
+
+            :color="pairStore.user2.isOnline ? 'success' : 'error'"
           />
         </div>
-        <UBadge variant="subtle" label="онлайн" />
+        <UBadge :color="pairStore.user2.isOnline ? 'success' : 'error'" variant="subtle" :label="pairStore.user2.isOnline ? 'онлайн' : 'оффлайн'" />
       </div>
     </div>
 

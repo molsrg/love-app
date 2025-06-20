@@ -36,11 +36,13 @@ export const usePairStore = defineStore('pair', {
       id: '',
       username: '',
       avatar: '',
+      isOnline: false,
     },
     user2: {
       id: '',
       username: '',
       avatar: '',
+      isOnline: true,
     },
     isHost: false,
     startDate: new Date(),
