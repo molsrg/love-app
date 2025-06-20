@@ -67,7 +67,7 @@ function openSettings() {
       @click="requestGeolocation"
     />
     <UButton
-      v-if="!locationManager.isAccessGranted"
+      v-else
       color="gray"
       size="md"
       label="Открыть настройки"
