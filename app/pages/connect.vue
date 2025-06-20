@@ -24,6 +24,10 @@ async function requestGeolocation() {
     error.value = 'Ошибка при получении геопозиции'
   }
 }
+
+function testSettings() {
+  locationManager.openSettings()
+}
 </script>
 
 <template>
@@ -35,17 +39,15 @@ async function requestGeolocation() {
     <p class="text-center text-gray-500 max-w-xs">
       Для работы приложения необходимо разрешить доступ к вашей геопозиции.
     </p>
-    {{ locationManager.isAccessGranted }}
     <UButton
-      v-if="!locationManager.isAccessGranted"
       color="primary"
       size="lg"
-      :disabled="!locationManager.isLocationAvailable"
+      label="Разрешить доступ"
       @click="requestGeolocation"
-    >
-      Разрешить доступ
-    </UButton>
-    <div v-if="locationManager.isAccessGranted && location" class="mt-4 text-center">
+    />
+
+    <UButton label="Настройки открыть" @click="testSettings" />
+    <div v-if="location" class="mt-4 text-center">
       <div>Широта: {{ location.latitude }}</div>
       <div>Долгота: {{ location.longitude }}</div>
       <div v-if="location.accuracy">
