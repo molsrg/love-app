@@ -15,4 +15,4 @@
   "eslint.debug": true,
   "eslint.alwaysShowStatus": true,
   "eslint.run": "onType"
-} 
+}

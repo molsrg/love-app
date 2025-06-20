@@ -5,7 +5,7 @@ import type { StepperItem } from '@nuxt/ui'
 import QrcodeVue from 'qrcode.vue'
 import { useQrScanner } from 'vue-tg'
 
-import { carouselItems, features } from '~/constants/app/connect'
+import { carouselItems } from '~/constants/app/connect'
 import { isNextDateDisabled } from '~/helpers/calendar.helper'
 
 definePageMeta({
