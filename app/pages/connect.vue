@@ -46,8 +46,7 @@ async function requestGeolocation() {
 function openSettings() {
   locationManager.openSettings()
 }
-
-
+</script>
 
 <template>
   <div class="flex flex-col items-center justify-center min-h-[300px] p-8 bg-elevated/50 rounded-2xl shadow-xl gap-6">
@@ -60,16 +59,15 @@ function openSettings() {
       Для работы приложения необходимо разрешить доступ к вашей геопозиции.
     </p>
     <UButton
-      v-if="locationManager.isAccessGranted()"
+      v-if="locationManager.isAccessGranted"
       color="primary"
       size="lg"
       :label="Запросить гео"
-    
       class="w-full max-w-xs"
       @click="requestGeolocation"
     />
     <UButton
-      v-if="!locationManager.isAccessGranted()"
+      v-if="!locationManager.isAccessGranted"
       color="gray"
       size="md"
       label="Открыть настройки"
