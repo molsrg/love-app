@@ -1,9 +1,3 @@
-
-
-
-
-
-
 <script setup>
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { useLocationManager } from 'vue-tg'

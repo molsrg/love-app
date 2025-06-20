@@ -5,6 +5,14 @@ import { useLocationManager } from 'vue-tg'
 const locationManager = useLocationManager()
 const location = ref(null)
 const error = ref(null)
+onMounted(async () => {
+  try {
+    await locationManager.init()
+  }
+  catch (error) {
+    error.value = 'Failed to initialize location services'
+  }
+})
 
 async function requestGeolocation() {
   error.value = null
