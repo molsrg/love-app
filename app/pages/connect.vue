@@ -62,7 +62,7 @@ function openSettings() {
       v-if="locationManager.isAccessGranted"
       color="primary"
       size="lg"
-      :label="Запросить гео"
+      label="Запросить гео"
       class="w-full max-w-xs"
       @click="requestGeolocation"
     />
