@@ -33,7 +33,7 @@ interface StatConfig {
 
 export const STATS_CONFIG: Record<string, StatConfig> = {
   tasks: {
-    label: 'км между вами',
+    label: 'между вами',
     value: null,
     textValue: 'index.stats.soon',
     disabled: true,
