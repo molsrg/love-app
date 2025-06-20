@@ -125,7 +125,7 @@ async function fetchRoute() {
   catch (err) {
     console.error('Ошибка построения маршрута:', err)
     error.value = `Ошибка: ${err instanceof Error ? err.message : 'Неизвестная ошибка'}`
-  }error
+  }
   finally {
     loading.value = false
   }
