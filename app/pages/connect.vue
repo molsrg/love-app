@@ -15,7 +15,7 @@ let intervalId: ReturnType<typeof setInterval> | null = null
 
 onMounted(async () => {
   try {
-    await locationManager.init()
+    // await locationManager.init()
     startAutoUpdate()
   }
   catch {
@@ -78,6 +78,7 @@ const showSettingsButton = computed(() => locationManager.isAccessRequested && !
     <h2 class="text-2xl font-bold mb-1">
       Доступ к геолокации
     </h2>
+    {{ locationManager }}
     <p class="text-center text-gray-500 max-w-md mb-2">
       Для работы приложения необходимо разрешить доступ к вашей геопозиции.
     </p>
