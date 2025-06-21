@@ -1,28 +1,26 @@
 <script lang="ts" setup>
 const error = useError()
-
+const { t } = useI18n()
 const handleError = () => clearError({ redirect: '/' })
 </script>
 
 <template>
-  <div
-    class="flex justify-center items-center px-6 h-[100vh] w-full bg-cover bg-center bg-no-repeat bg-img"
-  >
-    <div class="text-center flex flex-col gap-4 items-center">
-      <p class="text-[9.5rem] text-primary ">
-        {{ error.statusCode }}
-      </p>
-      <p class="text-xl">
-        {{ error.message }}
-      </p>
-      <UButton
-        :label="$t('general.error.redirect')"
-        class="mt-4"
-        color="neutral"
-        size="xl"
-        variant="solid"
-        @click="handleError"
-      />
-    </div>
+  <div v-if="error" class="absolute left-1/2 top-2/5 -translate-x-1/2 -translate-y-1/2  flex-col  w-full flex  items-center justify-center px-4">
+    <UCard class="w-full max-w-md text-center">
+      <div class="p-4">
+        <p class="text-8xl font-bold text-primary">
+          {{ error.statusCode }}
+        </p>
+        <p class="mt-4 text-xl">
+          {{ error.message }}
+        </p>
+        <UButton
+          :label="t('common.error.redirect')"
+          class="mt-8"
+          size="xl"
+          @click="handleError"
+        />
+      </div>
+    </UCard>
   </div>
 </template>

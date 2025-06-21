@@ -2,8 +2,8 @@
 import * as locales from '@nuxt/ui/locale'
 import { LoadingIndicator } from '~/components/nuxt'
 
-const { locale } = useI18n()
 const app = useAppConfig()
+const { locale } = useI18n()
 </script>
 
 <template>

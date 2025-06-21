@@ -175,6 +175,9 @@
   },
   "common": {
     "cancel": "Cancel",
-    "confirm": "Confirm"
+    "confirm": "Confirm",
+    "error": {
+      "redirect": "Go back home"
+    }
   }
 }

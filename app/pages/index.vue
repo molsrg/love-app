@@ -8,6 +8,8 @@ const pairStore = usePairStore()
 const now = ref<Date>(new Date())
 let intervalId: ReturnType<typeof setInterval>
 
+const { vibrate } = useVibrate({ pattern: [300, 100, 300] })
+
 onMounted(() => {
   intervalId = setInterval(() => {
     now.value = new Date()
@@ -46,6 +48,16 @@ const stats = computed(() => {
       {{ pairStore.user1.username }} и
       <span class="text-white">{{ pairStore.user2.username }}</span>
     </h2>
+
+    <div class="flex justify-center py-4">
+      <button
+        class="p-4 rounded-full bg-elevated/50 text-primary transition-transform duration-200 active:scale-90"
+        aria-label="Vibrate"
+        @click="vibrate()"
+      >
+        <UIcon name="i-heroicons-heart-20-solid" class="h-10 w-10" />
+      </button>
+    </div>
 
     <!-- Статистика -->
     <div class="grid grid-cols-3 gap-3 w-full translate-y-3">

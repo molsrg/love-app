@@ -50,7 +50,11 @@ export default defineNuxtConfig({
   },
 
   i18n: {
-    vueI18n: './i18n.config.ts',
+    defaultLocale: 'en',
+    locales: [
+      { code: 'en', name: 'English', file: 'en.json' },
+      { code: 'ru', name: 'Русский', file: 'ru.json' },
+    ],
     detectBrowserLanguage: {
       useCookie: true,
       cookieKey: 'i18n_language',
