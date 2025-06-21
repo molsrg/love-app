@@ -1,3 +1,5 @@
+import type { ComputedRef, Ref } from 'vue'
+import { defineStore } from 'pinia'
 import { useCloudStorage, useMiniApp } from 'vue-tg/latest'
 
 interface WebAppData {
@@ -13,90 +15,91 @@ interface InitDataUnsafe {
   }
 }
 
-interface TgWebAppState {
-  webAppData: WebAppData | null
-  initDataUnsafe: InitDataUnsafe | null
-  initData: string | null
-  startParam: string
-  isCreatePair: boolean
-  userInPair: boolean
-  isInitialized: boolean
-}
+export const useTgWebAppStore = defineStore('tgWebAppStore', () => {
+  const webAppData: Ref<WebAppData | null> = ref(null)
+  const initDataUnsafe: Ref<InitDataUnsafe | null> = ref(null)
+  const initData: Ref<string | null> = ref(null)
+  const isCreatePair: Ref<boolean> = ref(false)
+  const userInPair: Ref<boolean> = ref(false)
+  const isInitialized: Ref<boolean> = ref(false)
 
-export const useTgWebAppStore = defineStore('tgWebAppStore', {
-  state: (): TgWebAppState => ({
-    webAppData: null,
-    initDataUnsafe: null,
-    initData: null,
-    startParam: '',
-    isCreatePair: false,
-    userInPair: false,
-    isInitialized: false,
-  }),
+  const getIsCreatePair: ComputedRef<boolean> = computed(() => isCreatePair.value)
+  const getUserInPair: ComputedRef<boolean> = computed(() => userInPair.value)
+  const getIsInitialized: ComputedRef<boolean> = computed(() => isInitialized.value)
+  const getStartParam: ComputedRef<string | undefined> = computed(() => initDataUnsafe.value?.start_param)
 
-  actions: {
-    async init() {
-      await this.setInitData()
-      this.isInitialized = true
-    },
+  async function init() {
+    await setInitData()
+    isInitialized.value = true
+  }
 
-    setWebAppData() {
-      this.webAppData = useMiniApp()
-    },
+  function setWebAppData() {
+    webAppData.value = useMiniApp()
+  }
 
-    async setInitData() {
-      useAppConfig().ui.colors.primary = await useCloudStorage().getItem('theme') || 'rose'
+  async function setInitData() {
+    const miniApp = useMiniApp()
+    const cloudStorage = useCloudStorage()
+    const uiConfig = useAppConfig().ui
 
-      const initData = useMiniApp().initData
-      const initDataUnsafe = useMiniApp().initDataUnsafe
+    uiConfig.colors.primary = await cloudStorage.getItem('theme') || 'rose'
 
-      if (initData !== 'user') {
-        await useCloudStorage().setItem('initData', initData)
-        await useCloudStorage().setItem('initDataUnsafe', JSON.stringify(initDataUnsafe))
-      }
+    if (miniApp.initData !== 'user') {
+      await cloudStorage.setItem('initData', miniApp.initData)
+      await cloudStorage.setItem('initDataUnsafe', JSON.stringify(miniApp.initDataUnsafe))
+    }
 
-      this.initDataUnsafe = initDataUnsafe === null ? JSON.parse(await useCloudStorage().getItem('initDataUnsafe')) : initDataUnsafe
-      this.initData = initData === 'user' ? await useCloudStorage().getItem('initData') : initData
+    initDataUnsafe.value = miniApp.initDataUnsafe === null
+      ? JSON.parse(await cloudStorage.getItem('initDataUnsafe'))
+      : miniApp.initDataUnsafe
+    initData.value = miniApp.initData === 'user'
+      ? await cloudStorage.getItem('initData')
+      : miniApp.initData
 
-      const api = useApi()
-      const { accessToken, isRegistration: _isRegistration, isPaired } = await api.post<{ accessToken: string, isRegistration: boolean, isPaired: boolean }>('/auth/init', {
-        queryString: this.initData,
-      })
+    const api = useApi()
+    const tokenStore = useTokenStore()
 
-      this.userInPair = isPaired
+    const { accessToken, isPaired } = await api.post<{ accessToken: string, isPaired: boolean }>('/auth/init', {
+      queryString: initData.value,
+    })
 
-      useTokenStore().setToken(accessToken)
+    userInPair.value = isPaired
+    tokenStore.setToken(accessToken)
 
-      if (this.userInPair) {
-        usePairStore().startPairPolling()
-        return
-      }
+    if (userInPair.value) {
+      usePairStore().startPairPolling()
+      return
+    }
 
-      if (this.initDataUnsafe?.start_param) {
-        this.startParam = this.initDataUnsafe?.start_param
-
-        // Validate start_param format: ID_YYYY-MM-DD
-        const startParamRegex = /^\d+_\d{4}-\d{2}-\d{2}$/
-        if (startParamRegex.test(this.initDataUnsafe.start_param)) {
-          // Only set isCreatePair if user is NOT already paired
-          if (!this.userInPair) {
-            console.warn('start_param detected and valid (not paired), setting isCreatePair.')
-            this.isCreatePair = true
-          }
-          else {
-            console.warn('start_param detected but user is already paired. Ignoring isCreatePair.')
-            this.isCreatePair = false
-          }
-        }
-        else {
-          console.warn('Invalid start_param format detected:', this.initDataUnsafe.start_param, 'Expected format: ID_YYYY-MM-DD')
-          this.isCreatePair = false
-        }
+    const startParam = initDataUnsafe.value?.start_param
+    if (startParam) {
+      const startParamRegex = /^\d+_\d{4}-\d{2}-\d{2}$/
+      if (startParamRegex.test(startParam)) {
+        console.warn('start_param detected and valid, setting isCreatePair.')
+        isCreatePair.value = true
       }
       else {
-        console.warn('No start_param detected.')
-        this.isCreatePair = false
+        console.warn('Invalid start_param format detected:', startParam)
+        isCreatePair.value = false
       }
-    },
-  },
+    }
+    else {
+      console.warn('No start_param detected.')
+      isCreatePair.value = false
+    }
+  }
+
+  return {
+    // Getters
+    getIsCreatePair,
+    getUserInPair,
+    getIsInitialized,
+    getStartParam,
+    // Actions
+    init,
+    setWebAppData,
+    setInitData,
+  }
 })
+
+export type TgWebAppStore = ReturnType<typeof useTgWebAppStore>

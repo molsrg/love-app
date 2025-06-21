@@ -1,19 +1,25 @@
-export const useTokenStore = defineStore('tokenStore', {
-  state: () => ({
-    token: '',
-    loggedIn: false,
-  }),
-  getters: {
-    getToken: (state): string => state.token,
-    getStatus: (state): boolean => state.loggedIn,
-  },
-  actions: {
-    async setToken(token: string): void {
-      this.token = token
-      this.loggedIn = true
-    },
-    async updateToken(): Promise<void> {
-      await useTgWebAppStore().setInitData()
-    },
-  },
+export const useTokenStore = defineStore('tokenStore', () => {
+  const token: Ref<string> = ref('')
+  const loggedIn: Ref<boolean> = ref(false)
+
+  const getToken: ComputedRef<string> = computed(() => token.value)
+  const getStatus: ComputedRef<boolean> = computed(() => loggedIn.value)
+
+  function setToken(newToken: string): void {
+    token.value = newToken
+    loggedIn.value = true
+  }
+
+  async function updateToken(): Promise<void> {
+    await useTgWebAppStore().setInitData()
+  }
+
+  return {
+    getToken,
+    getStatus,
+    setToken,
+    updateToken,
+  }
 })
+
+export type TokenStore = ReturnType<typeof useTokenStore>
