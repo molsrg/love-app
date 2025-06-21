@@ -1,11 +1,13 @@
-type PollCallback = (data: any) => void
+import { pairRepository } from '~/repositories/pair.repository'
 
-export function usePolling() {
+type PollCallback = (data: any) => void
+type PollFunction = () => Promise<any>
+
+export function usePolling(pollFunction: PollFunction) {
   const timer = ref<ReturnType<typeof setTimeout> | null>(null)
   const isActive = ref(false)
   const errorCount = ref(0)
   const MAX_ERRORS = 3
-  const api = useApi()
 
   const stop = () => {
     isActive.value = false
@@ -16,12 +18,12 @@ export function usePolling() {
     errorCount.value = 0
   }
 
-  const poll = async (pollUrl: string, pollCallback: PollCallback, pollInterval: number) => {
+  const poll = async (pollCallback: PollCallback, pollInterval: number) => {
     if (!isActive.value)
       return
 
     try {
-      const data = await api.get(pollUrl, { showErrorToast: false })
+      const data = await pollFunction()
       pollCallback(data)
       errorCount.value = 0
     }
@@ -37,14 +39,14 @@ export function usePolling() {
     }
 
     if (isActive.value)
-      timer.value = setTimeout(() => poll(pollUrl, pollCallback, pollInterval), pollInterval)
+      timer.value = setTimeout(() => poll(pollCallback, pollInterval), pollInterval)
   }
 
-  const start = (pollUrl: string, pollCallback: PollCallback, pollInterval = 5000) => {
+  const start = (pollCallback: PollCallback, pollInterval = 5000) => {
     stop()
     isActive.value = true
     errorCount.value = 0
-    poll(pollUrl, pollCallback, pollInterval)
+    poll(pollCallback, pollInterval)
   }
 
   return {

@@ -12,11 +12,11 @@ const handleError = () => clearError({ redirect: '/' })
           {{ error.statusCode }}
         </p>
         <p class="mt-4 text-xl">
-          {{ error.message }}
+          {{ error }}
         </p>
         <UButton
           :label="t('common.error.redirect')"
-          class="mt-8"
+          class="mt-6"
           size="xl"
           @click="handleError"
         />

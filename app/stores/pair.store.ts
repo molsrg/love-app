@@ -1,5 +1,6 @@
 import type { Ref } from 'vue'
 import { defineStore } from 'pinia'
+import { pairRepository } from '~/repositories/pair.repository'
 
 export interface PairUser {
   id: string
@@ -83,10 +84,10 @@ export const usePairStore = defineStore('pair', () => {
   function startPairPolling(pollInterval = 3000) {
     console.warn('Starting pair polling')
 
-    const { start, stop } = usePolling()
+    const { start, stop } = usePolling(pairRepository.getPairData)
 
     stopPolling.value = stop
-    start('/pair', updatePairData, pollInterval)
+    start(updatePairData, pollInterval)
   }
 
   function stopPairPolling() {
@@ -99,8 +100,8 @@ export const usePairStore = defineStore('pair', () => {
   function breakPair() {
     stopPairPolling()
     const tgWebAppStore = useTgWebAppStore()
-    tgWebAppStore.userInPair = false
-    tgWebAppStore.isCreatePair = false
+    tgWebAppStore.setUserInPair(false)
+    tgWebAppStore.setIsCreatePair(false)
     navigateTo('/connect')
   }
 

@@ -55,6 +55,9 @@ async function requestGeolocation() {
         </p>
       </div>
     </DevelopmentPage> -->
+
+    {{ locationManager }}
+
     <UserDistance
       :user1-avatar="pairStore.user1.avatar"
       :user2-avatar="pairStore.user2.avatar"

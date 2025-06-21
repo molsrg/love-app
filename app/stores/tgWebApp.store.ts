@@ -1,6 +1,7 @@
 import type { ComputedRef, Ref } from 'vue'
 import { defineStore } from 'pinia'
 import { useCloudStorage, useMiniApp } from 'vue-tg/latest'
+import { authRepository } from '~/repositories/auth.repository'
 
 interface WebAppData {
   platform: string
@@ -56,12 +57,8 @@ export const useTgWebAppStore = defineStore('tgWebAppStore', () => {
       ? await cloudStorage.getItem('initData')
       : miniApp.initData
 
-    const api = useApi()
     const tokenStore = useTokenStore()
-
-    const { accessToken, isPaired } = await api.post<{ accessToken: string, isPaired: boolean }>('/auth/init', {
-      queryString: initData.value,
-    })
+    const { accessToken, isPaired } = await authRepository.login(initData.value)
 
     userInPair.value = isPaired
     tokenStore.setToken(accessToken)
@@ -89,6 +86,14 @@ export const useTgWebAppStore = defineStore('tgWebAppStore', () => {
     }
   }
 
+  function setUserInPair(value: boolean) {
+    userInPair.value = value
+  }
+
+  function setIsCreatePair(value: boolean) {
+    isCreatePair.value = value
+  }
+
   return {
     // Getters
     getIsCreatePair,
@@ -99,6 +104,8 @@ export const useTgWebAppStore = defineStore('tgWebAppStore', () => {
     init,
     setWebAppData,
     setInitData,
+    setUserInPair,
+    setIsCreatePair,
   }
 })
 
