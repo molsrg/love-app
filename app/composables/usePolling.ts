@@ -1,5 +1,3 @@
-import { pairRepository } from '~/repositories/pair.repository'
-
 type PollCallback = (data: any) => void
 type PollFunction = () => Promise<any>
 

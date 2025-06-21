@@ -21,10 +21,10 @@ const items: TabItem[] = [
     icon: 'i-lucide-users',
     value: '/',
   },
-  {
-    icon: 'i-material-symbols-light-globe-location-pin-sharp',
-    value: '/location',
-  },
+  // {
+  //   icon: 'i-material-symbols-light-globe-location-pin-sharp',
+  //   value: '/location',
+  // },
 
   {
     icon: 'i-lucide-settings',

@@ -7,14 +7,23 @@ import UserDistance from '../components/map/UserDistance.vue'
 definePageMeta({
   pageTransition: false,
 })
+
+const locationManager = useLocationManager()
+
 const { t } = useI18n()
 const pairStore = usePairStore()
 const points = [
   { lat: 59.867290, lng: 30.307911, name: 'Санкт-Петербург', color: '#e74c3c' },
   { lat: 59.2205, lng: 39.8915, name: 'Вологда', color: '#3498db' },
 ]
-
-const locationManager = useLocationManager()
+onMounted(async () => {
+  try {
+    await locationManager.init()
+  }
+  catch {
+    error.value = 'Не удалось инициализировать службы геолокации'
+  }
+})
 
 const location = ref(null)
 const error = ref(null)
