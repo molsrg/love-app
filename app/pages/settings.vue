@@ -50,6 +50,12 @@ const selectedDate = ref<any>(parseDate(userProfile.value.startDate))
 const isHostTransferEnabled = ref(false)
 const canEditPair = computed(() => pairStore.isHost)
 
+watch(() => pairStore.isHost, (isHost) => {
+  if (isHost) {
+    isHostTransferEnabled.value = false
+  }
+})
+
 function handleHostTransfer() {
   if (isHostTransferEnabled.value) {
     if (confirm(t('settings.partner.confirmations.transferHost'))) {
