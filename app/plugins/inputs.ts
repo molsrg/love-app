@@ -14,11 +14,9 @@ export default defineNuxtPlugin(() => {
     }
   }
 
-  // Обновленная версия preventScroll
   const preventScroll = (e: Event) => {
     const target = e.target as HTMLElement
     if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA') {
-      // Сохраняем текущую позицию прокрутки
       const scrollPosition = window.scrollY
 
       // Используем несколько таймаутов с разными задержками
@@ -33,7 +31,6 @@ export default defineNuxtPlugin(() => {
 
   document.addEventListener('focusin', preventScroll, true)
 
-  // Добавляем CSS правило для отключения прокрутки при фокусе
   const style = document.createElement('style')
   style.textContent = `
     input, textarea {
@@ -47,11 +44,14 @@ export default defineNuxtPlugin(() => {
   document.addEventListener('mousedown', closeKeyboard)
   document.addEventListener('focus', preventScroll, true)
 
-  onUnmounted(() => {
-    document.removeEventListener('touchstart', closeKeyboard)
-    document.removeEventListener('mousedown', closeKeyboard)
-    document.removeEventListener('focus', preventScroll, true)
-    document.removeEventListener('focusin', preventScroll, true)
-    document.head.removeChild(style)
-  })
+  return {
+    provide: {},
+    cleanup() {
+      document.removeEventListener('touchstart', closeKeyboard)
+      document.removeEventListener('mousedown', closeKeyboard)
+      document.removeEventListener('focus', preventScroll, true)
+      document.removeEventListener('focusin', preventScroll, true)
+      document.head.removeChild(style)
+    },
+  }
 })

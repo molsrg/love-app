@@ -77,6 +77,10 @@ async function requestGeolocation() {
       :user2="pairStore.user2"
     />
 
+    <h2 v-if="pairStore.locations.length" class=" font-bold text-primary text-center animate-fade-in translate-y-3 break-all">
+      {{ pairStore.locations }}
+    </h2>
+
     <!-- <RouteMap
       :points="points"
       route-color="var(--ui-color-primary-500)"

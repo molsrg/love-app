@@ -42,7 +42,7 @@ watch(() => props.distance, (newValue) => {
         }"
       >
         <h2>{{ `${Math.round(animatedDistance)} км` }}</h2>
-        <UBadge variant="outline" label="между вами" />
+        <UBadge variant="subtle" label="между вами" />
       </USeparator>
     </div>
     <UAvatar

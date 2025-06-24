@@ -1,5 +1,7 @@
 import type { Ref } from 'vue'
+import type { useLocationManager } from 'vue-tg/latest'
 import { defineStore } from 'pinia'
+import { useCloudStorage, useLocationManager, useMiniApp } from 'vue-tg/latest'
 import { pairRepository } from '~/repositories/pair.repository'
 
 export interface PairUser {
@@ -42,19 +44,20 @@ export const usePairStore = defineStore('pair', () => {
     id: '',
     username: '',
     avatar: '',
-    lastSeen: null,
+    lastSeen: '',
     approveGeo: false,
   })
   const user2: Ref<PairUser> = ref({
     id: '',
     username: '',
     avatar: '',
-    lastSeen: null,
+    lastSeen: '',
     approveGeo: false,
   })
   const isHost: Ref<boolean> = ref(false)
   const startDate: Ref<Date> = ref(new Date())
   const stopPolling: Ref<(() => void) | null> = ref(null)
+  const locations: Ref<Array<{ lat: number, lng: number, timestamp: string }>> = ref([])
 
   function updatePairData(data: PairData) {
     if (Object.keys(data).length === 0) {
@@ -95,13 +98,18 @@ export const usePairStore = defineStore('pair', () => {
     )
   }
 
-  function startPairPolling(pollInterval = 3000) {
+  async function startPairPolling(pollInterval = 3000) {
     console.warn('Starting pair polling')
 
     const { start, stop } = usePolling(pairRepository.getPairData)
-
     stopPolling.value = stop
-    start(updatePairData, pollInterval)
+
+    async function handlePairUpdate(data: PairData) {
+      updatePairData(data)
+      await updateLocation()
+    }
+
+    start(handlePairUpdate, pollInterval)
   }
 
   function stopPairPolling() {
@@ -119,15 +127,36 @@ export const usePairStore = defineStore('pair', () => {
     navigateTo('/connect')
   }
 
+  async function updateLocation() {
+    const locationManager = useLocationManager()
+    if (!locationManager.isLocationAvailable.value)
+      return
+
+    try {
+      const loc = await locationManager.getLocation()
+      if (loc) {
+        locations.value.push({
+          ...loc,
+          timestamp: new Date().toISOString(),
+        })
+      }
+    }
+    catch (e) {
+      console.error('Ошибка при получении геолокации', e)
+    }
+  }
+
   return {
     user1,
     user2,
     isHost,
     startDate,
     stopPolling,
+    locations,
     updatePairData,
     startPairPolling,
     stopPairPolling,
     breakPair,
+    updateLocation,
   }
 })

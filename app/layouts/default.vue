@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import type { TabsItem } from '@nuxt/ui'
+import { useCloudStorage, useLocationManager, useMiniApp } from 'vue-tg/latest'
 
 const { telegramSelectionChanged } = useHapticFeedback()
 const { $isMobile } = useNuxtApp()
@@ -11,7 +12,10 @@ interface TabItem extends TabsItem {
 }
 
 type NavigationResult = Promise<void> | void
-
+const locationManager = useLocationManager()
+onMounted(() => {
+  locationManager.init()
+})
 const items: TabItem[] = [
   // {
   //   icon: 'i-streamline-interface-calendar-heart-calendar-date-day-favorite-heart-like-month',
