@@ -1,8 +1,8 @@
 <script setup>
 import { useLocationManager } from 'vue-tg'
-import LastUpdatePair from '../components/map/LastUpdatePair.vue'
+import DistanceBetweenPair from '../components/map/DistanceBetweenPair.vue'
 
-import UserDistance from '../components/map/UserDistance.vue'
+import LastUpdatePair from '../components/map/LastUpdatePair.vue'
 
 definePageMeta({
   pageTransition: false,
@@ -64,15 +64,15 @@ async function requestGeolocation() {
       </div>
     </DevelopmentPage> -->
 
-    <UserDistance
+    <DistanceBetweenPair
       :user1-avatar="pairStore.user1.avatar"
       :user2-avatar="pairStore.user2.avatar"
       :distance="402"
-      class="animate-initial animate-slide-up"
+      class="animate-fade-in "
     />
 
     <LastUpdatePair
-      class="animate-initial animate-slide-up"
+      class="animate-initial animate-slide-up delay-100 "
       :user1="pairStore.user1"
       :user2="pairStore.user2"
     />

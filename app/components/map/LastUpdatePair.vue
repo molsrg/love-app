@@ -1,6 +1,4 @@
 <script lang="ts" setup>
-import { computed } from 'vue'
-
 const props = defineProps({
   user1: {
     type: Object,
@@ -12,56 +10,101 @@ const props = defineProps({
   },
 })
 
-function getStatus(user: any) {
-  if (!user?.lastSeen)
-    return { isOnline: false, label: 'оффлайн' }
+type AllowedColor = 'warning' | 'error' | 'success'
+
+function getUserStatus(user: any) {
+  if (!user?.lastSeen) {
+    return {
+      isOnline: false,
+      color: 'error' as AllowedColor,
+      label: 'оффлайн',
+    }
+  }
 
   const now = new Date()
   const lastSeenDate = new Date(user.lastSeen)
   const diffMinutes = Math.round((now.getTime() - lastSeenDate.getTime()) / 60000)
 
-  if (diffMinutes <= 5)
-    return { isOnline: true, label: 'онлайн' }
+  if (diffMinutes <= 2) {
+    return {
+      isOnline: true,
+      color: 'success' as AllowedColor,
+      label: 'онлайн',
+    }
+  }
+
+  if (diffMinutes < 60) {
+    return {
+      isOnline: false,
+      color: 'error' as AllowedColor,
+      label: `${diffMinutes} мин. назад`,
+    }
+  }
 
   const diffHours = Math.round(diffMinutes / 60)
-  if (diffHours < 24)
-    return { isOnline: false, label: `${diffHours} ч. назад` }
+  if (diffHours < 24) {
+    return {
+      isOnline: false,
+      color: 'error' as AllowedColor,
+      label: `${diffHours} ч. назад`,
+    }
+  }
 
   const diffDays = Math.round(diffHours / 24)
-  return { isOnline: false, label: `${diffDays} д. назад` }
+  return {
+    isOnline: false,
+    color: 'error' as AllowedColor,
+    label: `${diffDays} д. назад`,
+  }
 }
 
-const user1Status = computed(() => getStatus(props.user1))
-const user2Status = computed(() => getStatus(props.user2))
+const user1Status = computed(() => getUserStatus(props.user1))
+const user2Status = computed(() => getUserStatus(props.user2))
 </script>
 
 <template>
   <div class="flex flex-col gap-3 p-4 bg-elevated/50 rounded-lg animate-initial animate-slide-up">
-    <div class="flex items-center gap-3">
-      <UChip inset :color="user1Status.isOnline ? 'success' : 'error'">
+    <div class="flex items-center gap-2">
+      <UChip inset :color="user1Status.color">
         <UAvatar :src="user1.avatar" size="xl" />
       </UChip>
-      <div class="flex-1">
+      <div class="flex-1 ">
         <USeparator
           type="dashed"
           size="sm"
-          :color="user1Status.isOnline ? 'success' : 'error'"
+          :color="user1Status.color"
         />
       </div>
-      <UBadge :color="user1Status.isOnline ? 'success' : 'error'" variant="subtle" :label="user1Status.label" />
+      <div class="flex gap-1">
+        <UBadge :color="user1Status.color" variant="subtle" :label="user1Status.label" />
+        <UBadge
+          v-if="!user1.approveGeo"
+          color="warning"
+          variant="subtle"
+          label="нет доступа к геопозиции!"
+        />
+      </div>
     </div>
-    <div class="flex items-center gap-3">
-      <UChip inset :color="user2Status.isOnline ? 'success' : 'error'">
+    <div class="flex items-center gap-2">
+      <UChip inset :color="user2Status.color">
         <UAvatar :src="user2.avatar" size="xl" />
       </UChip>
-      <div class="flex-1">
+      <div class="flex-1 ">
         <USeparator
           type="dashed"
           size="sm"
-          :color="user2Status.isOnline ? 'success' : 'error'"
+          :color="user2Status.color"
         />
       </div>
-      <UBadge :color="user2Status.isOnline ? 'success' : 'error'" variant="subtle" :label="user2Status.label" />
+      <div class="flex gap-1">
+        <UBadge :color="user2Status.color" variant="subtle" :label="user2Status.label" />
+        <UBadge
+          v-if="!user2.approveGeo"
+          color="warning"
+          variant="subtle"
+          label="нет доступа к геопозиции!"
+        />
+      </div>
     </div>
   </div>
 </template>

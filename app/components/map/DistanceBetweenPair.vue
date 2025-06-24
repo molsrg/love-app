@@ -10,23 +10,25 @@ const props = defineProps<{
 const animatedDistance = ref(0)
 
 watch(() => props.distance, (newValue) => {
-  animatedDistance.value = newValue / 2
+  animatedDistance.value = 0
 
-  gsap.to(animatedDistance, {
-    value: newValue,
-    duration: 3,
-    ease: 'power3.out',
-    snap: { value: 0.1 },
-    overwrite: true,
-    onUpdate: () => {
-      animatedDistance.value = Math.round(animatedDistance.value * 10) / 10
-    },
-  })
+  setTimeout(() => {
+    gsap.to(animatedDistance, {
+      value: newValue,
+      duration: 3,
+      ease: 'power3.out',
+      snap: { value: 0.1 },
+      overwrite: true,
+      onUpdate: () => {
+        animatedDistance.value = Math.round(animatedDistance.value * 10) / 10
+      },
+    })
+  }, 100)
 }, { immediate: true })
 </script>
 
 <template>
-  <div class="rounded-lg p-4 flex  items-center bg-elevated/50 gap-3">
+  <div class="rounded-lg p-4 flex  items-center bg-elevated/50 gap-2">
     <UAvatar
       :src="user1Avatar"
       alt="U 1"

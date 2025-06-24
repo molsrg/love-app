@@ -1,7 +1,4 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { PhotoUploadModal } from '~/components/modal'
-
 definePageMeta({
   pageTransition: false,
 })
