@@ -13,18 +13,19 @@ interface TabItem extends TabsItem {
 type NavigationResult = Promise<void> | void
 
 const items: TabItem[] = [
+  // {
+  //   icon: 'i-streamline-interface-calendar-heart-calendar-date-day-favorite-heart-like-month',
+  //   value: '/calendar',
+
+  // },
   {
-    icon: 'i-streamline-interface-calendar-heart-calendar-date-day-favorite-heart-like-month',
-    value: '/calendar',
+    icon: 'i-material-symbols-light-globe-location-pin-sharp',
+    value: '/location',
   },
   {
     icon: 'i-lucide-users',
     value: '/',
   },
-  // {
-  //   icon: 'i-material-symbols-light-globe-location-pin-sharp',
-  //   value: '/location',
-  // },
 
   {
     icon: 'i-lucide-settings',

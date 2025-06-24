@@ -19,7 +19,7 @@ const selectedDate = ref<DateValue | null>(null)
 const qrUrl = computed(() => `https://t.me/${config.public.botUrl}?startapp=${tgUserStore.id}_${selectedDate.value}`)
 const isQrOpen = ref(false)
 const { $isMobile } = useNuxtApp()
-const { telegramSelectionChanged, telegramNotificationOccurred } = useHapticFeedback()
+const { telegramSelectionChanged } = useHapticFeedback()
 
 const qrScanner = useQrScanner()
 const dataQR = ref<{ data: string } | null>(null)

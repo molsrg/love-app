@@ -26,7 +26,7 @@ watch(() => props.distance, (newValue) => {
 </script>
 
 <template>
-  <div class="rounded-lg p-5 flex  items-center bg-elevated/50 gap-3">
+  <div class="rounded-lg p-4 flex  items-center bg-elevated/50 gap-3">
     <UAvatar
       :src="user1Avatar"
       alt="U 1"

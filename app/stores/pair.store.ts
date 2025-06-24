@@ -6,6 +6,7 @@ export interface PairUser {
   id: string
   username: string
   avatar: string
+  lastSeen: string
 }
 
 export interface PairState {
@@ -21,11 +22,13 @@ interface PairData {
     id: string
     username: string
     avatarUrl: string
+    lastSeen: string
   }
   user2: {
     id: string
     username: string
     avatarUrl: string
+    lastSeen: string
   }
   isHost: boolean
   startDate: string
@@ -36,11 +39,13 @@ export const usePairStore = defineStore('pair', () => {
     id: '',
     username: '',
     avatar: '',
+    lastSeen: new Date(Date.now() - 3 * 60 * 1000).toISOString(),
   })
   const user2: Ref<PairUser> = ref({
     id: '',
     username: '',
     avatar: '',
+    lastSeen: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
   })
   const isHost: Ref<boolean> = ref(false)
   const startDate: Ref<Date> = ref(new Date())
@@ -59,12 +64,14 @@ export const usePairStore = defineStore('pair', () => {
       id: currentUser.id,
       username: currentUser.username,
       avatar: currentUser.avatarUrl,
+      lastSeen: currentUser.lastSeen,
     }
 
     user2.value = {
       id: partnerUser.id,
       username: partnerUser.username,
       avatar: partnerUser.avatarUrl,
+      lastSeen: partnerUser.lastSeen,
     }
 
     isHost.value = data.isHost

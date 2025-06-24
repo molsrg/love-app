@@ -1,7 +1,8 @@
 <script setup>
 import { useLocationManager } from 'vue-tg'
-import RouteMap from '../components/map/RouteMap.vue'
+import LastUpdatePair from '../components/map/LastUpdatePair.vue'
 
+import RouteMap from '../components/map/RouteMap.vue'
 import UserDistance from '../components/map/UserDistance.vue'
 
 definePageMeta({
@@ -49,7 +50,7 @@ async function requestGeolocation() {
 </script>
 
 <template>
-  <div class="space-y-3">
+  <div class="space-y-2.5">
     <!-- <DevelopmentPage>
       <div class="flex flex-col items-center justify-center min-h-[300px] p-6 bg-elevated/50 rounded-xl shadow-lg gap-4">
         <UIcon name="i-heroicons-map-pin" class="text-4xl text-primary" />
@@ -65,8 +66,6 @@ async function requestGeolocation() {
       </div>
     </DevelopmentPage> -->
 
-    {{ locationManager }}
-
     <UserDistance
       :user1-avatar="pairStore.user1.avatar"
       :user2-avatar="pairStore.user2.avatar"
@@ -74,39 +73,17 @@ async function requestGeolocation() {
       class="animate-initial animate-slide-up"
     />
 
-    <div class="flex flex-col gap-3 p-4 bg-elevated/50 rounded-lg animate-initial animate-slide-up">
-      <div class="flex items-center gap-3">
-        <UChip inset :color="pairStore.user1.isOnline ? 'success' : 'error'">
-          <UAvatar :src="pairStore.user1.avatar" size="xl" />
-        </UChip>
-        <div class="flex-1">
-          <USeparator
-            type="dashed"
-            size="sm"
-            :color="pairStore.user1.isOnline ? 'success' : 'error'"
-          />
-        </div>
-        <UBadge :color="pairStore.user1.isOnline ? 'success' : 'error'" variant="subtle" :label="pairStore.user1.isOnline ? 'онлайн' : '2 недели назад'" />
-      </div>
-      <div class="flex items-center gap-3">
-        <UChip inset :color="pairStore.user2.isOnline ? 'success' : 'false'">
-          <UAvatar :src="pairStore.user2.avatar" size="xl" />
-        </UChip>
-        <div class="flex-1">
-          <USeparator
-            type="dashed"
-            size="sm"
+    <LastUpdatePair
+      class="animate-initial animate-slide-up"
+      :user1="pairStore.user1"
+      :user2="pairStore.user2"
+    />
 
-            :color="pairStore.user2.isOnline ? 'success' : 'error'"
-          />
-        </div>
-        <UBadge :color="pairStore.user2.isOnline ? 'success' : 'error'" variant="subtle" :label="pairStore.user2.isOnline ? 'онлайн' : 'оффлайн'" />
-      </div>
-    </div>
+    {{ pairStore.user1 }}
 
-    <RouteMap
+    <!-- <RouteMap
       :points="points"
       route-color="var(--ui-color-primary-500)"
-    />
+    /> -->
   </div>
 </template>
