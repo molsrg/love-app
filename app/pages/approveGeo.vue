@@ -11,8 +11,6 @@ const locationManager = useLocationManager()
 const location: Ref<LocationData | null> = ref(null)
 const error: Ref<string | null> = ref(null)
 
-const intervalId: ReturnType<typeof setInterval> | null = null
-
 onMounted(async () => {
   try {
     await locationManager.init()

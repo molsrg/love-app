@@ -87,11 +87,9 @@ async function requestLocation() {
         timestamp: Date.now(),
       })
       errorMessage.value = ''
-      console.log('Location received:', loc)
     }
     else {
       errorMessage.value = 'Location access was denied'
-      console.log('User denied location access')
     }
   }
   catch (error) {

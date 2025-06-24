@@ -2,7 +2,6 @@
 import { useLocationManager } from 'vue-tg'
 import LastUpdatePair from '../components/map/LastUpdatePair.vue'
 
-import RouteMap from '../components/map/RouteMap.vue'
 import UserDistance from '../components/map/UserDistance.vue'
 
 definePageMeta({
@@ -11,7 +10,6 @@ definePageMeta({
 
 const locationManager = useLocationManager()
 
-const { t } = useI18n()
 const pairStore = usePairStore()
 const points = [
   { lat: 59.867290, lng: 30.307911, name: 'Санкт-Петербург', color: '#e74c3c' },
@@ -78,8 +76,6 @@ async function requestGeolocation() {
       :user1="pairStore.user1"
       :user2="pairStore.user2"
     />
-
-    {{ pairStore.user1 }}
 
     <!-- <RouteMap
       :points="points"

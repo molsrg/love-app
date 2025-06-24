@@ -1,13 +1,12 @@
 <script setup lang="ts">
 import L from 'leaflet'
-import { onMounted, ref, watch } from 'vue'
 import 'leaflet/dist/leaflet.css'
 
 interface Point {
   lat: number
   lng: number
   name: string
-  color?: string // добавлено свойство цвета
+  color?: string
 }
 
 interface RouteInfo {
@@ -19,8 +18,8 @@ interface RouteInfo {
 
 const props = defineProps<{
   points: Point[]
-  markerColors?: string[] // оставляем для обратной совместимости
-  routeColor?: string // цвет линии маршрута
+  markerColors?: string[]
+  routeColor?: string
 }>()
 
 const API_KEY = '5b3ce3597851110001cf6248e27fb267a0444c0db60b34b0519762e6'

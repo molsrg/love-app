@@ -6,42 +6,41 @@ definePageMeta({
   pageTransition: false,
 })
 
-const selectedDay = ref<any>(null)
-const overlay = useOverlay()
-const toast = useToast()
+// const selectedDay = ref<any>(null)
+// const overlay = useOverlay()
+
 const { t } = useI18n()
-const { telegramSelectionChanged } = useHapticFeedback()
 
-const modal = overlay.create(PhotoUploadModal, {
-  props: {
-    day: selectedDay.value,
-  },
-})
+// const modal = overlay.create(PhotoUploadModal, {
+//   props: {
+//     day: selectedDay.value,
+//   },
+// })
 
-async function openPhotoModal(day: any) {
-  telegramSelectionChanged()
-  console.warn('Selected day:', day)
-  selectedDay.value = day
-  modal.patch({ day })
-  const instance = modal.open()
+// async function openPhotoModal(day: any) {
+//   telegramSelectionChanged()
+//   console.warn('Selected day:', day)
+//   selectedDay.value = day
+//   modal.patch({ day })
+//   const instance = modal.open()
 
-  const result = await instance.result
+//   const result = await instance.result
 
-  if (result) {
-    toast.add({
-      title: 'Фото успешно загружено',
-      color: 'success',
-      id: 'photo-success',
-    })
-  }
-  else {
-    toast.add({
-      title: 'Загрузка отменена',
-      color: 'error',
-      id: 'photo-dismiss',
-    })
-  }
-}
+//   if (result) {
+//     toast.add({
+//       title: 'Фото успешно загружено',
+//       color: 'success',
+//       id: 'photo-success',
+//     })
+//   }
+//   else {
+//     toast.add({
+//       title: 'Загрузка отменена',
+//       color: 'error',
+//       id: 'photo-dismiss',
+//     })
+//   }
+// }
 </script>
 
 <template>
@@ -71,11 +70,6 @@ async function openPhotoModal(day: any) {
           label: 'whitespace-normal text-center',
         }"
       />
-
-      <!-- <CalendarApp
-        icon-name="i-material-symbols-android-camera-outline"
-        @update:day-click="openPhotoModal"
-      /> -->
 
       <UCalendar
 
