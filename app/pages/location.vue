@@ -58,6 +58,16 @@ async function requestGeolocation() {
         <p class="text-center text-gray-500 max-w-xs">
           Для работы приложения необходимо разрешить доступ к вашей геопозиции.
         </p>
+        <UButton
+
+          trailing-icon="i-material-symbols-light-globe-location-pin-sharp"
+          color="primary"
+          variant="subtle"
+          size="xl"
+
+          label="Разрешить сбор геопозиции в настройках"
+          @click="locationManager.openSettings()"
+        />
         <p class="text-xs text-gray-400 mt-2 text-center">
           Мы не передаём ваши данные третьим лицам
         </p>

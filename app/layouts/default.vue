@@ -14,7 +14,7 @@ interface TabItem extends TabsItem {
 type NavigationResult = Promise<void> | void
 const locationManager = useLocationManager()
 onMounted(() => {
-  locationManager.init()
+  locationManager.isAccessGranted && locationManager.init()
 })
 const items: TabItem[] = [
   // {

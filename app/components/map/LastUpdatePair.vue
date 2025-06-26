@@ -107,13 +107,7 @@ const user2Status = computed(() => getUserStatus(props.user2))
       </div>
     </div>
 
-    <UButton
-
-      trailing-icon="i-material-symbols-light-globe-location-pin-sharp" color="warning"
-      variant="subtle"
-      size="md"
-      label="инструкция по предоставлению геопозиции"
-    />
+  
   </div>
 </template>
 

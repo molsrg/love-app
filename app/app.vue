@@ -4,6 +4,7 @@ import { LoadingIndicator } from '~/components/nuxt'
 
 const app = useAppConfig()
 const { locale } = useI18n()
+import { useCloudStorage, useLocationManager, useMiniApp } from 'vue-tg/latest'
 </script>
 
 <template>
@@ -12,6 +13,7 @@ const { locale } = useI18n()
     <LoadingIndicator :color="app.theme.loading" />
     <NuxtLayout>
       <div class="mx-auto px-3.5 py-1.5">
+        {{ useLocationManager() }}
         <NuxtPage />
       </div>
     </NuxtLayout>
