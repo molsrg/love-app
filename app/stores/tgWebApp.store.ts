@@ -25,7 +25,7 @@ export const useTgWebAppStore = defineStore('tgWebAppStore', () => {
   const isInitialized: Ref<boolean> = ref(false)
   const startParam = ref('')
 
-  const getInitDataUnsafe: ComputedRef<boolean> = computed(() => initDataUnsafe.value)
+  const getInitDataUnsafe: ComputedRef<InitDataUnsafe | null> = computed(() => initDataUnsafe.value)
   const getIsCreatePair: ComputedRef<boolean> = computed(() => isCreatePair.value)
   const getUserInPair: ComputedRef<boolean> = computed(() => userInPair.value)
   const getIsInitialized: ComputedRef<boolean> = computed(() => isInitialized.value)
@@ -114,6 +114,7 @@ export const useTgWebAppStore = defineStore('tgWebAppStore', () => {
     setInitData,
     setUserInPair,
     setIsCreatePair,
+    setStartParam,
   }
 })
 

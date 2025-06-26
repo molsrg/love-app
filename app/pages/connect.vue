@@ -14,12 +14,13 @@ definePageMeta({
 
 const { t } = useI18n()
 const config = useRuntimeConfig()
-const tgUserStore = useTgWebAppStore().getInitDataUnsafe.user
+const tgUserStore = useTgWebAppStore().getInitDataUnsafe?.user
 const selectedDate = ref<DateValue | null>(null)
 const qrUrl = computed(() => `https://t.me/${config.public.botUrl}?startapp=${tgUserStore.id}_${selectedDate.value}`)
 const isQrOpen = ref(false)
 const { $isMobile } = useNuxtApp()
 const { telegramSelectionChanged } = useHapticFeedback()
+const toast = useToast()
 
 const qrScanner = useQrScanner()
 const dataQR = ref<{ data: string } | null>(null)
@@ -33,7 +34,6 @@ const actionHandlers: Record<ActionType, () => void> = {
   startScanner,
   shareQR() { isQrOpen.value = !isQrOpen.value },
 }
-
 qrScanner?.onScan((eventData: { data: string }) => {
   dataQR.value = eventData
   const qrText = eventData.data
@@ -44,27 +44,54 @@ qrScanner?.onScan((eventData: { data: string }) => {
     if (userId && date) {
       const tgWebAppStore = useTgWebAppStore()
       const startParamRegex = /^\d+_\d{4}-\d{2}-\d{2}$/
-
+      tgWebAppStore.setIsCreatePair(true)
       if (startParamRegex.test(startParam)) {
-        if (!tgWebAppStore.getUserInPair) {
+        if (!tgWebAppStore.getUserInPair.value) {
           console.warn('Valid QR code detected, user not paired')
-          tgWebAppStore.setIsCreatePair(true)
 
           tgWebAppStore.setStartParam(startParam)
           navigateTo('/wait')
+          // qrScanner?.close()
         }
         else {
           console.warn('User already paired, ignoring QR code')
           tgWebAppStore.setIsCreatePair(false)
+          qrScanner?.close()
+          toast.add({
+            color: 'error',
+            title: 'Ошибка',
+            description: 'Пользователь уже в паре. QR-код проигнорирован.',
+          })
         }
       }
       else {
         console.warn('Invalid QR code format:', startParam)
         tgWebAppStore.setIsCreatePair(false)
+        qrScanner?.close()
+        toast.add({
+          color: 'error',
+          title: 'Ошибка',
+          description: 'Неверный формат QR-кода.',
+        })
       }
-
       qrScanner?.close()
     }
+    else {
+      qrScanner?.close()
+      toast.add({
+        color: 'error',
+        title: 'Ошибка',
+        description: 'QR-код не содержит корректных данных.',
+      })
+    }
+  }
+  else {
+    qrScanner?.close()
+    toast.add({
+      color: 'error',
+      title: 'Ошибка',
+      description: 'QR-код не содержит параметра startapp.',
+    })
   }
 })
 
