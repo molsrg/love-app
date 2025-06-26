@@ -23,11 +23,13 @@ export const useTgWebAppStore = defineStore('tgWebAppStore', () => {
   const isCreatePair: Ref<boolean> = ref(false)
   const userInPair: Ref<boolean> = ref(false)
   const isInitialized: Ref<boolean> = ref(false)
+  const startParam = ref('')
 
+  const getInitDataUnsafe: ComputedRef<boolean> = computed(() => initDataUnsafe.value)
   const getIsCreatePair: ComputedRef<boolean> = computed(() => isCreatePair.value)
   const getUserInPair: ComputedRef<boolean> = computed(() => userInPair.value)
   const getIsInitialized: ComputedRef<boolean> = computed(() => isInitialized.value)
-  const getStartParam: ComputedRef<string | undefined> = computed(() => initDataUnsafe.value?.start_param)
+  const getStartParam: ComputedRef<string | undefined> = computed(() => startParam.value)
 
   async function init() {
     await setInitData()
@@ -73,6 +75,7 @@ export const useTgWebAppStore = defineStore('tgWebAppStore', () => {
       const startParamRegex = /^\d+_\d{4}-\d{2}-\d{2}$/
       if (startParamRegex.test(startParam)) {
         console.warn('start_param detected and valid, setting isCreatePair.')
+        setStartParam(startParam)
         isCreatePair.value = true
       }
       else {
@@ -94,12 +97,17 @@ export const useTgWebAppStore = defineStore('tgWebAppStore', () => {
     isCreatePair.value = value
   }
 
+  function setStartParam(value: string) {
+    startParam.value = value
+  }
+
   return {
     // Getters
     getIsCreatePair,
     getUserInPair,
     getIsInitialized,
     getStartParam,
+    getInitDataUnsafe,
     // Actions
     init,
     setWebAppData,

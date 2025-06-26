@@ -123,7 +123,7 @@ function handleBreakUp() {
   if (confirm(t('settings.partner.confirmations.breakup'))) {
     api.delete('/pair')
       .then(() => {
-        useTgWebAppStore().userInPair = false
+        useTgWebAppStore().setUserInPair(false)
         usePairStore().stopPairPolling()
         navigateTo('/connect')
       })

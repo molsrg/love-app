@@ -24,7 +24,11 @@ const isAccepted = ref(false)
 const partnerId = ref<string>('')
 const startDate = ref<string>('')
 
-const startParam = computed(() => tgWebAppStore.startParam)
+const startParam = computed(() => tgWebAppStore.getStartParam)
+
+onMounted(async () => {
+  await loadPartnerInfo()
+})
 
 function parseStartParams(startParam: string): StartParams {
   const [id, date] = startParam.split('_')
@@ -71,8 +75,8 @@ async function handleAccept() {
       })
     }
     navigateTo('/')
-    useTgWebAppStore().userInPair = true
-    useTgWebAppStore().isCreatePair = false
+    useTgWebAppStore().setUserInPair(true)
+    useTgWebAppStore().setIsCreatePair(false)
     usePairStore().startPairPolling()
   }
   catch (error) {
@@ -84,13 +88,9 @@ async function handleAccept() {
 
 function handleDecline() {
   telegramSelectionChanged()
-  useTgWebAppStore().isCreatePair = false
+  useTgWebAppStore().setIsCreatePair(false)
   navigateTo('/connect')
 }
-
-onMounted(async () => {
-  await loadPartnerInfo()
-})
 </script>
 
 <template>

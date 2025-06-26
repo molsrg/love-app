@@ -14,7 +14,7 @@ definePageMeta({
 
 const { t } = useI18n()
 const config = useRuntimeConfig()
-const tgUserStore = useTgWebAppStore().initDataUnsafe.user
+const tgUserStore = useTgWebAppStore().getInitDataUnsafe.user
 const selectedDate = ref<DateValue | null>(null)
 const qrUrl = computed(() => `https://t.me/${config.public.botUrl}?startapp=${tgUserStore.id}_${selectedDate.value}`)
 const isQrOpen = ref(false)
@@ -46,21 +46,21 @@ qrScanner?.onScan((eventData: { data: string }) => {
       const startParamRegex = /^\d+_\d{4}-\d{2}-\d{2}$/
 
       if (startParamRegex.test(startParam)) {
-        if (!tgWebAppStore.userInPair) {
+        if (!tgWebAppStore.getUserInPair) {
           console.warn('Valid QR code detected, user not paired')
-          tgWebAppStore.isCreatePair = true
+          tgWebAppStore.setIsCreatePair(true)
 
-          tgWebAppStore.startParam = startParam
+          tgWebAppStore.setStartParam(startParam)
           navigateTo('/wait')
         }
         else {
           console.warn('User already paired, ignoring QR code')
-          tgWebAppStore.isCreatePair = false
+          tgWebAppStore.setIsCreatePair(false)
         }
       }
       else {
         console.warn('Invalid QR code format:', startParam)
-        tgWebAppStore.isCreatePair = false
+        tgWebAppStore.setIsCreatePair(false)
       }
 
       qrScanner?.close()
