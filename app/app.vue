@@ -1,10 +1,10 @@
 <script lang="ts" setup>
 import * as locales from '@nuxt/ui/locale'
+import { useLocationManager } from 'vue-tg/latest'
 import { LoadingIndicator } from '~/components/nuxt'
 
 const app = useAppConfig()
 const { locale } = useI18n()
-import { useCloudStorage, useLocationManager, useMiniApp } from 'vue-tg/latest'
 </script>
 
 <template>
@@ -13,7 +13,7 @@ import { useCloudStorage, useLocationManager, useMiniApp } from 'vue-tg/latest'
     <LoadingIndicator :color="app.theme.loading" />
     <NuxtLayout>
       <div class="mx-auto px-3.5 py-1.5">
-        {{ useLocationManager() }}
+        <!-- {{ useLocationManager() }} -->
         <NuxtPage />
       </div>
     </NuxtLayout>

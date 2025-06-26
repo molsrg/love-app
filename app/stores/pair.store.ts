@@ -1,6 +1,6 @@
 import type { Ref } from 'vue'
 import { defineStore } from 'pinia'
-import { useCloudStorage, useLocationManager, useMiniApp } from 'vue-tg/latest'
+import { useLocationManager } from 'vue-tg/latest'
 import { pairRepository } from '~/repositories/pair.repository'
 
 export interface PairUser {
@@ -57,7 +57,7 @@ export const usePairStore = defineStore('pair', () => {
   const startDate: Ref<Date> = ref(new Date())
   const stopPolling: Ref<(() => void) | null> = ref(null)
   const locations: Ref<Array<{ lat: number, lng: number, timestamp: string }>> = ref([])
-
+  const locationManager = useLocationManager()
   function updatePairData(data: PairData) {
     if (Object.keys(data).length === 0) {
       breakPair()
@@ -127,7 +127,6 @@ export const usePairStore = defineStore('pair', () => {
   }
 
   async function updateLocation() {
-    const locationManager = useLocationManager()
     if (!locationManager.isAccessGranted || !locationManager.isLocationAvailable.value)
       return
 

@@ -1,3 +1,5 @@
+import { useLocationManager } from 'vue-tg/latest'
+
 declare global {
   interface Window {
     Telegram: {
@@ -12,6 +14,17 @@ export default defineNuxtPlugin(async () => {
     version: '',
   })
   const isMobile = ref(false)
+  const accessGranted = ref(false)
+  const locationManager = useLocationManager()
+
+  accessGranted.value = typeof locationManager.isAccessGranted === 'boolean'
+    ? locationManager.isAccessGranted
+    : (locationManager.isAccessGranted?.value ?? false)
+  watch(() => (typeof locationManager.isAccessGranted === 'boolean'
+    ? locationManager.isAccessGranted
+    : (locationManager.isAccessGranted?.value ?? false)), (val) => {
+    accessGranted.value = val
+  })
 
   const setWebAppData = () => {
     webAppData.value = {
@@ -42,6 +55,7 @@ export default defineNuxtPlugin(async () => {
     provide: {
       isMobile,
       webAppData,
+      accessGranted,
     },
   }
 })

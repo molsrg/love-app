@@ -26,7 +26,7 @@ onMounted(async () => {
 
 const location = ref(null)
 const error = ref(null)
-
+const { $accessGranted } = useNuxtApp()
 async function requestGeolocation() {
   error.value = null
   try {
@@ -85,6 +85,17 @@ async function requestGeolocation() {
       class="animate-initial animate-slide-up delay-100 "
       :user1="pairStore.user1"
       :user2="pairStore.user2"
+    />
+
+    <UButton
+      v-if="!$accessGranted"
+      trailing-icon="i-material-symbols-light-globe-location-pin-sharp"
+      color="primary"
+      variant="subtle"
+      size="xl"
+
+      label="Разрешить сбор геопозиции в настройках"
+      @click="locationManager.openSettings()"
     />
 
     <h2 v-if="pairStore.locations.length" class=" font-bold text-primary text-center animate-fade-in translate-y-3 break-all">

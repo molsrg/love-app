@@ -31,6 +31,10 @@ export const useTgWebAppStore = defineStore('tgWebAppStore', () => {
   const getIsInitialized: ComputedRef<boolean> = computed(() => isInitialized.value)
   const getStartParam: ComputedRef<string | undefined> = computed(() => startParam.value)
 
+  const miniApp = useMiniApp()
+  const cloudStorage = useCloudStorage()
+  const uiConfig = useAppConfig().ui
+
   async function init() {
     await setInitData()
     isInitialized.value = true
@@ -41,10 +45,6 @@ export const useTgWebAppStore = defineStore('tgWebAppStore', () => {
   }
 
   async function setInitData() {
-    const miniApp = useMiniApp()
-    const cloudStorage = useCloudStorage()
-    const uiConfig = useAppConfig().ui
-
     uiConfig.colors.primary = await cloudStorage.getItem('theme') || 'rose'
 
     if (miniApp.initData !== 'user') {

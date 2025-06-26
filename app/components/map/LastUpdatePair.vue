@@ -106,8 +106,6 @@ const user2Status = computed(() => getUserStatus(props.user2))
         />
       </div>
     </div>
-
-  
   </div>
 </template>
 
