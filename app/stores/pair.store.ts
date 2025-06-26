@@ -1,5 +1,4 @@
 import type { Ref } from 'vue'
-import type { useLocationManager } from 'vue-tg/latest'
 import { defineStore } from 'pinia'
 import { useCloudStorage, useLocationManager, useMiniApp } from 'vue-tg/latest'
 import { pairRepository } from '~/repositories/pair.repository'
@@ -129,7 +128,7 @@ export const usePairStore = defineStore('pair', () => {
 
   async function updateLocation() {
     const locationManager = useLocationManager()
-    if (!locationManager.isLocationAvailable.value)
+    if (!locationManager.isAccessGranted || !locationManager.isLocationAvailable.value)
       return
 
     try {
