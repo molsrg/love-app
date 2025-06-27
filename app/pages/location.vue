@@ -4,9 +4,9 @@ import DistanceBetweenPair from '../components/map/DistanceBetweenPair.vue'
 
 import LastUpdatePair from '../components/map/LastUpdatePair.vue'
 
-definePageMeta({
-  pageTransition: false,
-})
+// definePageMeta({
+//   pageTransition: false,
+// })
 
 const locationManager = useLocationManager()
 
@@ -15,18 +15,18 @@ const points = [
   { lat: 59.867290, lng: 30.307911, name: 'Санкт-Петербург', color: '#e74c3c' },
   { lat: 59.2205, lng: 39.8915, name: 'Вологда', color: '#3498db' },
 ]
-onMounted(async () => {
-  try {
-    await locationManager.init()
-  }
-  catch {
-    error.value = 'Не удалось инициализировать службы геолокации'
-  }
-})
+// onMounted(async () => {
+//   try {
+//     await locationManager.init()
+//   }
+//   catch {
+//     error.value = 'Не удалось инициализировать службы геолокации'
+//   }
+// })
 
 const location = ref(null)
 const error = ref(null)
-const { $accessGranted } = useNuxtApp()
+const { $accessGranted, $isLocationAvailable } = useNuxtApp()
 async function requestGeolocation() {
   error.value = null
   try {
@@ -87,21 +87,40 @@ async function requestGeolocation() {
       :user2="pairStore.user2"
     />
 
-    <UButton
-      v-if="!$accessGranted"
-      trailing-icon="i-material-symbols-light-globe-location-pin-sharp"
-      color="primary"
-      variant="subtle"
-      size="xl"
+    <UCard v-if="!$accessGranted && $isLocationAvailable" variant="soft" class="animate-initial animate-slide-up delay-200">
+      <template #header>
+        <div class="flex flex-col">
+          <UBadge
+            size="xl"
+            trailing-icon="i-material-symbols-light-globe-location-pin-sharp"
+            color="error"
+            variant="subtle"
+            class=" mx-auto "
+            label="Нет доступа к геопозиции"
+          />
+        </div>
+      </template>
+      <div class="flex flex-col items-center gap-3 w-full">
+        <div class="text-gray-400 text-justify text-base">
+          Для корректной работы приложения, вам нужно разрешить доступ в настройках
+        </div>
+        <img src="../assets/img/geo_access.jpg" alt="Инструкция по разрешению геолокации" class="rounded-lg w-full ">
 
-      label="Разрешить сбор геопозиции в настройках"
-      @click="locationManager.openSettings()"
-    />
-
+        <UButton
+          v-if="!$accessGranted"
+          class="mt-2 mx-auto"
+          trailing-icon="i-heroicons-cog-6-tooth"
+          color="primary"
+          variant="subtle"
+          size="md"
+          label="Открыть настройки"
+          @click="locationManager.openSettings()"
+        />
+      </div>
+    </UCard>
     <h2 v-if="pairStore.locations.length" class=" font-bold text-primary text-center animate-fade-in translate-y-3 break-all">
       {{ pairStore.locations }}
     </h2>
-
     <!-- <RouteMap
       :points="points"
       route-color="var(--ui-color-primary-500)"

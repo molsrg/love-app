@@ -3,12 +3,19 @@ import { defineStore } from 'pinia'
 import { useLocationManager } from 'vue-tg/latest'
 import { pairRepository } from '~/repositories/pair.repository'
 
+export interface GeoData {
+  latitude: number
+  longitude: number
+  timestamp: string
+  approveGeo?: boolean
+}
+
 export interface PairUser {
   id: string
   username: string
   avatar: string
   lastSeen: string
-  approveGeo: boolean
+  geo: GeoData | null
 }
 
 export interface PairState {
@@ -24,15 +31,13 @@ interface PairData {
     id: string
     username: string
     avatarUrl: string
-    lastSeen: null
-    approveGeo: boolean
+    geo: GeoData | null
   }
   user2: {
     id: string
     username: string
     avatarUrl: string
-    lastSeen: null
-    approveGeo: boolean
+    geo: GeoData | null
   }
   isHost: boolean
   startDate: string
@@ -44,20 +49,21 @@ export const usePairStore = defineStore('pair', () => {
     username: '',
     avatar: '',
     lastSeen: '',
-    approveGeo: false,
+    geo: null,
   })
   const user2: Ref<PairUser> = ref({
     id: '',
     username: '',
     avatar: '',
     lastSeen: '',
-    approveGeo: false,
+    geo: null,
   })
   const isHost: Ref<boolean> = ref(false)
   const startDate: Ref<Date> = ref(new Date())
   const stopPolling: Ref<(() => void) | null> = ref(null)
   const locations: Ref<Array<{ lat: number, lng: number, timestamp: string }>> = ref([])
   const locationManager = useLocationManager()
+  const { $accessGranted, $isLocationAvailable } = useNuxtApp()
   function updatePairData(data: PairData) {
     if (Object.keys(data).length === 0) {
       breakPair()
@@ -71,16 +77,16 @@ export const usePairStore = defineStore('pair', () => {
       id: currentUser.id,
       username: currentUser.username,
       avatar: currentUser.avatarUrl,
-      lastSeen: new Date(Date.now() - 2 * 60 * 1000).toISOString(),
-      approveGeo: true,
+      lastSeen: '',
+      geo: currentUser.geo ?? null,
     }
 
     user2.value = {
       id: partnerUser.id,
       username: partnerUser.username,
       avatar: partnerUser.avatarUrl,
-      lastSeen: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
-      approveGeo: false,
+      lastSeen: '',
+      geo: partnerUser.geo ?? null,
     }
 
     isHost.value = data.isHost
@@ -105,7 +111,10 @@ export const usePairStore = defineStore('pair', () => {
 
     async function handlePairUpdate(data: PairData) {
       updatePairData(data)
-      await updateLocation()
+
+      if ($accessGranted.value && $isLocationAvailable.value) {
+        await updateLocation()
+      }
     }
 
     start(handlePairUpdate, pollInterval)
@@ -127,16 +136,22 @@ export const usePairStore = defineStore('pair', () => {
   }
 
   async function updateLocation() {
-    if (!locationManager.isAccessGranted || !locationManager.isLocationAvailable.value)
-      return
-
     try {
       const loc = await locationManager.getLocation()
       if (loc) {
-        locations.value.push({
+        const geoPoint = {
           ...loc,
           timestamp: new Date().toISOString(),
-        })
+        }
+        locations.value.push(geoPoint)
+        // Отправка на эндпоинт /geo
+
+        try {
+          await useApi().post('/geo', geoPoint)
+        }
+        catch (e) {
+          console.warn('Ошибка при отправке геолокации на /geo', e)
+        }
       }
     }
     catch (e) {

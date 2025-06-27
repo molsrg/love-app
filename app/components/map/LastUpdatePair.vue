@@ -13,7 +13,7 @@ const props = defineProps({
 type AllowedColor = 'warning' | 'error' | 'success'
 
 function getUserStatus(user: any) {
-  if (!user?.lastSeen) {
+  if (!user?.geo?.timestamp) {
     return {
       isOnline: false,
       color: 'error' as AllowedColor,
@@ -22,7 +22,7 @@ function getUserStatus(user: any) {
   }
 
   const now = new Date()
-  const lastSeenDate = new Date(user.lastSeen)
+  const lastSeenDate = new Date(user.geo?.timestamp)
   const diffMinutes = Math.round((now.getTime() - lastSeenDate.getTime()) / 60000)
 
   if (diffMinutes <= 2) {
@@ -64,6 +64,7 @@ const user2Status = computed(() => getUserStatus(props.user2))
 
 <template>
   <div class="flex flex-col gap-3 p-4 bg-elevated/50 rounded-lg animate-initial animate-slide-up">
+  
     <div class="flex items-center gap-2">
       <UChip inset :color="user1Status.color">
         <UAvatar :src="user1.avatar" size="xl" />
@@ -78,7 +79,7 @@ const user2Status = computed(() => getUserStatus(props.user2))
       <div class="flex gap-1">
         <UBadge :color="user1Status.color" variant="subtle" :label="user1Status.label" />
         <UBadge
-          v-if="!user1.approveGeo"
+          v-if="!user1.geo?.approveGeo"
           color="warning"
           variant="subtle"
           label="нет доступа к геопозиции!"

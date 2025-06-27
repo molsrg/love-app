@@ -15,6 +15,7 @@ export default defineNuxtPlugin(async () => {
   })
   const isMobile = ref(false)
   const accessGranted = ref(false)
+  const isLocationAvailable = ref(false)
   const locationManager = useLocationManager()
 
   accessGranted.value = typeof locationManager.isAccessGranted === 'boolean'
@@ -24,6 +25,15 @@ export default defineNuxtPlugin(async () => {
     ? locationManager.isAccessGranted
     : (locationManager.isAccessGranted?.value ?? false)), (val) => {
     accessGranted.value = val
+  })
+
+  isLocationAvailable.value = typeof locationManager.isLocationAvailable === 'boolean'
+    ? locationManager.isLocationAvailable
+    : (locationManager.isLocationAvailable?.value ?? false)
+  watch(() => (typeof locationManager.isLocationAvailable === 'boolean'
+    ? locationManager.isLocationAvailable
+    : (locationManager.isLocationAvailable?.value ?? false)), (val) => {
+    isLocationAvailable.value = val
   })
 
   const setWebAppData = () => {
@@ -56,6 +66,7 @@ export default defineNuxtPlugin(async () => {
       isMobile,
       webAppData,
       accessGranted,
+      isLocationAvailable,
     },
   }
 })

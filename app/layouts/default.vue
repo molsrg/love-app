@@ -5,6 +5,11 @@ import { useLocationManager } from 'vue-tg/latest'
 const { telegramSelectionChanged } = useHapticFeedback()
 const { $isMobile } = useNuxtApp()
 const route = useRoute()
+const locationManager = useLocationManager()
+
+onMounted(() => {
+  locationManager.init()
+})
 
 interface TabItem extends TabsItem {
   value: string
@@ -12,7 +17,6 @@ interface TabItem extends TabsItem {
 }
 
 type NavigationResult = Promise<void> | void
-
 
 const items: TabItem[] = [
   // {
