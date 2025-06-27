@@ -17,7 +17,7 @@ function getUserStatus(user: any) {
     return {
       isOnline: false,
       color: 'error' as AllowedColor,
-      label: 'партнёр не предоставил доступ',
+      label: 'не предоставлен доступ',
     }
   }
 
