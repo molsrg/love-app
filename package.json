@@ -29,8 +29,7 @@
     "qrcode.vue": "^3.6.0",
     "tailwindcss": "^4.1.7",
     "uuid": "^11.1.0",
-    "vue-tg": "0.9.0-beta.3",
-    "vue3-touch-events": "^5.0.13"
+    "vue-tg": "0.9.0-beta.3"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^4.13.2",
