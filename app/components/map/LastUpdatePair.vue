@@ -13,6 +13,14 @@ const props = defineProps({
 type AllowedColor = 'warning' | 'error' | 'success'
 
 function getUserStatus(user: any) {
+  if (!user?.geo) {
+    return {
+      isOnline: false,
+      color: 'error' as AllowedColor,
+      label: 'партнёр не предоставил доступ',
+    }
+  }
+
   if (!user?.geo?.timestamp) {
     return {
       isOnline: false,
@@ -36,7 +44,7 @@ function getUserStatus(user: any) {
   if (diffMinutes < 60) {
     return {
       isOnline: false,
-      color: 'error' as AllowedColor,
+      color: 'warning' as AllowedColor,
       label: `${diffMinutes} мин. назад`,
     }
   }
@@ -64,7 +72,7 @@ const user2Status = computed(() => getUserStatus(props.user2))
 
 <template>
   <div class="flex flex-col gap-3 p-4 bg-elevated/50 rounded-lg animate-initial animate-slide-up">
-  
+ 
     <div class="flex items-center gap-2">
       <UChip inset :color="user1Status.color">
         <UAvatar :src="user1.avatar" size="xl" />
@@ -79,10 +87,10 @@ const user2Status = computed(() => getUserStatus(props.user2))
       <div class="flex gap-1">
         <UBadge :color="user1Status.color" variant="subtle" :label="user1Status.label" />
         <UBadge
-          v-if="!user1.geo?.approveGeo"
+          v-if="!user1.geo?.approveGeo && user1.geo"
           color="warning"
           variant="subtle"
-          label="нет доступа к геопозиции!"
+          label="нет доступа к геопозиции"
         />
       </div>
     </div>
@@ -100,10 +108,10 @@ const user2Status = computed(() => getUserStatus(props.user2))
       <div class="flex gap-1">
         <UBadge :color="user2Status.color" variant="subtle" :label="user2Status.label" />
         <UBadge
-          v-if="!user2.approveGeo"
+          v-if="!user2.geo?.approveGeo && user2.geo"
           color="warning"
           variant="subtle"
-          label="нет доступа к геопозиции!"
+          label="нет доступа к геопозиции"
         />
       </div>
     </div>

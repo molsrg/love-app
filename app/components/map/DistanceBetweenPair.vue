@@ -25,6 +25,13 @@ watch(() => props.distance, (newValue) => {
     })
   }, 100)
 }, { immediate: true })
+
+const distanceText = computed(() => {
+  if (animatedDistance.value < 1000) {
+    return 'вы вместе!'
+  }
+  return `${(animatedDistance.value / 1000).toFixed(1)} км`
+})
 </script>
 
 <template>
@@ -41,8 +48,8 @@ watch(() => props.distance, (newValue) => {
           container: 'flex-col gap-0.5 justify-center ',
         }"
       >
-        <h2>{{ `${Math.round(animatedDistance)} км` }}</h2>
-        <UBadge variant="subtle" label="между вами" />
+        <h2>{{ distanceText }}</h2>
+        <UBadge variant="subtle" v-if="animatedDistance > 1000" label="между вами" />
       </USeparator>
     </div>
     <UAvatar

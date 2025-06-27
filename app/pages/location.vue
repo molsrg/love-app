@@ -1,13 +1,8 @@
 <script setup>
 import { useLocationManager } from 'vue-tg'
 import DistanceBetweenPair from '../components/map/DistanceBetweenPair.vue'
-
 import LastUpdatePair from '../components/map/LastUpdatePair.vue'
-
-// definePageMeta({
-//   pageTransition: false,
-// })
-
+import Icon from '~/components/Icon.vue'
 const locationManager = useLocationManager()
 
 const pairStore = usePairStore()
@@ -15,36 +10,9 @@ const points = [
   { lat: 59.867290, lng: 30.307911, name: 'Санкт-Петербург', color: '#e74c3c' },
   { lat: 59.2205, lng: 39.8915, name: 'Вологда', color: '#3498db' },
 ]
-// onMounted(async () => {
-//   try {
-//     await locationManager.init()
-//   }
-//   catch {
-//     error.value = 'Не удалось инициализировать службы геолокации'
-//   }
-// })
 
-const location = ref(null)
-const error = ref(null)
 const { $accessGranted, $isLocationAvailable } = useNuxtApp()
-async function requestGeolocation() {
-  error.value = null
-  try {
-    if (!locationManager.isInited) {
-      await locationManager.init()
-    }
-    const loc = await locationManager.getLocation()
-    if (loc) {
-      location.value = loc
-    }
-    else {
-      error.value = 'Доступ к геопозиции не предоставлен'
-    }
-  }
-  catch {
-    error.value = 'Ошибка при получении геопозиции'
-  }
-}
+
 </script>
 
 <template>
@@ -77,7 +45,7 @@ async function requestGeolocation() {
     <DistanceBetweenPair
       :user1-avatar="pairStore.user1.avatar"
       :user2-avatar="pairStore.user2.avatar"
-      :distance="402"
+      :distance="111121"
       class="animate-fade-in "
     />
 
@@ -101,7 +69,7 @@ async function requestGeolocation() {
         </div>
       </template>
       <div class="flex flex-col items-center gap-3 w-full">
-        <div class="text-gray-400 text-justify text-base">
+        <div class="text-gray-400 text-center text-base">
           Для корректной работы приложения, вам нужно разрешить доступ в настройках
         </div>
         <img src="../assets/img/geo_access.jpg" alt="Инструкция по разрешению геолокации" class="rounded-lg w-full ">
@@ -110,13 +78,23 @@ async function requestGeolocation() {
           v-if="!$accessGranted"
           class="mt-2 mx-auto"
           trailing-icon="i-heroicons-cog-6-tooth"
-          color="primary"
+          color="warning"
           variant="subtle"
           size="md"
           label="Открыть настройки"
           @click="locationManager.openSettings()"
         />
       </div>
+    </UCard>
+  
+    <UCard  v-if="!$isLocationAvailable"  variant="soft" class="animate-initial animate-slide-up delay-200">
+      <div class="flex flex-col items-center justify-center gap-2 p-2">
+        <Icon name="infinity" size="48" alt="Сердце" />
+        <div class="text-center text-highlited animate-fade-in ">
+          С этого устройства нельзя отправить геолокацию<br>Попробуйте зайти с другого устройства
+        </div>
+      </div>
+     
     </UCard>
     <h2 v-if="pairStore.locations.length" class=" font-bold text-primary text-center animate-fade-in translate-y-3 break-all">
       {{ pairStore.locations }}
@@ -127,3 +105,4 @@ async function requestGeolocation() {
     /> -->
   </div>
 </template>
+

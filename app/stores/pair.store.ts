@@ -151,11 +151,25 @@ export const usePairStore = defineStore('pair', () => {
         }
         catch (e) {
           console.warn('Ошибка при отправке геолокации на /geo', e)
+          if (typeof useToast === 'function') {
+            useToast().add({
+              color: 'error',
+              title: 'Ошибка',
+              description: 'Ошибка при отправке геолокации',
+            })
+          }
         }
       }
     }
     catch (e) {
       console.error('Ошибка при получении геолокации', e)
+      if (typeof useToast === 'function') {
+        useToast().add({
+          color: 'error',
+          title: 'Ошибка',
+          description: 'Ошибка при получении геолокации',
+        })
+      }
     }
   }
 
