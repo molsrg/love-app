@@ -110,11 +110,10 @@ export const usePairStore = defineStore('pair', () => {
     stopPolling.value = stop
 
     async function handlePairUpdate(data: PairData) {
-      updatePairData(data)
-
       if ($accessGranted.value && $isLocationAvailable.value) {
         await updateLocation()
       }
+      updatePairData(data)      
     }
 
     start(handlePairUpdate, pollInterval)
