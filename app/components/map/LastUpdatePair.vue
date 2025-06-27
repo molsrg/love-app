@@ -65,7 +65,7 @@ function getUserStatus(user: any) {
     label: `${diffDays} д. назад`,
   }
 }
-
+const { $accessGranted } = useNuxtApp()
 const user1Status = computed(() => getUserStatus(props.user1))
 const user2Status = computed(() => getUserStatus(props.user2))
 </script>
@@ -87,7 +87,7 @@ const user2Status = computed(() => getUserStatus(props.user2))
       <div class="flex gap-1">
         <UBadge :color="user1Status.color" variant="subtle" :label="user1Status.label" />
         <UBadge
-          v-if="!user1.geo?.approveGeo && user1.geo"
+          v-if="!$accessGranted && user1.geo"
           color="warning"
           variant="subtle"
           label="нет доступа к геопозиции"
