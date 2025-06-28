@@ -1,6 +1,6 @@
 <script setup lang="ts">
 const props = defineProps<{
-  name: string // имя SVG-файла без расширения
+  name: string
   size?: number | string
   alt?: string
 }>()
@@ -15,8 +15,8 @@ const iconSize = computed(() => typeof props.size === 'number' ? `${props.size}p
     :alt="props.alt || props.name"
     :width="iconSize"
     :height="iconSize"
-    loading="lazy"
+    loading="eager"
     draggable="false"
     style="display: inline-block; vertical-align: middle;"
-  />
-</template> 
+  >
+</template>

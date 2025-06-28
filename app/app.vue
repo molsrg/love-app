@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import * as locales from '@nuxt/ui/locale'
-import { useLocationManager } from 'vue-tg/latest'
 import { LoadingIndicator } from '~/components/nuxt'
 
 const app = useAppConfig()

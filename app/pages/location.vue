@@ -1,18 +1,18 @@
 <script setup>
 import { useLocationManager } from 'vue-tg'
+import Icon from '~/components/Icon.vue'
 import DistanceBetweenPair from '../components/map/DistanceBetweenPair.vue'
 import LastUpdatePair from '../components/map/LastUpdatePair.vue'
-import Icon from '~/components/Icon.vue'
+
 const locationManager = useLocationManager()
 
 const pairStore = usePairStore()
-const points = [
-  { lat: 59.867290, lng: 30.307911, name: 'Санкт-Петербург', color: '#e74c3c' },
-  { lat: 59.2205, lng: 39.8915, name: 'Вологда', color: '#3498db' },
-]
+// const points = [
+//   { lat: 59.867290, lng: 30.307911, name: 'Санкт-Петербург', color: '#e74c3c' },
+//   { lat: 59.2205, lng: 39.8915, name: 'Вологда', color: '#3498db' },
+// ]
 
 const { $accessGranted, $isLocationAvailable } = useNuxtApp()
-
 </script>
 
 <template>
@@ -86,15 +86,14 @@ const { $accessGranted, $isLocationAvailable } = useNuxtApp()
         />
       </div>
     </UCard>
-  
-    <UCard  v-if="!$isLocationAvailable"  variant="soft" class="animate-initial animate-slide-up delay-200">
+
+    <UCard v-if="!$isLocationAvailable" variant="soft" class="animate-initial animate-slide-up delay-200">
       <div class="flex flex-col items-center justify-center gap-2 p-2">
         <Icon name="infinity" size="48" alt="Сердце" />
         <div class="text-center text-highlited animate-fade-in ">
           С этого устройства нельзя отправить геолокацию<br>Попробуйте зайти с другого устройства
         </div>
       </div>
-     
     </UCard>
     <h2 v-if="pairStore.locations.length" class=" font-bold text-primary text-center animate-fade-in translate-y-3 break-all">
       {{ pairStore.locations }}
@@ -105,4 +104,3 @@ const { $accessGranted, $isLocationAvailable } = useNuxtApp()
     /> -->
   </div>
 </template>
-

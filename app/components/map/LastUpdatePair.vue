@@ -72,7 +72,6 @@ const user2Status = computed(() => getUserStatus(props.user2))
 
 <template>
   <div class="flex flex-col gap-3 p-4 bg-elevated/50 rounded-lg animate-initial animate-slide-up">
- 
     <div class="flex items-center gap-2">
       <UChip inset :color="user1Status.color">
         <UAvatar :src="user1.avatar" size="xl" />

@@ -1,35 +1,35 @@
 <script setup>
-import { computed, onMounted, onUnmounted, ref } from 'vue'
+import { computed, onUnmounted, ref } from 'vue'
 import { useLocationManager } from 'vue-tg'
 
 const locationManager = useLocationManager()
 const location = ref(null)
 const errorMessage = ref('')
 const locationHistory = ref([])
-let locationInterval = null
+const locationInterval = null
 
 // Initialize LocationManager when component is mounted
-onMounted(async () => {
-  try {
-    await locationManager.init()
+// onMounted(async () => {
+//   try {
+//     await locationManager.init()
 
-    // Set up event handlers
-    locationManager.onManagerUpdate((update) => {
-      console.log('Location manager updated:', update)
-    })
+//     // Set up event handlers
+//     locationManager.onManagerUpdate((update) => {
+//       console.log('Location manager updated:', update)
+//     })
 
-    locationManager.onRequest((request) => {
-      console.log('Location request:', request)
-    })
+//     locationManager.onRequest((request) => {
+//       console.log('Location request:', request)
+//     })
 
-    // Start periodic location requests
-    startLocationWatcher()
-  }
-  catch (error) {
-    console.error('Failed to initialize LocationManager:', error)
-    errorMessage.value = 'Failed to initialize location services'
-  }
-})
+//     // Start periodic location requests
+//     startLocationWatcher()
+//   }
+//   catch (error) {
+//     console.error('Failed to initialize LocationManager:', error)
+//     errorMessage.value = 'Failed to initialize location services'
+//   }
+// })
 
 // Clean up interval when component is unmounted
 onUnmounted(() => {
@@ -38,24 +38,24 @@ onUnmounted(() => {
   }
 })
 
-function startLocationWatcher() {
-  locationInterval = setInterval(async () => {
-    try {
-      const loc = await locationManager.getLocation()
-      if (loc) {
-        location.value = loc
-        locationHistory.value.push({
-          ...loc,
-          timestamp: Date.now(),
-        })
-        errorMessage.value = ''
-      }
-    }
-    catch (error) {
-      console.error('Error getting location in watcher:', error)
-    }
-  }, 3000) // Request every 3 seconds
-}
+// function startLocationWatcher() {
+//   locationInterval = setInterval(async () => {
+//     try {
+//       const loc = await locationManager.getLocation()
+//       if (loc) {
+//         location.value = loc
+//         locationHistory.value.push({
+//           ...loc,
+//           timestamp: Date.now(),
+//         })
+//         errorMessage.value = ''
+//       }
+//     }
+//     catch (error) {
+//       console.error('Error getting location in watcher:', error)
+//     }
+//   }, 3000)
+// }
 
 const buttonText = computed(() => {
   if (!locationManager.isInited)

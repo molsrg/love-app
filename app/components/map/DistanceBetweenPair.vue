@@ -49,7 +49,7 @@ const distanceText = computed(() => {
         }"
       >
         <h2>{{ distanceText }}</h2>
-        <UBadge variant="subtle" v-if="animatedDistance > 1000" label="между вами" />
+        <UBadge v-if="animatedDistance > 1000" variant="subtle" label="между вами" />
       </USeparator>
     </div>
     <UAvatar
