@@ -17,8 +17,10 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     public: {
-      baseBackendUrl: '',
       apiUrl: '',
+
+      baseBackendUrl: '',
+     
       botToken: '',
       initUrl: '',
       botUrl: '',

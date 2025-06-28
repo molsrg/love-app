@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 const error = useError()
 const { t } = useI18n()
-const handleError = () => clearError({ redirect: '/' })
+const handleError = () => clearError({ redirect: '/connect' })
 </script>
 
 <template>
