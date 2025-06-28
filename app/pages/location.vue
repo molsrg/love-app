@@ -1,6 +1,5 @@
 <script setup>
 import { useLocationManager } from 'vue-tg'
-import Icon from '~/components/Icon.vue'
 import DistanceBetweenPair from '../components/map/DistanceBetweenPair.vue'
 import LastUpdatePair from '../components/map/LastUpdatePair.vue'
 
@@ -89,7 +88,8 @@ const { $accessGranted, $isLocationAvailable } = useNuxtApp()
 
     <UCard v-if="!$isLocationAvailable" variant="soft" class="animate-initial animate-slide-up delay-200">
       <div class="flex flex-col items-center justify-center gap-2 p-2">
-        <Icon name="infinity" size="48" alt="Сердце" />
+
+        <UIcon name="i-my-infinity"/> 
         <div class="text-center text-highlited animate-fade-in ">
           С этого устройства нельзя отправить геолокацию<br>Попробуйте зайти с другого устройства
         </div>

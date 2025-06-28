@@ -36,6 +36,11 @@ export default defineNuxtConfig({
     },
   },
 
+  icon: { customCollections: [{
+    prefix: 'my', 
+    dir: './assets/icons'
+  }]},
+
   devServer: {
     // eslint-disable-next-line node/prefer-global/process
     host: process.env.NUXT_DEV_SERVER_HOST || 'localhost',
