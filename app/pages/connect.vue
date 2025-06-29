@@ -46,7 +46,7 @@ qrScanner?.onScan((eventData: { data: string }) => {
       const startParamRegex = /^\d+_\d{4}-\d{2}-\d{2}$/
       tgWebAppStore.setIsCreatePair(true)
       if (startParamRegex.test(startParam)) {
-        if (!tgWebAppStore.getUserInPair.value) {
+        if (!tgWebAppStore.getUserInPair) {
           console.warn('Valid QR code detected, user not paired')
 
           tgWebAppStore.setStartParam(startParam)
@@ -134,7 +134,7 @@ const stepper = useTemplateRef<{ hasPrev: boolean }>('stepper')
 <template>
   <div>
     <div class="relative" style="height: 75vh;">
-      {{ qrUrl }}
+  
       <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center w-full">
         <UCarousel v-slot="{ item }" dots :items="mappedCarouselItems" class="w-full">
           <UCard variant="subtle" class="p-2" :ui="{ root: 'rounded-xl' }">
