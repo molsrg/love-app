@@ -8,29 +8,44 @@ const props = defineProps<{
 }>()
 
 const animatedDistance = ref(0)
+let tween: gsap.core.Tween | null = null
+let delayTimeout: ReturnType<typeof setTimeout> | null = null
+const { t } = useI18n()
 
-watch(() => props.distance, (newValue) => {
-  animatedDistance.value = 0
-
-  setTimeout(() => {
-    gsap.to(animatedDistance, {
+function animateDistance(newValue: number) {
+  if (tween)
+    tween.kill()
+  if (delayTimeout)
+    clearTimeout(delayTimeout)
+  delayTimeout = setTimeout(() => {
+    tween = gsap.to(animatedDistance, {
       value: newValue,
       duration: 3,
       ease: 'power3.out',
       snap: { value: 0.1 },
       overwrite: true,
-      onUpdate: () => {
-        animatedDistance.value = Math.round(animatedDistance.value * 10) / 10
-      },
     })
-  }, 100)
+  }, 200)
+}
+
+watch(() => props.distance, (newValue, oldValue) => {
+  if (newValue !== oldValue) {
+    animateDistance(newValue)
+  }
 }, { immediate: true })
+
+onUnmounted(() => {
+  if (tween)
+    tween.kill()
+  if (delayTimeout)
+    clearTimeout(delayTimeout)
+})
 
 const distanceText = computed(() => {
   if (animatedDistance.value < 1000) {
-    return 'вы вместе!'
+    return t('distance.together')
   }
-  return `${(animatedDistance.value / 1000).toFixed(1)} км`
+  return t('distance.kilometers', { value: (animatedDistance.value / 1000).toFixed(1) })
 })
 </script>
 
@@ -49,7 +64,7 @@ const distanceText = computed(() => {
         }"
       >
         <h2>{{ distanceText }}</h2>
-        <UBadge v-if="animatedDistance > 1000" variant="subtle" label="между вами" />
+        <UBadge v-if="animatedDistance > 1000" variant="subtle" :label="t('distance.between')" />
       </USeparator>
     </div>
     <UAvatar

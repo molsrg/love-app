@@ -68,6 +68,23 @@ const { t } = useI18n()
         }"
       />
 
+      <!-- <UCarousel
+      v-slot="{ item }"
+      loop
+      dots
+      :autoplay="{ delay: 2000 }"
+      :items="pairStore.photos"
+      class="w-full max-w-md mx-auto animate-slide-up opacity-0 translate-y-3"
+      style="animation-delay: 0.6s"
+    >
+      <div class="aspect-square w-full">
+        <img
+          :src="item"
+          class="w-full h-full object-cover rounded-lg"
+          alt="Carousel image"
+        >
+      </div>
+    </UCarousel> -->
       <UCalendar
 
         :fixed-weeks="false"

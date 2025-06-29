@@ -180,5 +180,26 @@
     "error": {
       "redirect": "Go back home"
     }
+  },
+  "distance": {
+    "together": "you are together!",
+    "kilometers": "{value} km",
+    "between": "between you"
+  },
+  "status": {
+    "noAccess": "no access granted",
+    "offline": "offline",
+    "online": "online",
+    "minutesAgo": "{value} min ago",
+    "hoursAgo": "{value} h ago",
+    "daysAgo": "{value} d ago",
+    "noGeoAccess": "no geolocation access"
+  },
+  "geo": {
+    "noAccessTitle": "No access to geolocation",
+    "noAccessText": "To use all app features, please allow access to your geolocation in your device settings",
+    "noAccessNote": "*After granting access, restart the app for geolocation to work correctly",
+    "openSettings": "Open settings",
+    "notAvailable": "It is not possible to send geolocation from this device\nTry using another device"
   }
 }

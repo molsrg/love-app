@@ -61,7 +61,7 @@ export const usePairStore = defineStore('pair', () => {
   const isHost: Ref<boolean> = ref(false)
   const startDate: Ref<Date> = ref(new Date())
   const stopPolling: Ref<(() => void) | null> = ref(null)
-  const locations: Ref<Array<{ lat: number, lng: number, timestamp: string }>> = ref([])
+
   const locationManager = useLocationManager()
   const { $accessGranted, $isLocationAvailable } = useNuxtApp()
   function updatePairData(data: PairData) {
@@ -142,8 +142,6 @@ export const usePairStore = defineStore('pair', () => {
           ...loc,
           timestamp: new Date().toISOString(),
         }
-        locations.value.push(geoPoint)
-        // Отправка на эндпоинт /geo
 
         try {
           await useApi().post('/geo', geoPoint)
@@ -178,7 +176,6 @@ export const usePairStore = defineStore('pair', () => {
     isHost,
     startDate,
     stopPolling,
-    locations,
     updatePairData,
     startPairPolling,
     stopPairPolling,

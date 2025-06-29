@@ -1,3 +1,4 @@
+import type { DateValue } from '@internationalized/date'
 import { CalendarDate } from '@internationalized/date'
 
 export function isNextDateDisabled(date: CalendarDate) {
@@ -12,6 +13,17 @@ export function isDateDisabledAfterNDays(date: CalendarDate, nDays = 29) {
   const today = new Date()
   today.setDate(today.getDate() + nDays)
   return date.compare(new CalendarDate(today.getFullYear(), today.getMonth() + 1, today.getDate())) > 0
+}
+
+export function isDateDisabled(date: DateValue) {
+  if (!('year' in date))
+    return false
+  const today = new CalendarDate(
+    new Date().getFullYear(),
+    new Date().getMonth() + 1,
+    new Date().getDate(),
+  )
+  return date.compare(today) > 0
 }
 
 export function extractDateComponents(date: CalendarDate) {

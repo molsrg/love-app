@@ -18,13 +18,9 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       apiUrl: '',
-
       baseBackendUrl: '',
-     
       botToken: '',
-      initUrl: '',
-      botUrl: '',
-      chatId: '',
+
       devServerHost: '',
       devServerPort: 5000,
     },
@@ -37,9 +33,9 @@ export default defineNuxtConfig({
   },
 
   icon: { customCollections: [{
-    prefix: 'my', 
-    dir: '~/assets/icons'
-  }]},
+    prefix: 'custom',
+    dir: '~/assets/icons',
+  }] },
 
   devServer: {
     // eslint-disable-next-line node/prefer-global/process

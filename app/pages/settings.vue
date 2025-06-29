@@ -1,15 +1,14 @@
 <script lang="ts" setup>
-import type { DateValue } from '@internationalized/date'
 import type { Profile, Theme } from '~/types/settings'
-import { CalendarDate, parseDate } from '@internationalized/date'
-
+import { parseDate } from '@internationalized/date'
 import { useCloudStorage } from 'vue-tg/latest'
 import { SETTINGS_SECTIONS, THEMES } from '~/config/settings'
+import { isDateDisabled } from '~/helpers/calendar.helper'
 
 const { t } = useI18n()
 const { telegramSelectionChanged, telegramNotificationOccurred } = useHapticFeedback()
 const appConfig = useAppConfig()
-const toast = useToast()
+
 const api = useApi()
 const pairStore = usePairStore()
 
@@ -17,13 +16,15 @@ const initialName = ref(pairStore.user1.username ?? '')
 const userName = ref(pairStore.user1.username ?? '')
 const activeTheme = ref(appConfig.ui.colors.primary)
 
-const userProfile = computed<Profile>(() => ({
+const avatarInput = ref<HTMLInputElement | null>(null)
+
+const userProfile = ref<Profile>({
   name: userName.value,
   partnerName: pairStore.user2.username ?? '',
   startDate: new Date(pairStore.startDate).toLocaleDateString('en-CA'),
   theme: activeTheme.value,
   ...(pairStore.user1.avatar ? { avatar: pairStore.user1.avatar } : {}),
-}))
+})
 
 // Theme app
 
@@ -81,8 +82,7 @@ watch(isHostTransferEnabled, (newValue) => {
 })
 
 function handleAvatarClick() {
-  const input = document.querySelector('input[type="file"]') as HTMLInputElement
-  input?.click()
+  avatarInput.value?.click()
 }
 
 async function handleAvatarChange(event: Event) {
@@ -94,25 +94,14 @@ async function handleAvatarChange(event: Event) {
       formData.append('file', file)
       usePairStore().stopPairPolling()
       await api.postFormData('/user/change-avatar', formData)
-      usePairStore().startPairPolling()
-      toast.add({
-        title: t('settings.profile.avatarUpdated.title'),
-        description: t('settings.profile.avatarUpdated.description'),
-        color: 'success',
-      })
 
       telegramNotificationOccurred('success')
     }
     catch (error) {
       console.error('Failed to upload avatar:', error)
-      usePairStore().startPairPolling()
-      toast.add({
-        title: t('settings.profile.avatarError.title'),
-        description: t('settings.profile.avatarError.description'),
-        color: 'error',
-      })
     }
     finally {
+      usePairStore().startPairPolling()
       target.value = ''
     }
   }
@@ -204,20 +193,13 @@ async function handleNameChange() {
     initialName.value = newUserName.value
 
     telegramNotificationOccurred('success')
-    toast.add({
-      title: t('settings.profile.nameUpdated.title'),
-      description: t('settings.profile.nameUpdated.description'),
-      color: 'success',
-    })
+
     isOpenChangeName.value = false
   }
   catch (error) {
+    telegramNotificationOccurred('error')
+
     console.error('Failed to update name:', error)
-    toast.add({
-      title: t('settings.profile.nameError.title'),
-      description: t('settings.profile.nameError.description'),
-      color: 'error',
-    })
   }
   finally {
     usePairStore().startPairPolling()
@@ -225,17 +207,6 @@ async function handleNameChange() {
 }
 
 const { currentLocale, setLanguage, languages } = useLanguage()
-
-function isDateDisabled(date: DateValue) {
-  if (!('year' in date))
-    return false
-  const today = new CalendarDate(
-    new Date().getFullYear(),
-    new Date().getMonth() + 1,
-    new Date().getDate(),
-  )
-  return date.compare(today) > 0
-}
 </script>
 
 <template>
@@ -285,6 +256,7 @@ function isDateDisabled(date: DateValue) {
             {{ t('settings.profile.changeAvatar') }}
           </UButton>
           <input
+            ref="avatarInput"
             accept="image/*"
             class="hidden"
             type="file"

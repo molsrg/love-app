@@ -1,1 +1,1 @@
-export { default as RelationshipProgress } from './RelationshipProgress.vue'
+export { default as CircularProgress } from './CircularProgress.vue'

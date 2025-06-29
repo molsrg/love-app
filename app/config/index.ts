@@ -46,7 +46,7 @@ export const STATS_CONFIG: Record<string, StatConfig> = {
   days: {
     label: 'index.stats.days',
     value: 0,
-    textValue: null,
+    textValue: undefined,
     disabled: false,
     classes: {
       value: 'text-primary',

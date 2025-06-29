@@ -1,22 +1,15 @@
 <script setup lang="ts">
-import { RelationshipProgress } from '~/components/progress'
+import { CircularProgress } from '~/components/progress'
 import { COUNTDOWN_CONFIG, RELATIONSHIP_GOALS, STATS_CONFIG } from '~/config/index'
 import { getDaysTogether, getTimeLeft } from '~/helpers/stats'
 
 const { t } = useI18n()
 const pairStore = usePairStore()
 const now = ref<Date>(new Date())
-let intervalId: ReturnType<typeof setInterval>
 
-onMounted(() => {
-  intervalId = setInterval(() => {
-    now.value = new Date()
-  }, 1000)
-})
-
-onUnmounted(() => {
-  clearInterval(intervalId)
-})
+useIntervalFn(() => {
+  now.value = new Date()
+}, 1000)
 
 const timeLeft = computed(() => getTimeLeft(now.value, pairStore.startDate))
 const daysTogether = computed<number>(() => getDaysTogether(now.value, pairStore.startDate))
@@ -31,6 +24,13 @@ const stats = computed(() => {
   }
   return config
 })
+
+const countdownValues = computed(() => [
+  timeLeft.value.days,
+  timeLeft.value.hours,
+  timeLeft.value.minutes,
+  timeLeft.value.seconds,
+])
 </script>
 
 <template>
@@ -78,10 +78,7 @@ const stats = computed(() => {
         <template v-for="(unit, index) in COUNTDOWN_CONFIG.units" :key="unit">
           <div class="flex flex-col items-center">
             <div class="text-3xl font-bold text-primary">
-              {{ index === 0 ? timeLeft.days
-                : index === 1 ? timeLeft.hours
-                  : index === 2 ? timeLeft.minutes
-                    : timeLeft.seconds }}
+              {{ countdownValues[index] }}
             </div>
             <div class="text-sm text-gray-400">
               {{ t(unit) }}
@@ -99,30 +96,12 @@ const stats = computed(() => {
         class="bg-elevated/50 rounded-lg p-2 flex flex-col items-center animate-slide-up opacity-0 translate-y-3"
         :style="{ animationDelay: `${0.5 + index * 0.2}s` }"
       >
-        <RelationshipProgress
+        <CircularProgress
           :current-days="daysTogether"
           :target-days="goal.days"
           :label="t(goal.label)"
         />
       </div>
     </div>
-
-    <!-- <UCarousel
-      v-slot="{ item }"
-      loop
-      dots
-      :autoplay="{ delay: 2000 }"
-      :items="pairStore.photos"
-      class="w-full max-w-md mx-auto animate-slide-up opacity-0 translate-y-3"
-      style="animation-delay: 0.6s"
-    >
-      <div class="aspect-square w-full">
-        <img
-          :src="item"
-          class="w-full h-full object-cover rounded-lg"
-          alt="Carousel image"
-        >
-      </div>
-    </UCarousel> -->
   </div>
 </template>

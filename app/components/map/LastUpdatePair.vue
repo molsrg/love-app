@@ -1,23 +1,26 @@
 <script lang="ts" setup>
-const props = defineProps({
-  user1: {
-    type: Object,
-    required: true,
-  },
-  user2: {
-    type: Object,
-    required: true,
-  },
-})
+interface UserGeo {
+  timestamp?: string
+  approveGeo?: boolean
+}
+interface User {
+  avatar: string
+  geo?: UserGeo
+}
+
+const props = defineProps<{
+  user1: User
+  user2: User
+}>()
 
 type AllowedColor = 'warning' | 'error' | 'success'
-
-function getUserStatus(user: any) {
+const { t } = useI18n()
+function getUserStatus(user: User) {
   if (!user?.geo) {
     return {
       isOnline: false,
       color: 'error' as AllowedColor,
-      label: 'не предоставлен доступ',
+      label: t('status.noAccess'),
     }
   }
 
@@ -25,7 +28,7 @@ function getUserStatus(user: any) {
     return {
       isOnline: false,
       color: 'error' as AllowedColor,
-      label: 'оффлайн',
+      label: t('status.offline'),
     }
   }
 
@@ -37,7 +40,7 @@ function getUserStatus(user: any) {
     return {
       isOnline: true,
       color: 'success' as AllowedColor,
-      label: 'онлайн',
+      label: t('status.online'),
     }
   }
 
@@ -45,7 +48,7 @@ function getUserStatus(user: any) {
     return {
       isOnline: false,
       color: 'warning' as AllowedColor,
-      label: `${diffMinutes} мин. назад`,
+      label: t('status.minutesAgo', { value: diffMinutes }),
     }
   }
 
@@ -54,7 +57,7 @@ function getUserStatus(user: any) {
     return {
       isOnline: false,
       color: 'error' as AllowedColor,
-      label: `${diffHours} ч. назад`,
+      label: t('status.hoursAgo', { value: diffHours }),
     }
   }
 
@@ -62,7 +65,7 @@ function getUserStatus(user: any) {
   return {
     isOnline: false,
     color: 'error' as AllowedColor,
-    label: `${diffDays} д. назад`,
+    label: t('status.daysAgo', { value: diffDays }),
   }
 }
 const { $accessGranted } = useNuxtApp()
@@ -89,7 +92,7 @@ const user2Status = computed(() => getUserStatus(props.user2))
           v-if="!$accessGranted && user1.geo"
           color="warning"
           variant="subtle"
-          label="нет доступа к геопозиции"
+          :label="$t('status.noGeoAccess')"
         />
       </div>
     </div>
@@ -110,7 +113,7 @@ const user2Status = computed(() => getUserStatus(props.user2))
           v-if="!user2.geo?.approveGeo && user2.geo"
           color="warning"
           variant="subtle"
-          label="нет доступа к геопозиции"
+          :label="$t('status.noGeoAccess')"
         />
       </div>
     </div>
