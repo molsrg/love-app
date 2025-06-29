@@ -51,7 +51,13 @@ export function useApi() {
 
     mergedOptions.onResponse = ({ response }) => {
       const method = mergedOptions.method?.toUpperCase()
-      if (mergedOptions.showSuccessToast && response._data?.message && method && mergedOptions.showToastForMethods?.includes(method as HttpMethod)) {
+      if (
+        mergedOptions.showSuccessToast &&
+        response.ok &&
+        response._data?.message &&
+        method &&
+        mergedOptions.showToastForMethods?.includes(method as HttpMethod)
+      ) {
         toast.add({
           color: 'success',
           title: response._data.message,
@@ -61,10 +67,11 @@ export function useApi() {
 
     mergedOptions.onResponseError = ({ response }) => {
       if (mergedOptions.showErrorToast) {
-        toast.add({
+        const showError = useErrorToast()
+        showError({
           color: 'error',
           title: `Error ${response.status}`,
-          description: response._data?.message?.[0] || response._data?.message || 'An unknown error occurred.',
+          description: response._data?.message || 'An unknown error occurred.'
         })
       }
     }

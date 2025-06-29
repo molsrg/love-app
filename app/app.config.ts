@@ -1,8 +1,8 @@
 export default defineAppConfig({
   toaster: {
     position: 'bottom-right' as const,
-    expand: false,
-    duration: 2000,
+    expand: true,
+    duration: 3000,
   },
   theme: {
     radius: 0.25,
