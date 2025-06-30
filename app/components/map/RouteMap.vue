@@ -18,18 +18,15 @@ interface RouteInfo {
 
 const props = defineProps<{
   points: Point[]
-  markerColors?: string[]
   routeColor?: string
 }>()
-
-const API_KEY = '5b3ce3597851110001cf6248e27fb267a0444c0db60b34b0519762e6'
 
 const mapContainer = ref<HTMLElement | null>(null)
 const map = ref<L.Map | null>(null)
 const loading = ref(false)
 const error = ref<string | null>(null)
 const routeInfo = ref<RouteInfo | null>(null)
-
+const config = useRuntimeConfig()
 // Инициализация карты
 function initMap() {
   if (!mapContainer.value)
@@ -37,9 +34,7 @@ function initMap() {
 
   map.value = L.map(mapContainer.value).setView([59.94, 30.31], 10)
 
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-
-  }).addTo(map.value)
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {}).addTo(map.value)
 }
 
 // Кастомные иконки для маркеров
@@ -57,7 +52,7 @@ function createCustomIcon(color: string) {
   })
 }
 
-// Получение маршрута
+// Получение маршрута (пеший)
 async function fetchRoute() {
   if (!props.points || props.points.length !== 2)
     return
@@ -70,7 +65,8 @@ async function fetchRoute() {
     if (!start || !end)
       throw new Error('Неверные координаты')
 
-    const url = `https://api.openrouteservice.org/v2/directions/driving-car?api_key=${API_KEY}&start=${start.lng},${start.lat}&end=${end.lng},${end.lat}`
+    // Пеший маршрут
+    const url = `https://api.openrouteservice.org/v2/directions/foot-walking?api_key=${config.public.leafletApiKey}&start=${start.lng},${start.lat}&end=${end.lng},${end.lat}`
 
     const response = await fetch(url)
     const data = await response.json()
@@ -135,8 +131,8 @@ onMounted(() => {
   fetchRoute()
 })
 
-// Следим за изменением точек и цветов
-watch(() => [props.points, props.markerColors, props.routeColor], fetchRoute, { deep: true })
+// Следим за изменением точек и цвета маршрута
+watch(() => [props.points, props.routeColor], fetchRoute, { deep: true })
 </script>
 
 <template>
@@ -150,7 +146,7 @@ watch(() => [props.points, props.markerColors, props.routeColor], fetchRoute, { 
       </div>
     </div>
 
-    <UCard v-if="routeInfo" class="absolute bottom-4 left-4 z-[10] max-w-sm">
+    <!-- <UCard v-if="routeInfo" class="absolute bottom-4 left-4 z-[10] max-w-sm">
       <template #header>
         <h3 class="text-base font-semibold">
           Информация о маршруте
@@ -175,7 +171,7 @@ watch(() => [props.points, props.markerColors, props.routeColor], fetchRoute, { 
           <span class="text-sm">~{{ routeInfo.duration }} мин</span>
         </div>
       </div>
-    </UCard>
+    </UCard> -->
 
     <UAlert
       v-if="error"

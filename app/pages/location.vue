@@ -5,10 +5,19 @@ const locationManager = useLocationManager()
 const { $accessGranted, $isLocationAvailable } = useNuxtApp()
 const pairStore = usePairStore()
 const { t } = useI18n()
-// const points = [
-//   { lat: 59.867290, lng: 30.307911, name: 'Санкт-Петербург', color: '#e74c3c' },
-//   { lat: 59.2205, lng: 39.8915, name: 'Вологда', color: '#3498db' },
-// ]
+
+const points = [
+  {
+    lat: pairStore.user1.geo?.latitude,
+    lng: pairStore.user1.geo?.longitude,
+    color: '#e74c3c',
+  },
+  {
+    lat: pairStore.user2.geo?.latitude,
+    lng: pairStore.user2.geo?.longitude,
+    color: '#3498db',
+  },
+]
 
 onMounted(async () => {
   if ($accessGranted.value && $isLocationAvailable.value) {
@@ -75,9 +84,9 @@ onMounted(async () => {
       </div>
     </UCard>
 
-    <!-- <RouteMap
+    <RouteMap
       :points="points"
       route-color="var(--ui-color-primary-500)"
-    /> -->
+    />
   </div>
 </template>

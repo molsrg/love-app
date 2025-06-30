@@ -7,9 +7,9 @@
 }
 
 :root {
-    -webkit-user-select: none;
+    /* -webkit-user-select: none;
     -moz-user-select: none;
-    user-select: none;
+    user-select: none; */
 
     /* Tg Padding Variable */
     padding-top: calc(var(--tg-safe-area-inset-top, 0px) + var(--tg-content-safe-area-inset-top));

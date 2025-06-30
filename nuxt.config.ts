@@ -20,6 +20,7 @@ export default defineNuxtConfig({
       apiUrl: '',
       baseBackendUrl: '',
       botUrl: '',
+      leafletApiKey: '',
 
       devServerHost: '',
       devServerPort: 5000,

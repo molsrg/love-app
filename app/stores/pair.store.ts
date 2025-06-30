@@ -102,7 +102,7 @@ export const usePairStore = defineStore('pair', () => {
     )
   }
 
-  async function startPairPolling(pollInterval = 3000) {
+  async function startPairPolling(pollInterval = 8000) {
     console.warn('Starting pair polling')
 
     const { start, stop } = usePolling(pairApi.getPairData)
