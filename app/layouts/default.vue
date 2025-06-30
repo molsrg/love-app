@@ -70,7 +70,6 @@ const active = computed<string>({
 
 <template>
   <div class="pb-[56px]">
-    {{ locationManager }}
     <slot />
   </div>
   <UTabs
