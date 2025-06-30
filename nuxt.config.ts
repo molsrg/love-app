@@ -19,7 +19,7 @@ export default defineNuxtConfig({
     public: {
       apiUrl: '',
       baseBackendUrl: '',
-      botToken: '',
+      botUrl: '',
 
       devServerHost: '',
       devServerPort: 5000,
