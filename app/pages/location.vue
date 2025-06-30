@@ -20,7 +20,7 @@ const points = [
 ]
 
 onMounted(async () => {
-  if ($accessGranted.value && $isLocationAvailable.value) {
+  if ( $isLocationAvailable.value) {
     await usePairStore().updateLocation()
   }
 })
