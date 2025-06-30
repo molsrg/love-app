@@ -15,12 +15,14 @@ export function useErrorToast() {
         title: options,
         color: 'error',
       })
-    } else if (options instanceof Error) {
+    }
+    else if (options instanceof Error) {
       toast.add({
         title: options.message,
         color: 'error',
       })
-    } else {
+    }
+    else {
       toast.add({
         title: options.title || 'Ошибка',
         description: options.description,
@@ -29,4 +31,4 @@ export function useErrorToast() {
       })
     }
   }
-} 
+}

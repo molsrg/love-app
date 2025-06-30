@@ -1,7 +1,6 @@
 <script setup>
 import { useLocationManager } from 'vue-tg'
 
-
 const locationManager = useLocationManager()
 const { $accessGranted, $isLocationAvailable } = useNuxtApp()
 const pairStore = usePairStore()

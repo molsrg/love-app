@@ -31,15 +31,16 @@ export default defineNuxtConfig({
       colors: ['primary', 'secondary', 'orange', 'indigo', 'black', 'cyan', 'stone', 'gray', 'lime', 'rose', 'info', 'success', 'warning', 'error', 'amber', 'blue', 'emerald'],
     },
   },
-  
+
   components: [
     {
       path: '~/components',
-      pathPrefix: false,    },
+      pathPrefix: false,
+    },
   ],
 
   imports: {
-    dirs: ['config']
+    dirs: ['config'],
   },
 
   icon: { customCollections: [{

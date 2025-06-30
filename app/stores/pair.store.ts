@@ -2,7 +2,6 @@ import type { Ref } from 'vue'
 import { defineStore } from 'pinia'
 import { useLocationManager } from 'vue-tg/latest'
 
-
 export interface GeoData {
   latitude: number
   longitude: number

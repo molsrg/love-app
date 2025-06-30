@@ -3,12 +3,9 @@ import type { Profile, Theme } from '~/types/settings'
 import { parseDate } from '@internationalized/date'
 import { useCloudStorage } from 'vue-tg/latest'
 
-
-
 const { t } = useI18n()
 const { telegramSelectionChanged, telegramNotificationOccurred } = useHapticFeedback()
 const appConfig = useAppConfig()
-
 
 const pairStore = usePairStore()
 
@@ -62,7 +59,8 @@ async function handleHostTransfer() {
     if (confirm(t('settings.partner.confirmations.transferHost'))) {
       await pairApi.changeHost()
       // Success
-    } else {
+    }
+    else {
       isHostTransferEnabled.value = false
     }
   }
@@ -89,9 +87,11 @@ async function handleAvatarChange(event: Event) {
       usePairStore().stopPairPolling()
       await pairApi.changeAvatar(formData)
       telegramNotificationOccurred('success')
-    } catch (error) {
+    }
+    catch (error) {
       console.error('Failed to upload avatar:', error)
-    } finally {
+    }
+    finally {
       usePairStore().startPairPolling()
       target.value = ''
     }
@@ -109,7 +109,8 @@ async function handleBreakUp() {
 }
 
 async function handleDateChange(date: any) {
-  if (!date || !('year' in date)) return
+  if (!date || !('year' in date))
+    return
   selectedDate.value = date
   userProfile.value.startDate = date.toString()
   telegramSelectionChanged()
@@ -118,7 +119,8 @@ async function handleDateChange(date: any) {
     usePairStore().stopPairPolling()
     await pairApi.changeDate(date.toString())
     usePairStore().startPairPolling()
-  } catch (error) {
+  }
+  catch (error) {
     console.error('Error connecting pair:', error)
   }
 }
@@ -162,7 +164,8 @@ watch(newUserName, (newValue) => {
 })
 
 async function handleNameChange() {
-  if (!validateName(newUserName.value)) return
+  if (!validateName(newUserName.value))
+    return
   try {
     usePairStore().stopPairPolling()
     await pairApi.changeName(newUserName.value)
@@ -171,10 +174,12 @@ async function handleNameChange() {
     initialName.value = newUserName.value
     telegramNotificationOccurred('success')
     isOpenChangeName.value = false
-  } catch (error) {
+  }
+  catch (error) {
     telegramNotificationOccurred('error')
     console.error('Failed to update name:', error)
-  } finally {
+  }
+  finally {
     usePairStore().startPairPolling()
   }
 }

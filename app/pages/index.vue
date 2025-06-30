@@ -30,7 +30,6 @@ const countdownValues = computed(() => [
 ])
 </script>
 
-
 <template>
   <div class="space-y-3">
     <div class="flex justify-center">
