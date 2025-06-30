@@ -2,14 +2,14 @@
 import type { Profile, Theme } from '~/types/settings'
 import { parseDate } from '@internationalized/date'
 import { useCloudStorage } from 'vue-tg/latest'
-import { SETTINGS_SECTIONS, THEMES } from '~/config/settings'
-import { isDateDisabled } from '~/helpers/calendar.helper'
+
+
 
 const { t } = useI18n()
 const { telegramSelectionChanged, telegramNotificationOccurred } = useHapticFeedback()
 const appConfig = useAppConfig()
 
-const api = useApi()
+
 const pairStore = usePairStore()
 
 const initialName = ref(pairStore.user1.username ?? '')
@@ -57,18 +57,12 @@ watch(() => pairStore.isHost, (isHost) => {
   }
 })
 
-function handleHostTransfer() {
+async function handleHostTransfer() {
   if (isHostTransferEnabled.value) {
     if (confirm(t('settings.partner.confirmations.transferHost'))) {
-      api.post('/pair/change-host', {})
-        .then(() => {
-          // Success
-        })
-        .catch((error) => {
-          console.error('Failed to change host:', error)
-        })
-    }
-    else {
+      await pairApi.changeHost()
+      // Success
+    } else {
       isHostTransferEnabled.value = false
     }
   }
@@ -93,50 +87,38 @@ async function handleAvatarChange(event: Event) {
       const formData = new FormData()
       formData.append('file', file)
       usePairStore().stopPairPolling()
-      await api.postFormData('/user/change-avatar', formData)
-
+      await pairApi.changeAvatar(formData)
       telegramNotificationOccurred('success')
-    }
-    catch (error) {
+    } catch (error) {
       console.error('Failed to upload avatar:', error)
-    }
-    finally {
+    } finally {
       usePairStore().startPairPolling()
       target.value = ''
     }
   }
 }
 
-function handleBreakUp() {
+async function handleBreakUp() {
   telegramSelectionChanged()
   if (confirm(t('settings.partner.confirmations.breakup'))) {
-    api.delete('/pair')
-      .then(() => {
-        useTgWebAppStore().setUserInPair(false)
-        usePairStore().stopPairPolling()
-        navigateTo('/connect')
-      })
-      .catch((error) => {
-        console.error('Failed to break up the pair:', error)
-      })
+    await pairApi.breakPair()
+    useTgWebAppStore().setUserInPair(false)
+    usePairStore().stopPairPolling()
+    navigateTo('/connect')
   }
 }
 
 async function handleDateChange(date: any) {
-  if (!date || !('year' in date))
-    return
-
+  if (!date || !('year' in date)) return
   selectedDate.value = date
   userProfile.value.startDate = date.toString()
   telegramSelectionChanged()
   isCalendarPopoverOpen.value = false
-
   try {
     usePairStore().stopPairPolling()
-    await api.post('/pair/change-date', { date: date.toString() })
+    await pairApi.changeDate(date.toString())
     usePairStore().startPairPolling()
-  }
-  catch (error) {
+  } catch (error) {
     console.error('Error connecting pair:', error)
   }
 }
@@ -180,28 +162,19 @@ watch(newUserName, (newValue) => {
 })
 
 async function handleNameChange() {
-  if (!validateName(newUserName.value))
-    return
-
+  if (!validateName(newUserName.value)) return
   try {
     usePairStore().stopPairPolling()
-    await api.post('/user/change-name', { username: newUserName.value })
-
-    // Update name in pairStore and local ref
+    await pairApi.changeName(newUserName.value)
     pairStore.user1.username = newUserName.value
     userName.value = newUserName.value
     initialName.value = newUserName.value
-
     telegramNotificationOccurred('success')
-
     isOpenChangeName.value = false
-  }
-  catch (error) {
+  } catch (error) {
     telegramNotificationOccurred('error')
-
     console.error('Failed to update name:', error)
-  }
-  finally {
+  } finally {
     usePairStore().startPairPolling()
   }
 }

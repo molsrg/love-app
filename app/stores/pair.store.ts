@@ -1,7 +1,7 @@
 import type { Ref } from 'vue'
 import { defineStore } from 'pinia'
 import { useLocationManager } from 'vue-tg/latest'
-import { pairRepository } from '~/repositories/pair.repository'
+
 
 export interface GeoData {
   latitude: number
@@ -106,7 +106,7 @@ export const usePairStore = defineStore('pair', () => {
   async function startPairPolling(pollInterval = 3000) {
     console.warn('Starting pair polling')
 
-    const { start, stop } = usePolling(pairRepository.getPairData)
+    const { start, stop } = usePolling(pairApi.getPairData)
     stopPolling.value = stop
 
     async function handlePairUpdate(data: PairData) {

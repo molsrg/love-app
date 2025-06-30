@@ -1,10 +1,7 @@
 <script setup lang="ts">
-import { CircularProgress } from '~/components/progress'
-import { COUNTDOWN_CONFIG, RELATIONSHIP_GOALS, STATS_CONFIG } from '~/config/index'
-import { getDaysTogether, getTimeLeft } from '~/helpers/stats'
-
 const { t } = useI18n()
 const pairStore = usePairStore()
+
 const now = ref<Date>(new Date())
 
 useIntervalFn(() => {
@@ -32,6 +29,7 @@ const countdownValues = computed(() => [
   timeLeft.value.seconds,
 ])
 </script>
+
 
 <template>
   <div class="space-y-3">

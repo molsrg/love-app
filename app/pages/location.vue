@@ -1,7 +1,6 @@
 <script setup>
 import { useLocationManager } from 'vue-tg'
-import DistanceBetweenPair from '../components/map/DistanceBetweenPair.vue'
-import LastUpdatePair from '../components/map/LastUpdatePair.vue'
+
 
 const locationManager = useLocationManager()
 const { $accessGranted, $isLocationAvailable } = useNuxtApp()

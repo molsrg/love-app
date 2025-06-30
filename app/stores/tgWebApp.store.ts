@@ -1,7 +1,6 @@
 import type { ComputedRef, Ref } from 'vue'
 import { defineStore } from 'pinia'
 import { useCloudStorage, useMiniApp } from 'vue-tg/latest'
-import { authRepository } from '~/repositories/auth.repository'
 
 interface WebAppData {
   platform: string
@@ -60,7 +59,7 @@ export const useTgWebAppStore = defineStore('tgWebAppStore', () => {
       : miniApp.initData
 
     const tokenStore = useTokenStore()
-    const { accessToken, isPaired } = await authRepository.login(initData.value)
+    const { accessToken, isPaired } = await authApi.login(initData.value)
 
     userInPair.value = isPaired
     tokenStore.setToken(accessToken)
