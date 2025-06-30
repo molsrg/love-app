@@ -85,6 +85,7 @@ onMounted(async () => {
     </UCard>
 
     <RouteMap
+      v-if="points.every(p => p && p.lat && p.lng)"
       :points="points"
       route-color="var(--ui-color-primary-500)"
     />
