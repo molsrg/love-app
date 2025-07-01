@@ -12,6 +12,7 @@ interface InitDataUnsafe {
   user?: {
     id: string
     first_name: string
+    language_code: string
   }
 }
 
