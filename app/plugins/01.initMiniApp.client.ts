@@ -51,6 +51,42 @@ export default defineNuxtPlugin(async () => {
 
   setWebAppData()
 
+  // Установка CSS-переменных для safe-area-inset и content-safe-area-inset
+  function setSafeAreaInsets() {
+    const root = document.documentElement
+    const tg = window.Telegram?.WebApp
+
+    if (tg?.safeAreaInset) {
+      root.style.setProperty('--tg-safe-area-inset-top', `${tg.safeAreaInset.top || 0}px`)
+      root.style.setProperty('--tg-safe-area-inset-bottom', `${tg.safeAreaInset.bottom || 0}px`)
+      root.style.setProperty('--tg-safe-area-inset-left', `${tg.safeAreaInset.left || 0}px`)
+      root.style.setProperty('--tg-safe-area-inset-right', `${tg.safeAreaInset.right || 0}px`)
+    } else {
+      root.style.setProperty('--tg-safe-area-inset-top', '0px')
+      root.style.setProperty('--tg-safe-area-inset-bottom', '0px')
+      root.style.setProperty('--tg-safe-area-inset-left', '0px')
+      root.style.setProperty('--tg-safe-area-inset-right', '0px')
+    }
+    if (tg?.contentSafeAreaInset) {
+      root.style.setProperty('--tg-content-safe-area-inset-top', `${tg.contentSafeAreaInset.top || 0}px`)
+      root.style.setProperty('--tg-content-safe-area-inset-bottom', `${tg.contentSafeAreaInset.bottom || 0}px`)
+      root.style.setProperty('--tg-content-safe-area-inset-left', `${tg.contentSafeAreaInset.left || 0}px`)
+      root.style.setProperty('--tg-content-safe-area-inset-right', `${tg.contentSafeAreaInset.right || 0}px`)
+    } else {
+      root.style.setProperty('--tg-content-safe-area-inset-top', '0px')
+      root.style.setProperty('--tg-content-safe-area-inset-bottom', '0px')
+      root.style.setProperty('--tg-content-safe-area-inset-left', '0px')
+      root.style.setProperty('--tg-content-safe-area-inset-right', '0px')
+    }
+  }
+  setSafeAreaInsets()
+
+  // Подписка на события изменения safe area
+  if (window.Telegram?.WebApp?.onEvent) {
+    window.Telegram.WebApp.onEvent('safeAreaChanged', setSafeAreaInsets)
+    window.Telegram.WebApp.onEvent('contentSafeAreaChanged', setSafeAreaInsets)
+  }
+
   if (['ios', 'android'].includes(webAppData.value.platform)) {
     window.Telegram.WebApp.requestFullscreen()
     isMobile.value = true
