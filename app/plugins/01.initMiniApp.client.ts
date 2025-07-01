@@ -51,7 +51,6 @@ export default defineNuxtPlugin(async () => {
 
   setWebAppData()
 
-
   if (['ios', 'android'].includes(webAppData.value.platform)) {
     window.Telegram.WebApp.requestFullscreen()
     isMobile.value = true

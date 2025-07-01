@@ -4,7 +4,6 @@ interface ErrorToastOptions {
   title?: string
   description?: string
   color?: 'error' | 'warning' | 'info' | 'success'
-  timeout?: number
 }
 
 export function useErrorToast() {
@@ -27,7 +26,7 @@ export function useErrorToast() {
         title: options.title || 'Ошибка',
         description: options.description,
         color: options.color || 'error',
-        timeout: options.timeout,
+
       })
     }
   }

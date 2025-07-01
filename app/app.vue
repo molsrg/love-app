@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import * as locales from '@nuxt/ui/locale'
-import { LoadingIndicator } from '~/components/nuxt'
 
 const { locale } = useI18n()
 </script>

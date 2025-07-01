@@ -5,7 +5,7 @@ import type { StepperItem } from '@nuxt/ui'
 import QrcodeVue from 'qrcode.vue'
 import { useQrScanner } from 'vue-tg'
 
-import { carouselItems } from '~/constants/app/connect'
+import { carouselItems } from '~/config/connect'
 
 definePageMeta({
   layout: 'unauthorized',
@@ -15,17 +15,18 @@ const { t } = useI18n()
 const config = useRuntimeConfig()
 const tgUserStore = useTgWebAppStore().getInitDataUnsafe?.user
 const selectedDate = ref<DateValue | null>(null)
-const qrUrl = computed(() => `https://t.me/${config.public.botUrl}?startapp=${tgUserStore.id}_${selectedDate.value}`)
+const qrUrl = computed(() => tgUserStore?.id && selectedDate.value ? `https://t.me/${config.public.botUrl}?startapp=${tgUserStore.id}_${selectedDate.value}` : '')
 const isQrOpen = ref(false)
 const { $isMobile } = useNuxtApp()
 const { telegramSelectionChanged } = useHapticFeedback()
-const toast = useToast()
+const showError = useErrorToast()
 
 const qrScanner = useQrScanner()
 const dataQR = ref<{ data: string } | null>(null)
 
 function startScanner(): void {
-  qrScanner?.show({ text: t('connect.scanner.text') })
+  if (qrScanner && typeof qrScanner.show === 'function')
+    qrScanner?.show({ text: t('connect.scanner.text') })
 }
 
 type ActionType = 'startScanner' | 'shareQR'
@@ -33,68 +34,77 @@ const actionHandlers: Record<ActionType, () => void> = {
   startScanner,
   shareQR() { isQrOpen.value = !isQrOpen.value },
 }
-qrScanner?.onScan((eventData: { data: string }) => {
-  dataQR.value = eventData
-  const qrText = eventData.data
-  const startParam = qrText.split('startapp=')[1]
 
-  if (startParam) {
-    const [userId, date] = startParam.split('_')
-    if (userId && date) {
-      const tgWebAppStore = useTgWebAppStore()
-      const startParamRegex = /^\d+_\d{4}-\d{2}-\d{2}$/
-      tgWebAppStore.setIsCreatePair(true)
-      if (startParamRegex.test(startParam)) {
-        if (!tgWebAppStore.getUserInPair) {
-          console.warn('Valid QR code detected, user not paired')
+if (qrScanner && typeof qrScanner.onScan === 'function') {
+  qrScanner?.onScan((eventData: { data: string }) => {
+    dataQR.value = eventData
+    const qrText = eventData.data
+    const startParam = qrText.split('startapp=')[1]
 
-          tgWebAppStore.setStartParam(startParam)
-          navigateTo('/wait')
-          // qrScanner?.close()
+    if (startParam) {
+      const [userId, date] = startParam.split('_')
+      if (userId && date) {
+        const tgWebAppStore = useTgWebAppStore()
+        const startParamRegex = /^\d+_\d{4}-\d{2}-\d{2}$/
+        tgWebAppStore.setIsCreatePair(true)
+        if (startParamRegex.test(startParam)) {
+          if (!tgWebAppStore.getUserInPair) {
+            console.warn('Valid QR code detected, user not paired')
+
+            tgWebAppStore.setStartParam(startParam)
+            navigateTo('/wait')
+            if (qrScanner && typeof qrScanner.close === 'function')
+              qrScanner.close()
+          }
+          else {
+            console.warn('User already paired, ignoring QR code')
+            tgWebAppStore.setIsCreatePair(false)
+            if (qrScanner && typeof qrScanner.close === 'function')
+              qrScanner.close()
+            showError({
+              color: 'error',
+              title: 'Ошибка',
+              description: 'Пользователь уже в паре. QR-код проигнорирован.',
+            })
+          }
         }
         else {
-          console.warn('User already paired, ignoring QR code')
+          console.warn('Invalid QR code format:', startParam)
           tgWebAppStore.setIsCreatePair(false)
-          qrScanner?.close()
-          toast.add({
+          if (qrScanner && typeof qrScanner.close === 'function')
+            qrScanner.close()
+          showError({
             color: 'error',
             title: 'Ошибка',
-            description: 'Пользователь уже в паре. QR-код проигнорирован.',
+            description: 'Неверный формат QR-кода.',
           })
         }
+        if (qrScanner && typeof qrScanner.close === 'function')
+          qrScanner.close()
       }
       else {
-        console.warn('Invalid QR code format:', startParam)
-        tgWebAppStore.setIsCreatePair(false)
-        qrScanner?.close()
-        toast.add({
+        if (qrScanner && typeof qrScanner.close === 'function')
+          qrScanner.close()
+        showError({
           color: 'error',
           title: 'Ошибка',
-          description: 'Неверный формат QR-кода.',
+          description: 'QR-код не содержит корректных данных.',
         })
       }
-      qrScanner?.close()
     }
     else {
-      qrScanner?.close()
-      toast.add({
+      if (qrScanner && typeof qrScanner.close === 'function')
+        qrScanner.close()
+      showError({
         color: 'error',
         title: 'Ошибка',
-        description: 'QR-код не содержит корректных данных.',
+        description: 'QR-код не содержит параметра startapp.',
       })
     }
-  }
-  else {
-    qrScanner?.close()
-    toast.add({
-      color: 'error',
-      title: 'Ошибка',
-      description: 'QR-код не содержит параметра startapp.',
-    })
-  }
-})
+  })
+}
 
-const carousel = useTemplateRef('carousel')
+const carousel = useTemplateRef<any>('carousel')
 const activeIndex = ref(0)
 
 function handleDateChange(date: any) {
@@ -134,7 +144,7 @@ const stepper = useTemplateRef<{ hasPrev: boolean }>('stepper')
   <div>
     <div class="relative" style="height: 75vh;">
       <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center w-full">
-        <UCarousel v-slot="{ item }" dots :items="mappedCarouselItems" class="w-full">
+        <UCarousel v-slot="{ item }" ref="carousel" dots :items="mappedCarouselItems" class="w-full">
           <UCard variant="subtle" class="p-2" :ui="{ root: 'rounded-xl' }">
             <div class="space-y-4 animate-fade-in">
               <div class="text-center">

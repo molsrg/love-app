@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { features } from '~/constants/app/connect'
+import { features } from '~/config/connect'
 
 definePageMeta({
   layout: 'unauthorized',
@@ -188,26 +188,7 @@ function handleDecline() {
     <div v-else class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center w-full">
       <UCard class="w-full max-w-sm" variant="subtle">
         <div class="flex flex-col items-center">
-          <svg width="120" height="60" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 150">
-            <path
-              fill="none"
-              stroke="white"
-              stroke-width="15"
-              stroke-linecap="round"
-              stroke-dasharray="300 385"
-              stroke-dashoffset="0"
-              d="M275 75c0 31-27 50-50 50-58 0-92-100-150-100-28 0-50 22-50 50s23 50 50 50c58 0 92-100 150-100 24 0 50 19 50 50Z"
-            >
-              <animate
-                attributeName="stroke-dashoffset"
-                calcMode="spline"
-                dur="6.7"
-                values="685;-685"
-                keySplines="0 0 1 1"
-                repeatCount="indefinite"
-              />
-            </path>
-          </svg>
+          <UIcon name="i-svg-spinners-blocks-shuffle-3" class="size-10" />
           <h1 class="text-2xl font-bold text-white text-center mt-4">
             {{ isAccepted ? $t('wait.processing.almost_done') : $t('wait.loading.title') }}
           </h1>

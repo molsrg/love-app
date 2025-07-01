@@ -20,7 +20,7 @@ const points = [
 ]
 
 onMounted(async () => {
-  if ( $isLocationAvailable.value) {
+  if ($isLocationAvailable.value) {
     await usePairStore().updateLocation()
   }
 })
@@ -85,8 +85,8 @@ onMounted(async () => {
     </UCard>
 
     <RouteMap
-     class="animate-initial animate-slide-up delay-400"
       v-if="points.every(p => p && p.lat && p.lng)"
+      class="animate-initial animate-slide-up delay-400"
       :points="points"
       route-color="var(--ui-color-primary-500)"
     />
