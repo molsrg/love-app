@@ -15,10 +15,10 @@
   user-select: none;
 
   /* Tg Padding Variable */
-  /* padding-top: calc(var(--tg-safe-area-inset-top, 0px) + var(--tg-content-safe-area-inset-top));
+  padding-top: calc(var(--tg-safe-area-inset-top, 0px) + var(--tg-content-safe-area-inset-top));
   padding-right: var(--tg-safe-area-inset-right, 0px);
   padding-bottom: max(var(--tg-safe-area-inset-bottom, 5px), 5px);
-  padding-left: var(--tg-safe-area-inset-left, 0px); */
+  padding-left: var(--tg-safe-area-inset-left, 0px);
 }
 
 
