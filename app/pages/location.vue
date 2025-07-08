@@ -31,7 +31,7 @@ onMounted(async () => {
     <DistanceBetweenPair
       :user1-avatar="pairStore.user1.avatar"
       :user2-avatar="pairStore.user2.avatar"
-      :distance="111121"
+      :distance="usePairStore().distance"
       class="animate-fade-in "
     />
 

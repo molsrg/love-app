@@ -32,15 +32,15 @@ interface StatConfig {
 }
 
 export const STATS_CONFIG: Record<string, StatConfig> = {
-  tasks: {
+  distance: {
     label: 'index.stats.between',
     value: null,
-    textValue: 'index.stats.soon',
+    textValue: undefined,
     disabled: true,
     classes: {
-      value: 'text-dimmed',
-      label: 'text-dimmed line-through',
-      container: 'bg-elevated/50',
+      value: 'text-primary',
+      label: 'text-highlighted',
+      container: 'bg-elevated',
     },
   },
   days: {

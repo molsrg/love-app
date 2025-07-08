@@ -26,7 +26,7 @@ export default defineNuxtPlugin(async () => {
     : (locationManager.isAccessGranted?.value ?? false)), async (val) => {
     accessGranted.value = val
     try {
-      await useApi().post('/geo/approve', { approveGeo: val })
+      await useApi().post('/user/geo-approval', { approveGeo: val })
     }
     catch (e) {
       console.warn('Ошибка при отправке approveGeo:', e)

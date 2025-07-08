@@ -22,6 +22,7 @@ export interface PairState {
   user2: PairUser
   isHost: boolean
   startDate: Date
+  distance: number
   stopPolling: (() => void) | null
 }
 
@@ -40,6 +41,7 @@ interface PairData {
   }
   isHost: boolean
   startDate: string
+  distance: number
 }
 
 export const usePairStore = defineStore('pair', () => {
@@ -59,6 +61,7 @@ export const usePairStore = defineStore('pair', () => {
   })
   const isHost: Ref<boolean> = ref(false)
   const startDate: Ref<Date> = ref(new Date())
+  const distance: Ref<number> = ref(0)
   const stopPolling: Ref<(() => void) | null> = ref(null)
 
   const locationManager = useLocationManager()
@@ -89,7 +92,7 @@ export const usePairStore = defineStore('pair', () => {
     }
 
     isHost.value = data.isHost
-
+    distance.value = data.distance
     const utcDate = new Date(data.startDate)
     startDate.value = new Date(
       utcDate.getUTCFullYear(),
@@ -173,6 +176,7 @@ export const usePairStore = defineStore('pair', () => {
     user1,
     user2,
     isHost,
+    distance,
     startDate,
     stopPolling,
     updatePairData,

@@ -13,6 +13,12 @@ const daysTogether = computed<number>(() => getDaysTogether(now.value, pairStore
 
 const stats = computed(() => {
   const config = { ...STATS_CONFIG }
+  if (config.distance) {
+    config.distance = {
+      ...config.distance,
+      value: `${usePairStore().distance} м`,
+    }
+  }
   if (config.days) {
     config.days = {
       ...config.days,
