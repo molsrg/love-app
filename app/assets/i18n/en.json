@@ -158,7 +158,8 @@
       "qr": {
         "title": "Get your QR code"
       }
-    }
+    },
+    "share": "Share in Telegram"
   },
   "wait": {
     "invitation": "You have an invitation",

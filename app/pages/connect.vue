@@ -10,7 +10,6 @@ import { carouselItems } from '~/config/connect'
 definePageMeta({
   layout: 'unauthorized',
 })
-import { ShareWidget } from 'vue-tg'
 const { t } = useI18n()
 const config = useRuntimeConfig()
 const tgUserStore = useTgWebAppStore().getInitDataUnsafe?.user
@@ -118,6 +117,10 @@ function select(index: number) {
   carousel.value?.emblaApi?.scrollTo(index)
 }
 
+function handleShare() {
+  const shareUrl = `https://t.me/share/url?url=${encodeURIComponent(qrUrl.value)}&text=👋 Привет! Прими моё приглашение, мы будем отличной парой 💖`
+  navigateTo(shareUrl, { external: true })
+}
 // Map carousel items with translations and actions
 const mappedCarouselItems = computed(() => carouselItems.map(item => ({
   ...item,
@@ -143,12 +146,7 @@ const stepper = useTemplateRef<{ hasPrev: boolean }>('stepper')
 <template>
   <div>
     <div class="relative" style="height: 75vh;">
- 
       <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center w-full">
-        <ShareWidget 
-    url="https://vue-tg.pages.dev" 
-    comment="Telegram integration for Vue" 
-  />
         <UCarousel v-slot="{ item }" ref="carousel" dots :items="mappedCarouselItems" class="w-full">
           <UCard variant="subtle" class="p-2" :ui="{ root: 'rounded-xl' }">
             <div class="space-y-4 animate-fade-in">
@@ -227,6 +225,7 @@ const stepper = useTemplateRef<{ hasPrev: boolean }>('stepper')
             <UCard variant="subtle" class="animate-fade-in">
               <div class="flex flex-col items-center gap-4">
                 <QrcodeVue :value="qrUrl" :size="200" />
+                <UButton variant="outline" leading-icon="i-hugeicons-telegram" :label="t('connect.share')" @click="handleShare" />
               </div>
             </UCard>
           </template>
