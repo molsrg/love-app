@@ -22,6 +22,9 @@ const points = [
 onMounted(async () => {
   if ($isLocationAvailable.value) {
     await usePairStore().updateLocation()
+
+    const res = await pairApi.getPairData()
+    usePairStore().updatePairData(res)
   }
 })
 </script>

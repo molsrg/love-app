@@ -14,6 +14,7 @@ export interface PairUser {
   avatar: string
   lastSeen: string
   geo: GeoData | null
+  approveGeo: boolean
 }
 
 export interface PairState {

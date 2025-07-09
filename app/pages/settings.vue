@@ -58,6 +58,9 @@ async function handleHostTransfer() {
   if (isHostTransferEnabled.value) {
     if (confirm(t('settings.partner.confirmations.transferHost'))) {
       await pairApi.changeHost()
+
+      const res = await pairApi.getPairData()
+      usePairStore().updatePairData(res)
       // Success
     }
     else {
