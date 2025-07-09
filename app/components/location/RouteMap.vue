@@ -34,7 +34,8 @@ function initMap() {
 
   map.value = L.map(mapContainer.value).setView([59.94, 30.31], 10)
 
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+
   }).addTo(map.value)
 }
 
