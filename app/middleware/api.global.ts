@@ -25,4 +25,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
     console.warn('Middleware: User not paired and not creating pair, navigating to /connect')
     return navigateTo('/connect')
   }
+
+  const res = await pairApi.getPairData()
+  usePairStore().updatePairData(res)
 })

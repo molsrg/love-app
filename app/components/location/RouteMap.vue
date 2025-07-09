@@ -34,7 +34,8 @@ function initMap() {
 
   map.value = L.map(mapContainer.value).setView([59.94, 30.31], 10)
 
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {}).addTo(map.value)
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+  }).addTo(map.value)
 }
 
 // Кастомные иконки для маркеров
@@ -89,10 +90,17 @@ async function fetchRoute() {
     // Добавляем маркеры
     props.points.forEach((point, index) => {
       const markerColor = point.color || (index === 0 ? '#e74c3c' : '#3498db')
+      const title = index === 0 ? 'Ты' : 'Партнёр'
       L.marker([point.lat, point.lng], {
         icon: createCustomIcon(markerColor),
       })
-        .bindPopup(`<b>${point.name}</b><br>Широта: ${point.lat.toFixed(5)}<br>Долгота: ${point.lng.toFixed(5)}`)
+        .bindPopup(`
+  <div>
+    <div style="font-weight:bold; font-size:14px; margin-bottom:2px;">${title}</div>
+    Широта: ${point.lat.toFixed(5)}<br>
+    Долгота: ${point.lng.toFixed(5)}
+  </div>
+`)
         .addTo(map.value!)
     })
 

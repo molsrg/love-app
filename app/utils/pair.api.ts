@@ -4,15 +4,18 @@ export interface PairDataResponse {
     username: string
     avatarUrl: string
     geo: any
+    approveGeo: boolean
   }
   user2: {
     id: string
     username: string
     avatarUrl: string
     geo: any
+    approveGeo: boolean
   }
   isHost: boolean
   startDate: string
+  distance: number
 }
 
 export interface ChangeDateParams {

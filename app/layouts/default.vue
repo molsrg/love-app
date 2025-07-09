@@ -7,8 +7,8 @@ const { $isMobile } = useNuxtApp()
 const route = useRoute()
 const locationManager = useLocationManager()
 
-onMounted(() => {
-  locationManager.init()
+onMounted(async () => {
+  await locationManager.init()
 })
 
 interface TabItem extends TabsItem {

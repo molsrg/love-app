@@ -6,8 +6,10 @@ export function useAnimatedNumber(initialValue = 0, duration = 3, delay = 200) {
   let delayTimeout: ReturnType<typeof setTimeout> | null = null
 
   function animateTo(newValue: number) {
-    if (tween) tween.kill()
-    if (delayTimeout) clearTimeout(delayTimeout)
+    if (tween)
+      tween.kill()
+    if (delayTimeout)
+      clearTimeout(delayTimeout)
     delayTimeout = setTimeout(() => {
       tween = gsap.to(animatedValue, {
         value: newValue,
@@ -20,8 +22,10 @@ export function useAnimatedNumber(initialValue = 0, duration = 3, delay = 200) {
   }
 
   onUnmounted(() => {
-    if (tween) tween.kill()
-    if (delayTimeout) clearTimeout(delayTimeout)
+    if (tween)
+      tween.kill()
+    if (delayTimeout)
+      clearTimeout(delayTimeout)
   })
 
   return {

@@ -6,7 +6,6 @@ export interface GeoData {
   latitude: number
   longitude: number
   timestamp: string
-  approveGeo?: boolean
 }
 
 export interface PairUser {
@@ -32,12 +31,14 @@ interface PairData {
     username: string
     avatarUrl: string
     geo: GeoData | null
+    approveGeo: boolean
   }
   user2: {
     id: string
     username: string
     avatarUrl: string
     geo: GeoData | null
+    approveGeo: boolean
   }
   isHost: boolean
   startDate: string
@@ -51,6 +52,7 @@ export const usePairStore = defineStore('pair', () => {
     avatar: '',
     lastSeen: '',
     geo: null,
+    approveGeo: false,
   })
   const user2: Ref<PairUser> = ref({
     id: '',
@@ -58,6 +60,7 @@ export const usePairStore = defineStore('pair', () => {
     avatar: '',
     lastSeen: '',
     geo: null,
+    approveGeo: false,
   })
   const isHost: Ref<boolean> = ref(false)
   const startDate: Ref<Date> = ref(new Date())
@@ -81,6 +84,7 @@ export const usePairStore = defineStore('pair', () => {
       avatar: currentUser.avatarUrl,
       lastSeen: '',
       geo: currentUser.geo ?? null,
+      approveGeo: currentUser.approveGeo,
     }
 
     user2.value = {
@@ -89,6 +93,7 @@ export const usePairStore = defineStore('pair', () => {
       avatar: partnerUser.avatarUrl,
       lastSeen: '',
       geo: partnerUser.geo ?? null,
+      approveGeo: partnerUser.approveGeo,
     }
 
     isHost.value = data.isHost

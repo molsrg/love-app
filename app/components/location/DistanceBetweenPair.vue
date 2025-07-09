@@ -1,13 +1,11 @@
 <script setup lang="ts">
-
-
 const props = defineProps<{
   user1Avatar: string
   user2Avatar: string
   distance: number
 }>()
 
-const {t} = useI18n()
+const { t } = useI18n()
 
 const { animatedValue, animateTo } = useAnimatedNumber(0, 3, 200)
 

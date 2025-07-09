@@ -1,6 +1,14 @@
 <script setup lang="ts">
-const { t } = useI18n()
 const pairStore = usePairStore()
+
+const { animatedValue, animateTo } = useAnimatedNumber(0, 3, 200)
+const { t } = useI18n()
+
+watch(() => pairStore.distance, (newValue, oldValue) => {
+  if (newValue !== oldValue) {
+    animateTo(newValue)
+  }
+}, { immediate: true })
 
 const now = ref<Date>(new Date())
 
@@ -16,7 +24,7 @@ const stats = computed(() => {
   if (config.distance) {
     config.distance = {
       ...config.distance,
-      value: `${usePairStore().distance} м`,
+      value: `${t('index.stats.distance', Math.round(animatedValue.value))}`,
     }
   }
   if (config.days) {

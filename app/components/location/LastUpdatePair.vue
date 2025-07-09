@@ -89,7 +89,7 @@ const user2Status = computed(() => getUserStatus(props.user2))
       <div class="flex gap-1">
         <UBadge :color="user1Status.color" variant="subtle" :label="user1Status.label" />
         <UBadge
-          v-if="!user1.geo?.approveGeo && user1.geo"
+          v-if="!$accessGranted && user1.geo"
           color="warning"
           variant="subtle"
           :label="$t('status.noGeoAccess')"
@@ -110,7 +110,7 @@ const user2Status = computed(() => getUserStatus(props.user2))
       <div class="flex gap-1">
         <UBadge :color="user2Status.color" variant="subtle" :label="user2Status.label" />
         <UBadge
-          v-if="!user2.geo?.approveGeo && user2.geo"
+          v-if="!user2.approveGeo && user2.geo"
           color="warning"
           variant="subtle"
           :label="$t('status.noGeoAccess')"
