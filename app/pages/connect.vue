@@ -10,7 +10,7 @@ import { carouselItems } from '~/config/connect'
 definePageMeta({
   layout: 'unauthorized',
 })
-
+import { ShareWidget } from 'vue-tg'
 const { t } = useI18n()
 const config = useRuntimeConfig()
 const tgUserStore = useTgWebAppStore().getInitDataUnsafe?.user
@@ -143,7 +143,12 @@ const stepper = useTemplateRef<{ hasPrev: boolean }>('stepper')
 <template>
   <div>
     <div class="relative" style="height: 75vh;">
+ 
       <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center w-full">
+        <ShareWidget 
+    url="https://vue-tg.pages.dev" 
+    comment="Telegram integration for Vue" 
+  />
         <UCarousel v-slot="{ item }" ref="carousel" dots :items="mappedCarouselItems" class="w-full">
           <UCard variant="subtle" class="p-2" :ui="{ root: 'rounded-xl' }">
             <div class="space-y-4 animate-fade-in">
