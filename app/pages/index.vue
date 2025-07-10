@@ -1,12 +1,13 @@
 <script setup lang="ts">
 const pairStore = usePairStore()
 
-const { animatedValue, animateTo } = useAnimatedNumber(0, 3, 200)
+const { animatedValue: animatedDistance, animateTo: animateDistanceTo } = useAnimatedNumber(1, 6, 300)
+const { animatedValue: animatedDays, animateTo: animateDaysTo } = useAnimatedNumber(1, 6, 300)
 const { t } = useI18n()
 
 watch(() => pairStore.distance, (newValue, oldValue) => {
   if (newValue !== oldValue) {
-    animateTo(newValue)
+    animateDistanceTo(newValue)
   }
 }, { immediate: true })
 
@@ -19,18 +20,25 @@ useIntervalFn(() => {
 const timeLeft = computed(() => getTimeLeft(now.value, pairStore.startDate))
 const daysTogether = computed<number>(() => getDaysTogether(now.value, pairStore.startDate))
 
+watch(daysTogether, (newValue, oldValue) => {
+  if (newValue !== oldValue) {
+    animateDaysTo(newValue)
+  }
+}, { immediate: true })
+
 const stats = computed(() => {
   const config = { ...STATS_CONFIG }
   if (config.distance) {
+    const val = Math.round(animatedDistance.value)
     config.distance = {
       ...config.distance,
-      value: `${t('index.stats.distance', Math.round(animatedValue.value))}`,
+      value: val === 0 ? '—' : t('index.stats.distance', val),
     }
   }
   if (config.days) {
     config.days = {
       ...config.days,
-      value: daysTogether.value,
+      value: Math.round(animatedDays.value),
     }
   }
   return config
