@@ -16,7 +16,7 @@ watch(() => props.distance, (newValue, oldValue) => {
 }, { immediate: true })
 
 const distanceText = computed(() => {
-  if (animatedValue.value < 1000) {
+  if (animatedValue.value < 50) {
     return t('distance.together')
   }
   return t('distance.kilometers', { value: (animatedValue.value / 1000).toFixed(1) })
@@ -38,7 +38,7 @@ const distanceText = computed(() => {
         }"
       >
         <h2>{{ distanceText }}</h2>
-        <UBadge v-if="animatedValue > 1000" variant="subtle" :label="t('distance.between')" />
+        <UBadge v-if="animatedValue > 50" variant="subtle" :label="t('distance.between')" />
       </USeparator>
     </div>
     <UAvatar
