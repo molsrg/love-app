@@ -1,211 +1,142 @@
-## GYM BRO TG-MINI-APP
+# Love App (Telegram Mini App)
 
-<img src="./.github/assets/berserk.gif" alt="Berserk" />
-
-### Table of Contents
-
-- 🚀 [Getting Started](#getting-started)
-- 📖 [Project Structure](#project-structure)
-- 💻 [Environment Variables](#environment-variables)
-- 🏠 [Nuxt Configuration](#nuxt-configuration)
-- ❤️ [Contribute](#contribute)
-- ⚖️ [License](#license)
+A modern Telegram mini app built with Nuxt 3, Pinia, PrimeVue, and full i18n support.
 
 ---
 
-## <a name="getting-started">🚀 Getting Started</a>
-
-## Install deps
-
-```bash
-# npm
-npm install
-
-# pnpm
-pnpm install
-
-# yarn
-yarn install
-
-# bun
-bun install
-```
-
-## Development Server
-
-```bash
-# npm
-npm run dev
-
-# pnpm
-pnpm run dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
-```
-
-## Production
-
-```bash
-# npm
-npm run build
-
-# pnpm
-pnpm run build
-
-# yarn
-yarn build
-
-# bun
-bun run build
-```
-
-## <a name="project-structure">📖 Project structure</a>
+## 📦 Project Structure
 
 ```
-gym-tg-app/
-├── app/               # Main application directory containing core application logic
-│   ├── services
-│   ├── helpers        # For helper functions and utilities
-│   ├── stores         # For state management stores (Pinia)
-│   ├── plugins
-│   ├── middleware
-│   ├── nuxt.config.ts # Nuxt.js configuration file
-│   └── ...            # Other application-specific files and directories
-├── .env.example
-├── CHANGELOG.md       # Changelog file documenting project changes
-└── ...                # Other project files and directories
+love-app/
+├── app/                  # Main application directory
+│   ├── assets/           # Static assets (styles, icons, images, localization)
+│   ├── components/       # Vue components (grouped by feature)
+│   ├── composables/      # Custom composables (hooks)
+│   ├── config/           # App configuration files
+│   ├── helpers/          # Helper functions and utilities
+│   ├── layouts/          # Global page layouts
+│   ├── legacy/           # Legacy/archived code (if any)
+│   ├── middleware/       # Nuxt middleware
+│   ├── pages/            # Application pages (Nuxt routing)
+│   ├── plugins/          # Nuxt plugins
+│   ├── stores/           # Pinia stores (global state)
+│   ├── types/            # TypeScript types
+│   ├── utils/            # Utilities and API wrappers
+│   ├── app.config.ts     # App config
+│   ├── app.vue           # Root Vue component
+│   └── error.vue         # Global error page
+├── public/               # Public files (favicon, etc.)
+├── nuxt.config.ts        # Nuxt global config
+├── package.json          # Dependencies and scripts
+├── tsconfig.json        
+├── README.md            
 ```
 
-## <a name="environment-variables">💻 Environment Variables</a>
+---
 
-Create 2 files `.env.development` and `.env.production` in your main directory with the following contents:
+## 🚀 Getting Started
+
+1. **Install dependencies:**
+   ```bash
+   pnpm install
+   # or npm install / yarn install / bun install
+   ```
+
+2. **Create environment files:**
+   - `.env.development` and `.env.production` in the project root:
+     ```dotenv
+     NUXT_PUBLIC_API_URL=https://api.example.com
+     ```
+   - **Do not commit these files to version control!**
+
+3. **Run the development server:**
+   ```bash
+   pnpm run dev
+   # or npm run dev / yarn dev / bun run dev
+   ```
+
+4. **Build for production:**
+   ```bash
+   pnpm run build
+   pnpm run start
+   ```
+
+---
+
+## ⚙️ Directory Overview
+
+- **assets/** — Styles, images, icons, and localization files (i18n).
+- **components/** — Reusable Vue components, organized by feature (e.g., loader, location, progress).
+- **composables/** — Custom hooks (e.g., useApi, useDebounce, usePolling, useLanguage).
+- **config/** — App and connection configuration files.
+- **helpers/** — Utility functions (e.g., date helpers, stats helpers).
+- **layouts/** — Page layouts (default, unauthorized, etc.).
+- **legacy/** — Deprecated or archived code.
+- **middleware/** — Global and route middleware.
+- **pages/** — Application pages (auto-routed by Nuxt).
+- **plugins/** — Plugins for app initialization, i18n, input handling, etc.
+- **stores/** — Pinia stores for global state (e.g., pair, tgWebApp, token).
+- **types/** — TypeScript types for app data.
+- **utils/** — API wrappers and general utilities (auth, calendar, pair, etc.).
+
+---
+
+## 🌍 Localization
+
+- Localization files: `app/assets/i18n/en.json`, `ru.json`
+- Config: `app/assets/i18n/i18n.config.ts`
+- Uses `@nuxtjs/i18n` with automatic browser language detection.
+
+---
+
+## 🛠️ Technologies Used
+
+- **Nuxt 3** — Modern Vue 3 framework (SPA/SSR)
+- **Pinia** — State management
+- **PrimeVue** — UI components
+- **@nuxt/ui** — UI utilities and themes
+- **@nuxtjs/i18n** — Internationalization
+- **TypeScript** — Type safety
+
+---
+
+## 📜 Scripts (package.json)
+
+- `dev` — Start development server
+- `build` — Build for production
+- `start` — Start production server
+- `lint` — Run linter
+
+---
+
+## 💻 Environment Variables
+
+Create `.env.development` and `.env.production` in the project root:
 
 ```dotenv
 NUXT_PUBLIC_API_URL=https://api.example.com
 ```
 
-**Note:** Replace the placeholder values with your actual environment variable values. Do **not** commit this file to
-version control.
+Add other variables as needed for your deployment.
 
-## <a name="environment-variables">🏠 Nuxt configuration</a>
+---
 
-Update your `nuxt.config.ts` file in the `app` directory as follows:
+## 🤝 Contribution
 
-```typescript
-export default defineNuxtConfig({
-  devtools: { enabled: false },
-  ssr: false,
+We welcome contributions to improve Love App!
 
-  app: {
-    head: {
-      meta: [
-        {
-          name: 'viewport',
-          content: 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no',
-        },
-      ],
-      script: [{ src: 'https://telegram.org/js/telegram-web-app.js' }],
-    },
-  },
-
-  runtimeConfig: {
-    public: {
-      apiUrl: '',
-      botToken: '',
-      chatId: '',
-    },
-  },
-
-  ui: {
-    theme: {
-      colors: ['primary', 'secondary', 'orange', 'indigo', 'black', 'cyan', 'stone', 'gray', 'lime', 'rose', 'info', 'success', 'warning', 'error'],
-    },
-  },
-
-  devServer: {
-    host: '192.168.0.199',
-    port: 5000,
-  },
-
-  modules: [
-    '@nuxt/ui',
-    '@nuxt/eslint',
-    '@pinia/nuxt',
-    '@primevue/nuxt-module',
-    '@nuxtjs/i18n',
-  ],
-
-  primevue: {
-    directives: {
-      exclude: '*',
-    },
-    components: {
-      include: ['Chart'],
-    },
-    composables: {
-      exclude: '*',
-    },
-  },
-
-  css: ['~/assets/css/main.css'],
-
-  future: {
-    compatibilityVersion: 4,
-  },
-
-  i18n: {
-    vueI18n: './app/plugins/i18n.config.ts',
-    detectBrowserLanguage: {
-      useCookie: true,
-      cookieKey: 'i18n_language',
-      redirectOn: 'root',
-    },
-  },
-
-  colorMode: {
-    preference: 'dark',
-    fallback: 'dark',
-    storage: 'localStorage',
-    storageKey: 'nuxt-color-mode',
-  },
-
-  compatibilityDate: '2024-11-27',
-})
-```
-
-## <a name="contribute">❤️ Contribute</a>
-
-We welcome contributions to improve Gym TG App! 💪
-
-Here are ways you can contribute:
-
-- **Reporting Bugs:** If you find bugs or issues, please create a detailed issue on GitHub with:
-    - Steps to reproduce
-    - Expected behavior
-    - Actual behavior
-    - Screenshots (if applicable)
-
-- **Feature Suggestions:** Have ideas to enhance the app? Open an issue with the tag "enhancement" and include:
-    - Clear description of the feature
-    - Use cases
-    - Any mockups or examples (if available)
-
-- **Code Contributions:** Want to contribute code?
-    1. Fork the repository
-    2. Create a feature branch (`git checkout -b feature/name`)
-    3. Follow our coding standards
-    4. Write clear commit messages following conventional commits
-    5. Submit a Pull Request (**Note**: send your PR to the **development** branch, this is the latest stable version
-       for development)
-
-Before contributing, please read our CHANGELOG in the releases to understand recent changes.
+- **Reporting Bugs:** Open a detailed issue on GitHub (steps to reproduce, expected/actual behavior, screenshots if possible).
+- **Feature Suggestions:** Open an issue with the "enhancement" tag and a clear description/use case.
+- **Code Contributions:**
+  1. Fork the repository
+  2. Create a feature branch (`git checkout -b feature/your-feature`)
+  3. Follow coding standards and use clear commit messages (conventional commits)
+  4. Submit a Pull Request to the `development` branch
 
 For questions and discussions, join our [Telegram channel](https://t.me/+Gm_8ULokA71kMTU6).
 
-## <a name="license">⚖️ License</a>
+---
 
-[MIT](https://github.com/molsrg/gym-tg-app/tree/main/LICENSE)
+## 📄 License
+
+[MIT](./LICENSE)

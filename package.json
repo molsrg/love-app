@@ -1,7 +1,7 @@
 {
-  "name": "gym-bro-app",
+  "name": "love-me-app",
   "type": "module",
-  "version": "0.0.5",
+  "version": "0.0.1",
   "prerelease": false,
   "private": true,
   "scripts": {
