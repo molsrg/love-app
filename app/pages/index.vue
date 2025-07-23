@@ -7,7 +7,7 @@ const { t } = useI18n()
 
 watch(() => pairStore.distance, (newValue, oldValue) => {
   if (newValue !== oldValue) {
-    animateDistanceTo(newValue)
+    animateDistanceTo(newValue / 1000)
   }
 }, { immediate: true })
 
@@ -29,10 +29,10 @@ watch(daysTogether, (newValue, oldValue) => {
 const stats = computed(() => {
   const config = { ...STATS_CONFIG }
   if (config.distance) {
-    const val = (animatedDistance.value / 1000).toFixed(1)
+    const val = Math.round(animatedDistance.value)
     config.distance = {
       ...config.distance,
-      value: Number(val) === 0 ? '—' : t('index.stats.distance', val),
+      value: val === 0 ? '—' : t('index.stats.distance', val),
     }
   }
   if (config.days) {
