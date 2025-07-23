@@ -29,10 +29,10 @@ watch(daysTogether, (newValue, oldValue) => {
 const stats = computed(() => {
   const config = { ...STATS_CONFIG }
   if (config.distance) {
-    const val = Math.round(animatedDistance.value)
+    const val = (animatedDistance.value / 1000).toFixed(1)
     config.distance = {
       ...config.distance,
-      value: val === 0 ? '—' : t('index.stats.distance', val),
+      value: Number(val) === 0 ? '—' : t('index.stats.distance', val),
     }
   }
   if (config.days) {

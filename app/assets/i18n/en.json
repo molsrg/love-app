@@ -97,7 +97,7 @@
   },
   "index": {
     "stats": {
-      "distance": "{count} m | {count} m | {count} m",
+      "distance": "{count} km | {count} km | {count} km",
       "tasks": "completed tasks",
       "days": "days together",
       "challenges": "joint challenges",
