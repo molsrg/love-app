@@ -99,7 +99,7 @@
   },
   "index": {
     "stats": {
-      "distance": "{count} км | {count} км | {count} км",
+      "distance": "{count} км",
       "tasks": "выполненных заданий",
       "days": "дней вместе",
       "challenges": "совместных челденджей",
