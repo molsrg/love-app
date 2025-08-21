@@ -75,7 +75,7 @@ const countdownValues = computed(() => [
         :class="[stat.classes.container]"
       >
         <h3
-          class="text-2xl font-bold"
+          class="text-xl font-bold"
           :class="stat.classes.value"
         >
           {{ stat.value === null || stat.value === 0 ? (stat.textValue ? t(stat.textValue) : '—') : stat.value }}
