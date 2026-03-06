@@ -28,8 +28,8 @@ love-app/
 ├── public/               # Public files (favicon, etc.)
 ├── nuxt.config.ts        # Nuxt global config
 ├── package.json          # Dependencies and scripts
-├── tsconfig.json        
-├── README.md            
+├── tsconfig.json
+├── README.md
 ```
 
 ---

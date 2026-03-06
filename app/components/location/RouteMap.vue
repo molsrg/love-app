@@ -1,44 +1,45 @@
 <script setup lang="ts">
-import L from "leaflet";
-import "leaflet/dist/leaflet.css";
+import L from 'leaflet'
+import 'leaflet/dist/leaflet.css'
 
 interface Point {
-  lat: number;
-  lng: number;
-  name?: string;
-  color?: string;
+  lat: number
+  lng: number
+  name?: string
+  color?: string
 }
 
 const props = defineProps<{
-  points: Point[];
-  routeColor?: string;
-}>();
+  points: Point[]
+  routeColor?: string
+}>()
 
 const tabs = [
-  { label: "Пеший", value: "foot-walking", icon: "i-lucide-footprints" },
-  { label: "На машине", value: "driving-car", icon: "i-lucide-car" },
-];
+  { label: 'Пеший', value: 'foot-walking', icon: 'i-lucide-footprints' },
+  { label: 'На машине', value: 'driving-car', icon: 'i-lucide-car' },
+]
 
-const activeProfile = ref("foot-walking");
+const activeProfile = ref('foot-walking')
 
-const mapContainer = ref<HTMLElement | null>(null);
-const map = ref<L.Map | null>(null);
-const loading = ref(false);
-const error = ref<string | null>(null);
+const mapContainer = ref<HTMLElement | null>(null)
+const map = ref<L.Map | null>(null)
+const loading = ref(false)
+const error = ref<string | null>(null)
 
 function initMap() {
-  if (!mapContainer.value) return;
+  if (!mapContainer.value)
+    return
 
-  map.value = L.map(mapContainer.value).setView([59.94, 30.31], 10);
+  map.value = L.map(mapContainer.value).setView([59.94, 30.31], 10)
 
-  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {}).addTo(
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {}).addTo(
     map.value,
-  );
+  )
 }
 
 function createCustomIcon(color: string) {
   return L.divIcon({
-    className: "custom-marker",
+    className: 'custom-marker',
     html: `
       <svg viewBox="0 0 24 24" width="24" height="24">
         <path fill="${color}" d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>
@@ -47,42 +48,44 @@ function createCustomIcon(color: string) {
     `,
     iconSize: [32, 32],
     iconAnchor: [16, 32],
-  });
+  })
 }
 
 async function fetchRoute() {
-  if (!props.points || props.points.length !== 2) return;
+  if (!props.points || props.points.length !== 2)
+    return
 
-  loading.value = true;
-  error.value = null;
+  loading.value = true
+  error.value = null
 
   try {
-    const [start, end] = props.points;
-    if (!start || !end) throw new Error("Неверные координаты");
+    const [start, end] = props.points
+    if (!start || !end)
+      throw new Error('Неверные координаты')
 
-    const data = await $fetch("/api/route", {
+    const data = await $fetch('/api/route', {
       params: {
         start: `${start.lng},${start.lat}`,
         end: `${end.lng},${end.lat}`,
         profile: activeProfile.value,
       },
-    });
+    })
 
     if (!data.features || data.features.length === 0) {
-      throw new Error("Маршрут не найден");
+      throw new Error('Маршрут не найден')
     }
 
-    const route = data.features[0];
+    const route = data.features[0]
 
     map.value?.eachLayer((layer: L.Layer) => {
       if (layer instanceof L.GeoJSON || layer instanceof L.Marker) {
-        map.value?.removeLayer(layer);
+        map.value?.removeLayer(layer)
       }
-    });
+    })
 
     props.points.forEach((point, index) => {
-      const markerColor = point.color || (index === 0 ? "#e74c3c" : "#3498db");
-      const title = index === 0 ? "Ты" : "Партнёр";
+      const markerColor = point.color || (index === 0 ? '#e74c3c' : '#3498db')
+      const title = index === 0 ? 'Ты' : 'Партнёр'
       L.marker([point.lat, point.lng], {
         icon: createCustomIcon(markerColor),
       })
@@ -95,34 +98,36 @@ async function fetchRoute() {
   </div>
 `,
         )
-        .addTo(map.value!);
-    });
+        .addTo(map.value!)
+    })
 
     L.geoJSON(route, {
       style: {
-        color: props.routeColor || "#9b59b6",
+        color: props.routeColor || '#9b59b6',
         weight: 5,
         opacity: 0.8,
       },
-    }).addTo(map.value!);
+    }).addTo(map.value!)
 
-    const routeLayer = L.geoJSON(route);
-    map.value?.fitBounds(routeLayer.getBounds().pad(0.2));
-  } catch (err) {
-    console.error("Ошибка построения маршрута:", err);
-    error.value = `Ошибка: ${err instanceof Error ? err.message : "Неизвестная ошибка"}`;
-  } finally {
-    loading.value = false;
+    const routeLayer = L.geoJSON(route)
+    map.value?.fitBounds(routeLayer.getBounds().pad(0.2))
+  }
+  catch (err) {
+    console.error('Ошибка построения маршрута:', err)
+    error.value = `Ошибка: ${err instanceof Error ? err.message : 'Неизвестная ошибка'}`
+  }
+  finally {
+    loading.value = false
   }
 }
 
 onMounted(() => {
-  initMap();
-  fetchRoute();
-});
+  initMap()
+  fetchRoute()
+})
 
-watch(() => [props.points, props.routeColor], fetchRoute, { deep: true });
-watch(activeProfile, fetchRoute);
+watch(() => [props.points, props.routeColor], fetchRoute, { deep: true })
+watch(activeProfile, fetchRoute)
 </script>
 
 <template>
