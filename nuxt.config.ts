@@ -16,11 +16,11 @@ export default defineNuxtConfig({
   },
 
   runtimeConfig: {
+    leafletApiKey: '',
     public: {
       apiUrl: '',
       baseBackendUrl: '',
       botUrl: '',
-      leafletApiKey: '',
 
       devServerHost: '',
       devServerPort: 5000,
