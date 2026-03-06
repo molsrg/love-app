@@ -5,21 +5,27 @@ import "leaflet/dist/leaflet.css";
 interface Point {
   lat: number;
   lng: number;
-  name: string;
+  name?: string;
   color?: string;
 }
-
 
 const props = defineProps<{
   points: Point[];
   routeColor?: string;
 }>();
 
+const tabs = [
+  { label: "Пеший", value: "foot-walking", icon: "i-lucide-footprints" },
+  { label: "На машине", value: "driving-car", icon: "i-lucide-car" },
+];
+
+const activeProfile = ref("foot-walking");
+
 const mapContainer = ref<HTMLElement | null>(null);
 const map = ref<L.Map | null>(null);
 const loading = ref(false);
 const error = ref<string | null>(null);
-// Инициализация карты
+
 function initMap() {
   if (!mapContainer.value) return;
 
@@ -30,7 +36,6 @@ function initMap() {
   );
 }
 
-// Кастомные иконки для маркеров
 function createCustomIcon(color: string) {
   return L.divIcon({
     className: "custom-marker",
@@ -45,7 +50,6 @@ function createCustomIcon(color: string) {
   });
 }
 
-// Получение маршрута (пеший)
 async function fetchRoute() {
   if (!props.points || props.points.length !== 2) return;
 
@@ -56,11 +60,11 @@ async function fetchRoute() {
     const [start, end] = props.points;
     if (!start || !end) throw new Error("Неверные координаты");
 
-    // Пеший маршрут через серверный прокси
-    const data = await $fetch('/api/route', {
+    const data = await $fetch("/api/route", {
       params: {
         start: `${start.lng},${start.lat}`,
         end: `${end.lng},${end.lat}`,
+        profile: activeProfile.value,
       },
     });
 
@@ -70,14 +74,12 @@ async function fetchRoute() {
 
     const route = data.features[0];
 
-    // Очищаем предыдущий маршрут
     map.value?.eachLayer((layer: L.Layer) => {
       if (layer instanceof L.GeoJSON || layer instanceof L.Marker) {
         map.value?.removeLayer(layer);
       }
     });
 
-    // Добавляем маркеры
     props.points.forEach((point, index) => {
       const markerColor = point.color || (index === 0 ? "#e74c3c" : "#3498db");
       const title = index === 0 ? "Ты" : "Партнёр";
@@ -96,7 +98,6 @@ async function fetchRoute() {
         .addTo(map.value!);
     });
 
-    // Добавляем маршрут
     L.geoJSON(route, {
       style: {
         color: props.routeColor || "#9b59b6",
@@ -105,7 +106,6 @@ async function fetchRoute() {
       },
     }).addTo(map.value!);
 
-    // Масштабируем карту
     const routeLayer = L.geoJSON(route);
     map.value?.fitBounds(routeLayer.getBounds().pad(0.2));
   } catch (err) {
@@ -121,59 +121,38 @@ onMounted(() => {
   fetchRoute();
 });
 
-// Следим за изменением точек и цвета маршрута
 watch(() => [props.points, props.routeColor], fetchRoute, { deep: true });
+watch(activeProfile, fetchRoute);
 </script>
 
 <template>
-  <div class="relative w-full h-[500px] rounded-lg overflow-hidden shadow-sm">
-    <div ref="mapContainer" class="w-full h-full z-0" />
+  <div class="flex flex-col gap-2">
+    <UTabs v-model="activeProfile" :content="false" size="md" :items="tabs" />
 
-    <div
-      v-if="loading"
-      class="absolute inset-0 z-20 flex items-center justify-center bg-white/70"
-    >
-      <div class="flex flex-col items-center gap-2">
-        <span
-          class="loader border-4 border-primary border-t-transparent rounded-full w-10 h-10 animate-spin"
-        />
-        <span class="text-sm text-gray-500">Загрузка карты...</span>
+    <div class="relative w-full h-[500px] rounded-lg overflow-hidden shadow-sm">
+      <div ref="mapContainer" class="w-full h-full z-0" />
+
+      <div
+        v-if="loading"
+        class="absolute inset-0 z-20 flex items-center justify-center bg-white/70"
+      >
+        <div class="flex flex-col items-center gap-2">
+          <span
+            class="loader border-4 border-primary border-t-transparent rounded-full w-10 h-10 animate-spin"
+          />
+          <span class="text-sm text-gray-500">Загрузка карты...</span>
+        </div>
       </div>
+
+      <UAlert
+        v-if="error"
+        color="rose"
+        variant="soft"
+        class="absolute top-4 left-1/2 -translate-x-1/2 z-[10]"
+      >
+        {{ error }}
+      </UAlert>
     </div>
-
-    <!-- <UCard v-if="routeInfo" class="absolute bottom-4 left-4 z-[10] max-w-sm">
-      <template #header>
-        <h3 class="text-base font-semibold">Информация о маршруте</h3>
-      </template>
-
-      <div class="space-y-2">
-        <div class="flex items-center gap-2">
-          <UIcon name="i-heroicons-map-pin" class="w-4 h-4 text-primary" />
-          <span class="text-sm">{{ routeInfo.startName }}</span>
-        </div>
-        <div class="flex items-center gap-2">
-          <UIcon name="i-heroicons-map-pin" class="w-4 h-4 text-primary" />
-          <span class="text-sm">{{ routeInfo.endName }}</span>
-        </div>
-        <div class="flex items-center gap-2">
-          <UIcon name="i-heroicons-arrow-path" class="w-4 h-4 text-primary" />
-          <span class="text-sm">{{ routeInfo.distance }} км</span>
-        </div>
-        <div class="flex items-center gap-2">
-          <UIcon name="i-heroicons-clock" class="w-4 h-4 text-primary" />
-          <span class="text-sm">~{{ routeInfo.duration }} мин</span>
-        </div>
-      </div>
-    </UCard> -->
-
-    <UAlert
-      v-if="error"
-      color="rose"
-      variant="soft"
-      class="absolute top-4 left-1/2 -translate-x-1/2 z-[10]"
-    >
-      {{ error }}
-    </UAlert>
   </div>
 </template>
 
@@ -186,7 +165,6 @@ watch(() => [props.points, props.routeColor], fetchRoute, { deep: true });
   border-top-color: transparent;
 }
 
-/* Управление z-index для карты и её элементов */
 :deep(.leaflet-container) {
   @apply z-0;
 }
