@@ -7,40 +7,25 @@ const emit = defineEmits<{
 const open = defineModel<boolean>('open', { required: true })
 const { t } = useI18n()
 
-const link = ref('')
 const title = ref('')
-const price = ref<number | undefined>()
-const linkError = ref('')
-const isPasted = ref(false)
+const description = ref('')
+const link = ref('')
+const titleError = ref('')
 
 watch(open, (isOpen) => {
   if (!isOpen) {
-    link.value = ''
     title.value = ''
-    price.value = undefined
-    linkError.value = ''
-    isPasted.value = false
+    description.value = ''
+    link.value = ''
+    titleError.value = ''
   }
 })
 
-function mockTitleFromUrl(url: string): string {
-  try {
-    const u = new URL(url)
-    const parts = u.pathname.split('/').filter(p => p.length > 1)
-    const last = parts[parts.length - 1]
-    if (last) {
-      return last
-        .replace(/[-_]/g, ' ')
-        .replace(/\.[^.]+$/, '')
-        .replace(/\b\w/g, c => c.toUpperCase())
-        .trim()
-    }
-    return u.hostname.replace('www.', '')
+watch(title, () => {
+  if (titleError.value && title.value.trim()) {
+    titleError.value = ''
   }
-  catch {
-    return ''
-  }
-}
+})
 
 function isValidUrl(url: string): boolean {
   try {
@@ -52,35 +37,19 @@ function isValidUrl(url: string): boolean {
   }
 }
 
-async function handlePaste() {
-  linkError.value = ''
-  try {
-    const text = (await navigator.clipboard.readText()).trim()
-    if (!text) {
-      linkError.value = t('wishlist.form.errors.clipboardEmpty')
-      return
-    }
-    if (!isValidUrl(text)) {
-      linkError.value = t('wishlist.form.errors.invalidUrl')
-      return
-    }
-    link.value = text
-    title.value = mockTitleFromUrl(text)
-    isPasted.value = true
-  }
-  catch {
-    linkError.value = t('wishlist.form.errors.clipboardError')
-  }
-}
-
 function handleSubmit() {
-  if (!title.value.trim())
+  if (!title.value.trim()) {
+    titleError.value = t('wishlist.form.errors.titleRequired')
     return
+  }
+  if (link.value && !isValidUrl(link.value)) {
+    return
+  }
 
   emit('submit', {
     title: title.value.trim(),
-    link: link.value || undefined,
-    ...(price.value != null ? { price: price.value } : {}),
+    ...(description.value.trim() ? { description: description.value.trim() } : {}),
+    ...(link.value.trim() ? { link: link.value.trim() } : {}),
   })
 }
 </script>
@@ -88,74 +57,58 @@ function handleSubmit() {
 <template>
   <UDrawer v-model:open="open">
     <template #content>
-      <div class="space-y-4">
-        <h3 class="text-lg font-semibold text-white">
-          {{ t('wishlist.add') }}
-        </h3>
+      <div class="space-y-3">
+        <div>
+          <label class="text-sm text-gray-400 mb-1 block">{{ t('wishlist.form.title') }}</label>
+          <UInput
+            v-model="title"
+            :placeholder="t('wishlist.form.titlePlaceholder')"
+            class="w-full"
+            size="lg"
+          />
+          <UBadge v-if="titleError" class="mt-1 ml-1" color="error" :label="titleError" variant="outline" />
+        </div>
 
-        <template v-if="!isPasted">
+        <div>
+          <label class="text-sm text-gray-400 mb-1 block">{{ t('wishlist.form.description') }}</label>
+          <UTextarea
+            v-model="description"
+            :placeholder="t('wishlist.form.descriptionPlaceholder')"
+            class="w-full"
+            size="lg"
+            :rows="3"
+            autoresize
+          />
+        </div>
+
+        <div>
+          <label class="text-sm text-gray-400 mb-1 block">{{ t('wishlist.form.link') }}</label>
+          <UInput
+            v-model="link"
+            :placeholder="t('wishlist.form.linkPlaceholder')"
+            class="w-full"
+            size="lg"
+            trailing-icon="i-lucide-link"
+          />
+          <UBadge
+            v-if="link && !isValidUrl(link)"
+            class="mt-1 ml-1"
+            color="error"
+            :label="t('wishlist.form.errors.invalidUrl')"
+            variant="outline"
+          />
+        </div>
+
+        <div class="flex justify-end">
           <UButton
+            :disabled="!title.trim() || (!!link && !isValidUrl(link))"
+            :label="t('wishlist.form.submit')"
             color="primary"
             variant="subtle"
-            leading-icon="i-lucide-clipboard"
-            :label="t('wishlist.form.paste')"
-            class="w-full h-[44px]"
-            @click="handlePaste"
+            leading-icon="i-lucide-plus"
+            @click="handleSubmit"
           />
-          <UBadge v-if="linkError" class="ml-1" color="error" :label="linkError" variant="outline" />
-        </template>
-
-        <template v-else>
-          <div>
-            <label class="text-sm text-gray-400 mb-1 block">{{ t('wishlist.form.link') }}</label>
-            <UInput
-              v-model="link"
-              disabled
-              class="w-full"
-              size="lg"
-              trailing-icon="i-lucide-link"
-            />
-          </div>
-
-          <div>
-            <label class="text-sm text-gray-400 mb-1 block">{{ t('wishlist.form.title') }}</label>
-            <UInput
-              v-model="title"
-              :placeholder="t('wishlist.form.titlePlaceholder')"
-              class="w-full"
-              size="lg"
-            />
-          </div>
-
-          <div>
-            <label class="text-sm text-gray-400 mb-1 block">{{ t('wishlist.form.price') }}</label>
-            <UInput
-              v-model.number="price"
-              type="number"
-              :placeholder="t('wishlist.form.pricePlaceholder')"
-              class="w-full"
-              size="lg"
-            />
-          </div>
-
-          <div class="flex gap-2 justify-between">
-            <UButton
-              color="neutral"
-              variant="ghost"
-              leading-icon="i-lucide-arrow-left"
-              :label="t('wishlist.form.back')"
-              @click="isPasted = false"
-            />
-            <UButton
-              color="primary"
-              variant="subtle"
-              :disabled="!title.trim()"
-              leading-icon="i-lucide-plus"
-              :label="t('wishlist.form.submit')"
-              @click="handleSubmit"
-            />
-          </div>
-        </template>
+        </div>
       </div>
     </template>
   </UDrawer>

@@ -6,6 +6,7 @@ import { useBackButton } from 'vue-tg/latest'
 const { t } = useI18n()
 const { telegramNotificationOccurred } = useHapticFeedback()
 const wishlistStore = useWishlistStore()
+const router = useRouter()
 
 const backButton = useBackButton()
 
@@ -19,7 +20,7 @@ const tabs: TabsItem[] = [
 
 onMounted(async () => {
   backButton.show()
-  backButton.onClick(() => navigateTo('/'))
+  backButton.onClick(() => router.push('/'))
 
   await Promise.all([
     wishlistStore.fetchMyWishlist(),
