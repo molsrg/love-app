@@ -34,6 +34,10 @@ const items: TabItem[] = [
   },
 
   {
+    icon: 'i-lucide-gift',
+    value: '/wishlist',
+  },
+  {
     icon: 'i-lucide-settings',
     value: '/settings',
   },

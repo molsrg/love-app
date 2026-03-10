@@ -197,6 +197,46 @@
     "daysAgo": "{value} d ago",
     "noGeoAccess": "no geolocation access"
   },
+  "wishlist": {
+    "title": "Wishlist",
+    "add": "Add Wish",
+    "tabs": {
+      "mine": "My Wishes",
+      "partner": "Partner's Wishes"
+    },
+    "empty": {
+      "mine": "No wishes yet. Add your first!",
+      "partner": "Your partner hasn't added any wishes yet."
+    },
+    "form": {
+      "title": "Title",
+      "titlePlaceholder": "What do you wish for?",
+      "description": "Description",
+      "descriptionPlaceholder": "Tell more about this wish...",
+      "price": "Price",
+      "pricePlaceholder": "0",
+      "link": "Link",
+      "linkPlaceholder": "https://...",
+      "imageUrl": "Image URL",
+      "imageUrlPlaceholder": "https://...",
+      "submit": "Add to wishlist",
+      "errors": {
+        "titleRequired": "Title is required"
+      }
+    },
+    "card": {
+      "booked": "Someone has their eye on this",
+      "bookedByYou": "Booked by you"
+    },
+    "actions": {
+      "book": "Book",
+      "unbook": "Unbook",
+      "delete": "Delete",
+      "openLink": "Open link"
+    },
+    "confirmDelete": "Your partner already booked this gift. Delete anyway?",
+    "confirmDeletePlain": "Remove this wish?"
+  },
   "geo": {
     "noAccessTitle": "No access to geolocation",
     "noAccessText": "To use all app features, please allow access to your geolocation in your device settings",

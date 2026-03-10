@@ -2,7 +2,7 @@ import antfu from '@antfu/eslint-config'
 
 export default antfu(
   {
-    ignores: ['**/*.toml'],
+    ignores: ['**/*.toml', 'docs/**'],
     rules: {
       'no-inline-comments': 'error',
       'spaced-comment': ['error', 'always', {
