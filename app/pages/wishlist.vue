@@ -6,7 +6,7 @@ import { useBackButton } from 'vue-tg/latest'
 const { t } = useI18n()
 const { telegramNotificationOccurred } = useHapticFeedback()
 const wishlistStore = useWishlistStore()
-const router = useRouter()
+
 
 const backButton = useBackButton()
 
@@ -18,9 +18,14 @@ const tabs: TabsItem[] = [
   { label: t('wishlist.tabs.partner'), value: 'partner', icon: 'i-lucide-heart-handshake' },
 ]
 
+watch(backButton.isVisible, (isVisible) => {
+  if (isVisible) {
+    backButton.onClick(() => navigateTo('/'))
+  }
+})
+
 onMounted(async () => {
   backButton.show()
-  backButton.onClick(() => router.push('/'))
 
   await Promise.all([
     wishlistStore.fetchMyWishlist(),

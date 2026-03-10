@@ -99,7 +99,7 @@ function handleSubmit() {
           />
         </div>
 
-        <div class="flex justify-end">
+        <div class="flex justify-end mt-2 mb-4">
           <UButton
             :disabled="!title.trim() || (!!link && !isValidUrl(link))"
             :label="t('wishlist.form.submit')"
