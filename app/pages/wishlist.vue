@@ -70,10 +70,14 @@ async function handleUnbook(id: string) {
     telegramNotificationOccurred('error')
   }
 }
+
+function handleBackButton() {
+  navigateTo('/location')
+}
 </script>
 
 <template>
-  <BackButton @click="navigateTo('/')" />
+  <BackButton @click="handleBackButton" />
   <div class="space-y-1">
     <div class="flex items-center justify-between animate-fade-in">
       <h1 class="text-2xl font-bold text-white">
