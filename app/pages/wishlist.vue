@@ -1,14 +1,11 @@
 <script lang="ts" setup>
 import type { TabsItem } from '@nuxt/ui'
 import type { CreateWishlistItemRequest } from '~/utils/wishlist.api'
-import { useBackButton } from 'vue-tg/latest'
+import { BackButton } from 'vue-tg'
 
 const { t } = useI18n()
 const { telegramNotificationOccurred } = useHapticFeedback()
 const wishlistStore = useWishlistStore()
-
-
-const backButton = useBackButton()
 
 const activeTab = ref('mine')
 const isAddDrawerOpen = ref(false)
@@ -18,23 +15,11 @@ const tabs: TabsItem[] = [
   { label: t('wishlist.tabs.partner'), value: 'partner', icon: 'i-lucide-heart-handshake' },
 ]
 
-watch(backButton.isVisible, (isVisible) => {
-  if (isVisible) {
-    backButton.onClick(() => navigateTo('/'))
-  }
-})
-
 onMounted(async () => {
-  backButton.show()
-
   await Promise.all([
     wishlistStore.fetchMyWishlist(),
     wishlistStore.fetchPartnerWishlist(),
   ])
-})
-
-onUnmounted(() => {
-  backButton.hide()
 })
 
 async function handleAdd(data: CreateWishlistItemRequest) {
@@ -88,7 +73,8 @@ async function handleUnbook(id: string) {
 </script>
 
 <template>
-  <div class="space-y-3">
+  <BackButton @click="navigateTo('/')" />
+  <div class="space-y-1">
     <div class="flex items-center justify-between animate-fade-in">
       <h1 class="text-2xl font-bold text-white">
         {{ t('wishlist.title') }}
