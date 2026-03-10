@@ -1,12 +1,16 @@
 <script setup lang="ts">
+import { useBackButton } from 'vue-tg/latest'
+
 const pairStore = usePairStore()
 const wishlistStore = useWishlistStore()
 
 const { animatedValue: animatedDistance, animateTo: animateDistanceTo } = useAnimatedNumber(1, 6, 300)
 const { animatedValue: animatedDays, animateTo: animateDaysTo } = useAnimatedNumber(1, 6, 300)
 const { t } = useI18n()
+const backButton = useBackButton()
 
 onMounted(() => {
+  backButton.hide()
   wishlistStore.fetchPartnerWishlist()
 })
 
