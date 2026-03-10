@@ -41,8 +41,8 @@ export const STATS_CONFIG: Record<string, StatConfig> = {
     disabled: true,
     classes: {
       value: 'text-primary',
-      label: 'text-highlighted',
-      container: 'bg-elevated',
+      label: 'text-dimmed line-through',
+      container: 'bg-elevated/50',
     },
   },
   days: {
