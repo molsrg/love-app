@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import type { TabsItem } from '@nuxt/ui'
 import type { CreateWishlistItemRequest } from '~/utils/wishlist.api'
+import { BackButton } from 'vue-tg/latest'
 
 const { t } = useI18n()
 const { telegramNotificationOccurred } = useHapticFeedback()
@@ -72,13 +73,15 @@ async function handleUnbook(id: string) {
 </script>
 
 <template>
+  <BackButton :visible="true" @click="navigateTo('/')" />
+
   <div class="space-y-3">
     <div class="flex items-center justify-between animate-fade-in">
       <h1 class="text-2xl font-bold text-white">
         {{ t('wishlist.title') }}
       </h1>
       <UButton
-        v-if="activeTab === 'mine'"
+        v-if="activeTab === 'mine' && wishlistStore.myItems.length > 0"
         size="sm"
         color="primary"
         variant="subtle"

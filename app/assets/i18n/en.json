@@ -100,7 +100,8 @@
       "distance": "{count} km",
       "tasks": "completed tasks",
       "days": "days together",
-      "challenges": "joint challenges",
+      "wishlist": "partner wish | partner wishes",
+      "wishlistNone": "no",
       "soon": "soon",
       "between": "between you"
     },
@@ -219,9 +220,14 @@
       "linkPlaceholder": "https://...",
       "imageUrl": "Image URL",
       "imageUrlPlaceholder": "https://...",
+      "paste": "Paste link from clipboard",
+      "back": "Back",
       "submit": "Add to wishlist",
       "errors": {
-        "titleRequired": "Title is required"
+        "titleRequired": "Title is required",
+        "invalidUrl": "Please paste a valid link",
+        "clipboardEmpty": "Clipboard is empty",
+        "clipboardError": "Could not read clipboard. Try again."
       }
     },
     "card": {

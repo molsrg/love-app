@@ -34,10 +34,6 @@ const items: TabItem[] = [
   },
 
   {
-    icon: 'i-lucide-gift',
-    value: '/wishlist',
-  },
-  {
     icon: 'i-lucide-settings',
     value: '/settings',
   },
@@ -73,10 +69,11 @@ const active = computed<string>({
 </script>
 
 <template>
-  <div class="pb-[56px]">
+  <div :class="route.path !== '/wishlist' ? 'pb-[56px]' : ''">
     <slot />
   </div>
   <UTabs
+    v-if="route.path !== '/wishlist'"
     v-model="active"
     :content="false"
     size="xl"

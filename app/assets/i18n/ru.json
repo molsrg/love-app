@@ -102,7 +102,8 @@
       "distance": "{count} км",
       "tasks": "выполненных заданий",
       "days": "дней вместе",
-      "challenges": "совместных челденджей",
+      "wishlist": "желание партнёра | желания партнёра | желаний партнёра",
+      "wishlistNone": "нет",
       "soon": "скоро",
       "between": "между вами"
     },
@@ -221,9 +222,14 @@
       "linkPlaceholder": "https://...",
       "imageUrl": "URL изображения",
       "imageUrlPlaceholder": "https://...",
+      "paste": "Вставить ссылку из буфера",
+      "back": "Назад",
       "submit": "Добавить в вишлист",
       "errors": {
-        "titleRequired": "Название обязательно"
+        "titleRequired": "Название обязательно",
+        "invalidUrl": "Вставьте корректную ссылку",
+        "clipboardEmpty": "Буфер обмена пуст",
+        "clipboardError": "Не удалось прочитать буфер. Попробуйте ещё раз."
       }
     },
     "card": {

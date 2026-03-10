@@ -24,6 +24,8 @@ interface StatConfig {
   value: string | number | null
   textValue?: string
   disabled?: boolean
+  route?: string
+  resolvedLabel?: string
   classes: {
     value: string
     label: string
@@ -54,15 +56,16 @@ export const STATS_CONFIG: Record<string, StatConfig> = {
       container: 'bg-elevated',
     },
   },
-  challenges: {
-    label: 'index.stats.challenges',
-    value: null,
-    textValue: 'index.stats.soon',
-    disabled: true,
+  wishlist: {
+    label: 'index.stats.wishlist',
+    value: 0,
+    textValue: undefined,
+    disabled: false,
+    route: '/wishlist',
     classes: {
-      value: 'text-dimmed',
-      label: 'text-dimmed line-through',
-      container: 'bg-elevated/50',
+      value: 'text-primary',
+      label: 'text-highlighted',
+      container: 'bg-elevated',
     },
   },
-} as const
+}

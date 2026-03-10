@@ -1,9 +1,14 @@
 <script setup lang="ts">
 const pairStore = usePairStore()
+const wishlistStore = useWishlistStore()
 
 const { animatedValue: animatedDistance, animateTo: animateDistanceTo } = useAnimatedNumber(1, 6, 300)
 const { animatedValue: animatedDays, animateTo: animateDaysTo } = useAnimatedNumber(1, 6, 300)
 const { t } = useI18n()
+
+onMounted(() => {
+  wishlistStore.fetchPartnerWishlist()
+})
 
 watch(() => pairStore.distance, (newValue, oldValue) => {
   if (newValue !== oldValue) {
@@ -41,6 +46,15 @@ const stats = computed(() => {
       value: Math.round(animatedDays.value),
     }
   }
+  if (config.wishlist) {
+    const count = wishlistStore.partnerItems.length
+    config.wishlist = {
+      ...config.wishlist,
+      value: count === 0 ? null : count,
+      textValue: count === 0 ? 'index.stats.wishlistNone' : undefined,
+      resolvedLabel: t('index.stats.wishlist', count),
+    }
+  }
   return config
 })
 
@@ -72,7 +86,8 @@ const countdownValues = computed(() => [
         v-for="(stat) in stats"
         :key="stat.label"
         class="rounded-lg p-4 flex flex-col items-center animate-initial animate-slide-up"
-        :class="[stat.classes.container]"
+        :class="[stat.classes.container, stat.route ? 'cursor-pointer active:scale-95 transition-transform' : '']"
+        @click="stat.route ? navigateTo(stat.route) : undefined"
       >
         <h3
           class="text-xl font-bold"
@@ -81,7 +96,7 @@ const countdownValues = computed(() => [
           {{ stat.value === null || stat.value === 0 ? (stat.textValue ? t(stat.textValue) : '—') : stat.value }}
         </h3>
         <p class="text-sm text-center" :class="[stat.classes.label]">
-          {{ t(stat.label).split(' ')[0] }}<br>{{ t(stat.label).split(' ').slice(1).join(' ') }}
+          {{ (stat.resolvedLabel ?? t(stat.label)).split(' ')[0] }}<br>{{ (stat.resolvedLabel ?? t(stat.label)).split(' ').slice(1).join(' ') }}
         </p>
       </div>
     </div>
