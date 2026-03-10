@@ -38,6 +38,13 @@ const stats = computed(() => {
     config.distance = {
       ...config.distance,
       value: val === 0 ? '—' : t('index.stats.distance', val),
+      ...(val !== 0 && {
+        classes: {
+          value: 'text-primary',
+          label: 'text-highlighted',
+          container: 'bg-elevated',
+        },
+      }),
     }
   }
   if (config.days) {
