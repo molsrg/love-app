@@ -72,13 +72,13 @@ async function handleUnbook(id: string) {
 }
 
 function handleBackButton() {
-  navigateTo('/location')
+  navigateTo('/')
 }
 </script>
 
 <template>
-  <BackButton @click="handleBackButton" />
   <div class="space-y-1">
+    <BackButton @click="handleBackButton" />
     <div class="flex items-center justify-between animate-fade-in">
       <h1 class="text-2xl font-bold text-white">
         {{ t('wishlist.title') }}
