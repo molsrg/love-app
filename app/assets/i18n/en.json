@@ -11,6 +11,7 @@
       "avatar": "Avatar",
       "changeAvatar": "Change",
       "avatarTooLarge": "File is too large. Please choose a photo under 5 MB",
+      "avatarSuccess": "Avatar updated",
       "theme": "Theme",
       "language": "App language",
       "themes": {

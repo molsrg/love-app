@@ -6,6 +6,7 @@ const wishlistStore = useWishlistStore()
 
 const { animatedValue: animatedDistance, animateTo: animateDistanceTo } = useAnimatedNumber(1, 6, 300)
 const { animatedValue: animatedDays, animateTo: animateDaysTo } = useAnimatedNumber(1, 6, 300)
+const { animatedValue: animatedWishlist, animateTo: animateWishlistTo } = useAnimatedNumber(0, 6, 300)
 const { t } = useI18n()
 const backButton = useBackButton()
 
@@ -35,6 +36,12 @@ watch(daysTogether, (newValue, oldValue) => {
   }
 }, { immediate: true })
 
+watch(() => wishlistStore.partnerItems.length, (newValue, oldValue) => {
+  if (newValue !== oldValue) {
+    animateWishlistTo(newValue)
+  }
+}, { immediate: true })
+
 const stats = computed(() => {
   const config = { ...STATS_CONFIG }
   if (config.distance) {
@@ -59,9 +66,10 @@ const stats = computed(() => {
   }
   if (config.wishlist) {
     const count = wishlistStore.partnerItems.length
+    const animatedCount = Math.round(animatedWishlist.value)
     config.wishlist = {
       ...config.wishlist,
-      value: count === 0 ? null : count,
+      value: count === 0 ? null : animatedCount,
       resolvedLabel: t('index.stats.wishlist', count),
     }
   }

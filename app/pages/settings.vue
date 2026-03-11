@@ -91,12 +91,17 @@ async function handleAvatarChange(event: Event) {
       target.value = ''
       return
     }
+    const toast = useToast()
     try {
       const formData = new FormData()
       formData.append('file', file)
       usePairStore().stopPairPolling()
       await pairApi.changeAvatar(formData)
+      const res = await pairApi.getPairData()
+      usePairStore().updatePairData(res)
+      userProfile.value.avatar = pairStore.user1.avatar ?? undefined
       telegramNotificationOccurred('success')
+      toast.add({ color: 'success', title: t('settings.profile.avatarSuccess') })
     }
     catch (error) {
       console.error('Failed to upload avatar:', error)

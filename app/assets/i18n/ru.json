@@ -11,6 +11,7 @@
       "avatar": "Аватар",
       "changeAvatar": "Изменить",
       "avatarTooLarge": "Файл слишком большой. Выберите фото меньше 5 МБ",
+      "avatarSuccess": "Аватар обновлён",
       "theme": "Тема",
       "language": "Язык приложения",
       "themes": {
