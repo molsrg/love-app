@@ -82,7 +82,7 @@ function handleBackButton() {
 </script>
 
 <template>
-  <div class="space-y-1">
+  <div class="space-y-2.5">
     <BackButton @click="handleBackButton" />
     <div class="flex items-center justify-between animate-fade-in">
       <h1 class="text-2xl font-bold text-white">
@@ -103,7 +103,7 @@ function handleBackButton() {
       v-model="activeTab"
       :items="tabs"
       :content="false"
-      class="animate-slide-up opacity-0 translate-y-5 -mt-2"
+      class="animate-slide-up opacity-0 translate-y-5 -mt-3"
       style="animation-delay: 0.15s"
     />
 

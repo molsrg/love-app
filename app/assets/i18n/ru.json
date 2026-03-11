@@ -10,6 +10,7 @@
       "namePlaceholder": "Введите ваше имя",
       "avatar": "Аватар",
       "changeAvatar": "Изменить",
+      "avatarTooLarge": "Файл слишком большой. Выберите фото меньше 5 МБ",
       "theme": "Тема",
       "language": "Язык приложения",
       "themes": {

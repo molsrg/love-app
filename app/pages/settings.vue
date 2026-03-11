@@ -84,6 +84,13 @@ async function handleAvatarChange(event: Event) {
   const target = event.target as HTMLInputElement
   const file = target.files?.[0]
   if (file) {
+    const maxSize = 5 * 1024 * 1024
+    if (file.size > maxSize) {
+      const showError = useErrorToast()
+      showError({ color: 'error', title: t('settings.profile.avatarTooLarge') })
+      target.value = ''
+      return
+    }
     try {
       const formData = new FormData()
       formData.append('file', file)

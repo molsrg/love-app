@@ -10,6 +10,7 @@
       "namePlaceholder": "Enter your name",
       "avatar": "Avatar",
       "changeAvatar": "Change",
+      "avatarTooLarge": "File is too large. Please choose a photo under 5 MB",
       "theme": "Theme",
       "language": "App language",
       "themes": {
