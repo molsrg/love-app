@@ -58,7 +58,7 @@ const formattedPrice = computed(() => {
 
       <div class="flex-1 min-w-0">
         <div class="flex items-start justify-between gap-2">
-          <p class="font-semibold text-white truncate">
+          <p class="font-semibold text-white line-clamp-2">
             {{ item.title }}
           </p>
           <UBadge v-if="formattedPrice" :label="formattedPrice" color="primary" variant="subtle" size="sm" class="flex-shrink-0" />
