@@ -225,6 +225,7 @@
       "submit": "Add to wishlist",
       "errors": {
         "titleRequired": "Title is required",
+        "linkRequired": "Link is required",
         "invalidUrl": "Please paste a valid link",
         "clipboardEmpty": "Clipboard is empty",
         "clipboardError": "Could not read clipboard. Try again."

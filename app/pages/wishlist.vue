@@ -9,9 +9,10 @@ const wishlistStore = useWishlistStore()
 
 const activeTab = ref('mine')
 const isAddDrawerOpen = ref(false)
+const isAddLoading = ref(false)
 
 const tabs: TabsItem[] = [
-  { label: t('wishlist.tabs.mine'), value: 'mine', icon: 'i-lucide-list-heart' },
+  { label: t('wishlist.tabs.mine'), value: 'mine', icon: 'i-lucide-gift' },
   { label: t('wishlist.tabs.partner'), value: 'partner', icon: 'i-lucide-heart-handshake' },
 ]
 
@@ -23,6 +24,7 @@ onMounted(async () => {
 })
 
 async function handleAdd(data: CreateWishlistItemRequest) {
+  isAddLoading.value = true
   try {
     await wishlistStore.addItem(data)
     telegramNotificationOccurred('success')
@@ -30,6 +32,9 @@ async function handleAdd(data: CreateWishlistItemRequest) {
   }
   catch {
     telegramNotificationOccurred('error')
+  }
+  finally {
+    isAddLoading.value = false
   }
 }
 
@@ -85,12 +90,12 @@ function handleBackButton() {
       </h1>
       <UButton
         v-if="activeTab === 'mine' && wishlistStore.myItems.length > 0"
-        size="sm"
+        size="md"
         color="primary"
         variant="subtle"
         leading-icon="i-lucide-plus"
         :label="t('wishlist.add')"
-        class="animate-slide-up opacity-0 translate-y-5"
+        class="animate-slide-up opacity-0 translate-y-5 shrink-0"
         style="animation-delay: 0.1s"
         @click="isAddDrawerOpen = true"
       />
@@ -173,6 +178,6 @@ function handleBackButton() {
       </div>
     </div>
 
-    <AddWishDrawer v-model:open="isAddDrawerOpen" @submit="handleAdd" />
+    <AddWishDrawer v-model:open="isAddDrawerOpen" :loading="isAddLoading" @submit="handleAdd" />
   </div>
 </template>

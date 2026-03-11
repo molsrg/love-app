@@ -1,6 +1,10 @@
 <script lang="ts" setup>
 import type { CreateWishlistItemRequest } from '~/utils/wishlist.api'
 
+const props = defineProps<{
+  loading?: boolean
+}>()
+
 const emit = defineEmits<{
   submit: [data: CreateWishlistItemRequest]
 }>()
@@ -11,6 +15,7 @@ const title = ref('')
 const description = ref('')
 const link = ref('')
 const titleError = ref('')
+const linkError = ref('')
 
 watch(open, (isOpen) => {
   if (!isOpen) {
@@ -18,12 +23,19 @@ watch(open, (isOpen) => {
     description.value = ''
     link.value = ''
     titleError.value = ''
+    linkError.value = ''
   }
 })
 
 watch(title, () => {
   if (titleError.value && title.value.trim()) {
     titleError.value = ''
+  }
+})
+
+watch(link, () => {
+  if (linkError.value && link.value.trim()) {
+    linkError.value = ''
   }
 })
 
@@ -42,14 +54,18 @@ function handleSubmit() {
     titleError.value = t('wishlist.form.errors.titleRequired')
     return
   }
-  if (link.value && !isValidUrl(link.value)) {
+  if (!link.value.trim()) {
+    linkError.value = t('wishlist.form.errors.linkRequired')
+    return
+  }
+  if (!isValidUrl(link.value)) {
     return
   }
 
   emit('submit', {
     title: title.value.trim(),
     ...(description.value.trim() ? { description: description.value.trim() } : {}),
-    ...(link.value.trim() ? { link: link.value.trim() } : {}),
+    link: link.value.trim(),
   })
 }
 </script>
@@ -57,7 +73,7 @@ function handleSubmit() {
 <template>
   <UDrawer v-model:open="open">
     <template #content>
-      <div class="space-y-3">
+      <div class="space-y-3 p-4 pb-6">
         <div>
           <label class="text-sm text-gray-400 mb-1 block">{{ t('wishlist.form.title') }}</label>
           <UInput
@@ -91,7 +107,14 @@ function handleSubmit() {
             trailing-icon="i-lucide-link"
           />
           <UBadge
-            v-if="link && !isValidUrl(link)"
+            v-if="linkError"
+            class="mt-1 ml-1"
+            color="error"
+            :label="linkError"
+            variant="outline"
+          />
+          <UBadge
+            v-else-if="link && !isValidUrl(link)"
             class="mt-1 ml-1"
             color="error"
             :label="t('wishlist.form.errors.invalidUrl')"
@@ -99,13 +122,15 @@ function handleSubmit() {
           />
         </div>
 
-        <div class="flex justify-end mt-2 mb-4">
+        <div class="flex justify-end mt-4">
           <UButton
-            :disabled="!title.trim() || (!!link && !isValidUrl(link))"
+            :disabled="!title.trim() || !link.trim() || (!!link && !isValidUrl(link))"
+            :loading="props.loading"
             :label="t('wishlist.form.submit')"
             color="primary"
             variant="subtle"
             leading-icon="i-lucide-plus"
+            size="lg"
             @click="handleSubmit"
           />
         </div>

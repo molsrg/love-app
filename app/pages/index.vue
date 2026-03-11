@@ -96,10 +96,16 @@ const countdownValues = computed(() => [
       <div
         v-for="(stat) in stats"
         :key="stat.label"
-        class="rounded-lg p-4 flex flex-col items-center animate-initial animate-slide-up"
+        class="rounded-lg p-4 flex flex-col items-center animate-initial animate-slide-up relative"
         :class="[stat.classes.container, stat.route ? 'cursor-pointer active:scale-95 transition-transform' : '']"
         @click="stat.route ? navigateTo(stat.route) : undefined"
       >
+        <UIcon
+          v-if="stat.route"
+          name="i-lucide-chevron-right"
+          class="absolute top-1.5 right-1.5 size-3 opacity-40"
+          :class="stat.classes.label"
+        />
         <h3
           class="text-xl font-bold"
           :class="stat.classes.value"
