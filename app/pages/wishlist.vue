@@ -95,8 +95,6 @@ function handleBackButton() {
         variant="subtle"
         leading-icon="i-lucide-plus"
         :label="t('wishlist.add')"
-        class="animate-slide-up shrink-0"
-        style="animation-delay: 0.1s"
         @click="isAddDrawerOpen = true"
       />
     </div>

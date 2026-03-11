@@ -73,7 +73,7 @@ function handleSubmit() {
 <template>
   <UDrawer v-model:open="open">
     <template #content>
-      <div class="space-y-3 p-4 pb-6">
+      <div class="space-y-3 pb-3">
         <UFormField
           :label="t('wishlist.form.title')"
           :error="titleError"
