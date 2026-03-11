@@ -16,7 +16,6 @@ const description = ref('')
 const link = ref('')
 const titleError = ref('')
 const linkError = ref('')
-const clipboardError = ref('')
 
 watch(open, (isOpen) => {
   if (!isOpen) {
@@ -25,7 +24,6 @@ watch(open, (isOpen) => {
     link.value = ''
     titleError.value = ''
     linkError.value = ''
-    clipboardError.value = ''
   }
 })
 
@@ -39,24 +37,7 @@ watch(link, () => {
   if (linkError.value && link.value.trim()) {
     linkError.value = ''
   }
-  if (clipboardError.value) {
-    clipboardError.value = ''
-  }
 })
-
-async function pasteFromClipboard() {
-  try {
-    const text = await navigator.clipboard.readText()
-    if (!text.trim()) {
-      clipboardError.value = t('wishlist.form.errors.clipboardEmpty')
-      return
-    }
-    link.value = text.trim()
-  }
-  catch {
-    clipboardError.value = t('wishlist.form.errors.clipboardError')
-  }
-}
 
 function isValidUrl(url: string): boolean {
   try {
@@ -92,20 +73,21 @@ function handleSubmit() {
 <template>
   <UDrawer v-model:open="open">
     <template #content>
-      <div class="space-y-3 pb-6">
-        <div>
-          <label class="text-sm text-gray-400 mb-1 block">{{ t('wishlist.form.title') }}</label>
+      <div class="space-y-3 p-4 pb-6">
+        <UFormField
+          :label="t('wishlist.form.title')"
+          :error="titleError"
+          required
+        >
           <UInput
             v-model="title"
             :placeholder="t('wishlist.form.titlePlaceholder')"
             class="w-full"
             size="lg"
           />
-          <UBadge v-if="titleError" class="mt-1 ml-1" color="error" :label="titleError" variant="outline" />
-        </div>
+        </UFormField>
 
-        <div>
-          <label class="text-sm text-gray-400 mb-1 block">{{ t('wishlist.form.description') }}</label>
+        <UFormField :label="t('wishlist.form.description')">
           <UTextarea
             v-model="description"
             :placeholder="t('wishlist.form.descriptionPlaceholder')"
@@ -114,20 +96,13 @@ function handleSubmit() {
             :rows="3"
             autoresize
           />
-        </div>
+        </UFormField>
 
-        <div>
-          <div class="flex gap-2 items-center mb-1">
-            <label class="text-sm text-gray-400 block">{{ t('wishlist.form.link') }}</label>
-            <UButton
-              :label="t('wishlist.form.paste')"
-              color="primary"
-              size="xs"
-              variant="outline"
-              leading-icon="i-lucide-clipboard"
-              @click="pasteFromClipboard"
-            />
-          </div>
+        <UFormField
+          :label="t('wishlist.form.link')"
+          :error="linkError || (link && !isValidUrl(link) ? t('wishlist.form.errors.invalidUrl') : '')"
+          required
+        >
           <UInput
             v-model="link"
             :placeholder="t('wishlist.form.linkPlaceholder')"
@@ -135,28 +110,7 @@ function handleSubmit() {
             size="lg"
             trailing-icon="i-lucide-link"
           />
-          <UBadge
-            v-if="linkError"
-            class="mt-1 ml-1"
-            color="error"
-            :label="linkError"
-            variant="outline"
-          />
-          <UBadge
-            v-else-if="clipboardError"
-            class="mt-1 ml-1"
-            color="error"
-            :label="clipboardError"
-            variant="outline"
-          />
-          <UBadge
-            v-else-if="link && !isValidUrl(link)"
-            class="mt-1 ml-1"
-            color="error"
-            :label="t('wishlist.form.errors.invalidUrl')"
-            variant="outline"
-          />
-        </div>
+        </UFormField>
 
         <div class="flex justify-end mt-4">
           <UButton

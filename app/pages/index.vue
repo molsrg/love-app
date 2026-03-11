@@ -103,7 +103,7 @@ const countdownValues = computed(() => [
         <UIcon
           v-if="stat.route"
           name="nimbus:external-link"
-          class="absolute top-1.5 right-1.5 size-4 opacity-40"
+          class="absolute top-2.5 right-2.5 size-4 opacity-40"
           :class="stat.classes.label"
         />
         <h3

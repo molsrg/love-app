@@ -105,7 +105,7 @@ function handleBackButton() {
       v-model="activeTab"
       :items="tabs"
       :content="false"
-      class="animate-slide-up opacity-0 translate-y-5"
+      class="animate-slide-up opacity-0 translate-y-5 -mt-2"
       style="animation-delay: 0.15s"
     />
 
