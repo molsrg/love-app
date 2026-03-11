@@ -102,8 +102,8 @@ const countdownValues = computed(() => [
       >
         <UIcon
           v-if="stat.route"
-          name="i-lucide-chevron-right"
-          class="absolute top-1.5 right-1.5 size-3 opacity-40"
+          name="nimbus:external-link"
+          class="absolute top-1.5 right-1.5 size-4 opacity-40"
           :class="stat.classes.label"
         />
         <h3
