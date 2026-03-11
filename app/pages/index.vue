@@ -62,7 +62,6 @@ const stats = computed(() => {
     config.wishlist = {
       ...config.wishlist,
       value: count === 0 ? null : count,
-      textValue: count === 0 ? 'index.stats.wishlistNone' : undefined,
       resolvedLabel: t('index.stats.wishlist', count),
     }
   }

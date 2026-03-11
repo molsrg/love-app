@@ -101,8 +101,7 @@
       "distance": "{count} km",
       "tasks": "completed tasks",
       "days": "days together",
-      "wishlist": "partner wish | partner wishes",
-      "wishlistNone": "no",
+      "wishlist": "partner wishes | partner wish | partner wishes",
       "soon": "soon",
       "between": "between you"
     },
