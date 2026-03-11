@@ -249,6 +249,8 @@
     "noAccessText": "To use all app features, please allow access to your geolocation in your device settings",
     "noAccessNote": "*After granting access, restart the app for geolocation to work correctly",
     "openSettings": "Open settings",
-    "notAvailable": "It is not possible to send geolocation from this device.\nTry using another device"
+    "notAvailable": "It is not possible to send geolocation from this device.\nTry using another device",
+    "partnerNoAccessTitle": "Partner hasn't shared location",
+    "partnerNoAccessText": "For the map to work, your partner needs to allow location access in their app"
   }
 }

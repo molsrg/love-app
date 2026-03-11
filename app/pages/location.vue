@@ -87,6 +87,18 @@ onMounted(async () => {
       </div>
     </UCard>
 
+    <UCard v-if="!pairStore.user2.approveGeo" variant="soft" class="animate-initial animate-slide-up delay-300">
+      <div class="flex flex-col items-center gap-2 py-2">
+        <UIcon name="i-lucide-map-pin-off" class="text-warning size-10" />
+        <p class="font-semibold text-white text-center">
+          {{ t('geo.partnerNoAccessTitle') }}
+        </p>
+        <p class="text-gray-400 text-center text-sm">
+          {{ t('geo.partnerNoAccessText') }}
+        </p>
+      </div>
+    </UCard>
+
     <RouteMap
       v-if="points.every(p => p && p.lat && p.lng)"
       class="animate-initial animate-slide-up delay-400"

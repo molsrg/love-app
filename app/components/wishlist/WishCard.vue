@@ -14,6 +14,17 @@ const emit = defineEmits<{
 
 const { t } = useI18n()
 
+const isLoading = ref(false)
+
+watch(() => props.item, () => {
+  isLoading.value = false
+}, { deep: true })
+
+function handleAction(action: () => void) {
+  isLoading.value = true
+  action()
+}
+
 const formattedPrice = computed(() => {
   if (props.item.price == null)
     return null
@@ -22,7 +33,10 @@ const formattedPrice = computed(() => {
 </script>
 
 <template>
-  <UCard variant="subtle" class="w-full">
+  <UCard variant="subtle" class="w-full relative">
+    <div v-if="isLoading" class="absolute inset-0 rounded-lg bg-black/40 flex items-center justify-center z-10">
+      <UIcon name="i-lucide-loader-circle" class="text-primary size-6 animate-spin" />
+    </div>
     <div class="flex gap-3">
       <div class="flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden bg-elevated flex items-center justify-center">
         <img
@@ -80,7 +94,7 @@ const formattedPrice = computed(() => {
             variant="subtle"
             leading-icon="i-lucide-trash-2"
             :label="t('wishlist.actions.delete')"
-            @click="emit('delete', item.id)"
+            @click="handleAction(() => emit('delete', item.id))"
           />
         </template>
 
@@ -91,7 +105,7 @@ const formattedPrice = computed(() => {
             variant="subtle"
             :leading-icon="item.isBooked ? 'i-lucide-bookmark-x' : 'i-lucide-bookmark'"
             :label="item.isBooked ? t('wishlist.actions.unbook') : t('wishlist.actions.book')"
-            @click="item.isBooked ? emit('unbook', item.id) : emit('book', item.id)"
+            @click="handleAction(() => item.isBooked ? emit('unbook', item.id) : emit('book', item.id))"
           />
         </template>
       </div>
