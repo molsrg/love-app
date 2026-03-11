@@ -39,14 +39,6 @@ async function handleAdd(data: CreateWishlistItemRequest) {
 }
 
 async function handleDelete(id: string) {
-  const item = wishlistStore.myItems.find(i => i.id === id)
-  if (!item)
-    return
-
-  const message = item.isBooked ? t('wishlist.confirmDelete') : t('wishlist.confirmDeletePlain')
-  if (!confirm(message))
-    return
-
   try {
     await wishlistStore.removeItem(id)
     telegramNotificationOccurred('success')

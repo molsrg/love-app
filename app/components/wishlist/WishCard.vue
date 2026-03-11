@@ -25,6 +25,14 @@ function handleAction(action: () => void) {
   action()
 }
 
+function handleDelete() {
+  const message = props.item.isBooked ? t('wishlist.confirmDelete') : t('wishlist.confirmDeletePlain')
+  if (!confirm(message))
+    return
+  isLoading.value = true
+  emit('delete', props.item.id)
+}
+
 const formattedPrice = computed(() => {
   if (props.item.price == null)
     return null
@@ -94,7 +102,7 @@ const formattedPrice = computed(() => {
             variant="subtle"
             leading-icon="i-lucide-trash-2"
             :label="t('wishlist.actions.delete')"
-            @click="handleAction(() => emit('delete', item.id))"
+            @click="handleDelete"
           />
         </template>
 
