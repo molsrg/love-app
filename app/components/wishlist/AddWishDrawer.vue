@@ -1,12 +1,10 @@
 <script lang="ts" setup>
-import type { CreateWishlistItemRequest } from '~/utils/wishlist.api'
-
 const props = defineProps<{
   loading?: boolean
 }>()
 
 const emit = defineEmits<{
-  submit: [data: CreateWishlistItemRequest]
+  submit: [data: FormData]
 }>()
 const open = defineModel<boolean>('open', { required: true })
 const { t } = useI18n()
@@ -16,6 +14,14 @@ const description = ref('')
 const link = ref('')
 const titleError = ref('')
 const linkError = ref('')
+const imageFile = ref<File | null>(null)
+const imagePreviewUrl = ref<string | null>(null)
+
+watch(imageFile, (newFile) => {
+  if (imagePreviewUrl.value)
+    URL.revokeObjectURL(imagePreviewUrl.value)
+  imagePreviewUrl.value = newFile ? URL.createObjectURL(newFile) : null
+})
 
 watch(open, (isOpen) => {
   if (!isOpen) {
@@ -24,6 +30,7 @@ watch(open, (isOpen) => {
     link.value = ''
     titleError.value = ''
     linkError.value = ''
+    imageFile.value = null
   }
 })
 
@@ -62,16 +69,20 @@ function handleSubmit() {
     return
   }
 
-  emit('submit', {
-    title: title.value.trim(),
-    ...(description.value.trim() ? { description: description.value.trim() } : {}),
-    link: link.value.trim(),
-  })
+  const formData = new FormData()
+  formData.append('title', title.value.trim())
+  if (description.value.trim())
+    formData.append('description', description.value.trim())
+  formData.append('link', link.value.trim())
+  if (imageFile.value)
+    formData.append('image', imageFile.value)
+
+  emit('submit', formData)
 }
 </script>
 
 <template>
-  <UDrawer v-model:open="open">
+  <UDrawer v-model:open="open" :title="t('wishlist.add')">
     <template #content>
       <div class="space-y-3 pb-3">
         <UFormField
@@ -110,6 +121,41 @@ function handleSubmit() {
             size="lg"
             trailing-icon="i-lucide-link"
           />
+        </UFormField>
+
+        <UFormField
+          :label="t('wishlist.form.image')"
+        >
+          <UFileUpload v-slot="{ open, removeFile }" v-model="imageFile" accept="image/*">
+            <div class="flex flex-wrap items-center gap-3">
+              <img
+                v-if="imagePreviewUrl"
+                :src="imagePreviewUrl"
+                class="size-8 rounded-lg object-cover"
+                alt=""
+              >
+              <UIcon v-else name="i-lucide-image" class="text-muted size-8" />
+
+              <UButton
+                :label="imageFile ? t('wishlist.form.imageChange') : t('wishlist.form.imageSelect')"
+                color="neutral"
+                variant="subtle"
+                @click="open()"
+              />
+            </div>
+
+            <p v-if="imageFile" class="text-xs text-muted mt-1.5">
+              {{ imageFile.name }}
+              <UButton
+                :label="t('wishlist.form.imageRemove')"
+                color="error"
+                variant="link"
+                size="xs"
+                class="p-0"
+                @click="removeFile()"
+              />
+            </p>
+          </UFileUpload>
         </UFormField>
 
         <div class="flex justify-end mt-4">

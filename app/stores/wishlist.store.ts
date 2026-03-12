@@ -1,4 +1,4 @@
-import type { CreateWishlistItemRequest, PartnerWishlistItemResponse, WishlistItemResponse } from '~/utils/wishlist.api'
+import type { PartnerWishlistItemResponse, WishlistItemResponse } from '~/utils/wishlist.api'
 
 export const useWishlistStore = defineStore('wishlist', () => {
   const myItems = ref<WishlistItemResponse[]>([])
@@ -30,7 +30,7 @@ export const useWishlistStore = defineStore('wishlist', () => {
     }
   }
 
-  async function addItem(data: CreateWishlistItemRequest) {
+  async function addItem(data: FormData) {
     const newItem = await wishlistApi.addWish(data)
     if (newItem)
       myItems.value.unshift(newItem)

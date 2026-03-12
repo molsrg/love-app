@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import type { TabsItem } from '@nuxt/ui'
-import type { CreateWishlistItemRequest } from '~/utils/wishlist.api'
 import { BackButton } from 'vue-tg'
 
 const { t } = useI18n()
@@ -23,7 +22,7 @@ onMounted(async () => {
   ])
 })
 
-async function handleAdd(data: CreateWishlistItemRequest) {
+async function handleAdd(data: FormData) {
   isAddLoading.value = true
   try {
     await wishlistStore.addItem(data)

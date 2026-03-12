@@ -32,8 +32,8 @@ export const wishlistApi = {
   async getMyWishlist() {
     return useApi().get<WishlistItemResponse[]>('/wishlist')
   },
-  async addWish(data: CreateWishlistItemRequest) {
-    return useApi().post<WishlistItemResponse>('/wishlist', data)
+  async addWish(data: FormData) {
+    return useApi().postFormData<WishlistItemResponse>('/wishlist', data)
   },
   async deleteWish(id: string) {
     return useApi().delete(`/wishlist/${id}`)

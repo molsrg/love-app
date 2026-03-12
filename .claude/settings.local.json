@@ -3,7 +3,8 @@
     "allow": [
       "WebFetch(domain:openrouteservice.org)",
       "Bash(pnpm run lint)",
-      "Bash(pnpm run lint:fix)"
+      "Bash(pnpm run lint:fix)",
+      "Bash(python3 -c \":*)"
     ]
   }
 }
