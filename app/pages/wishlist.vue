@@ -1,24 +1,34 @@
 <script lang="ts" setup>
 import type { TabsItem } from '@nuxt/ui'
+import type { JointGiftResponse, Share } from '~/utils/joint-gift.api'
 import { BackButton } from 'vue-tg'
 
 const { t } = useI18n()
 const { telegramNotificationOccurred } = useHapticFeedback()
 const wishlistStore = useWishlistStore()
+const jointGiftStore = useJointGiftStore()
+const pairStore = usePairStore()
 
 const activeTab = ref('mine')
 const isAddDrawerOpen = ref(false)
 const isAddLoading = ref(false)
+const isAddJointDrawerOpen = ref(false)
+const isAddJointLoading = ref(false)
+const isContributeOpen = ref(false)
+const isContributeLoading = ref(false)
+const contributeTarget = ref<{ gift: JointGiftResponse, myShare: Share } | null>(null)
 
 const tabs: TabsItem[] = [
   { label: t('wishlist.tabs.mine'), value: 'mine', icon: 'i-lucide-gift' },
   { label: t('wishlist.tabs.partner'), value: 'partner', icon: 'i-lucide-heart-handshake' },
+  { label: t('wishlist.tabs.joint'), value: 'joint', icon: 'i-lucide-handshake' },
 ]
 
 onMounted(async () => {
   await Promise.all([
     wishlistStore.fetchMyWishlist(),
     wishlistStore.fetchPartnerWishlist(),
+    jointGiftStore.fetchAll(),
   ])
 })
 
@@ -67,6 +77,69 @@ async function handleUnbook(id: string) {
   }
 }
 
+async function handleJointAdd(data: FormData) {
+  isAddJointLoading.value = true
+  try {
+    await jointGiftStore.createItem(data)
+    telegramNotificationOccurred('success')
+    isAddJointDrawerOpen.value = false
+  }
+  catch {
+    telegramNotificationOccurred('error')
+  }
+  finally {
+    isAddJointLoading.value = false
+  }
+}
+
+function handleContributeOpen(id: string) {
+  const gift = jointGiftStore.items.find(g => g.id === id)
+  if (!gift)
+    return
+  const myShare = gift.shares.find(s => s.userId === pairStore.user1.id)
+  if (!myShare)
+    return
+  contributeTarget.value = { gift, myShare }
+  isContributeOpen.value = true
+}
+
+async function handleContribute(amount: number) {
+  if (!contributeTarget.value)
+    return
+  isContributeLoading.value = true
+  try {
+    await jointGiftStore.contributeToItem(contributeTarget.value.gift.id, amount)
+    telegramNotificationOccurred('success')
+    isContributeOpen.value = false
+  }
+  catch {
+    telegramNotificationOccurred('error')
+  }
+  finally {
+    isContributeLoading.value = false
+  }
+}
+
+async function handleJointComplete(id: string) {
+  try {
+    await jointGiftStore.completeItem(id)
+    telegramNotificationOccurred('success')
+  }
+  catch {
+    telegramNotificationOccurred('error')
+  }
+}
+
+async function handleJointDelete(id: string) {
+  try {
+    await jointGiftStore.removeItem(id)
+    telegramNotificationOccurred('success')
+  }
+  catch {
+    telegramNotificationOccurred('error')
+  }
+}
+
 function handleBackButton() {
   navigateTo('/')
 }
@@ -88,6 +161,15 @@ function handleBackButton() {
         :label="t('wishlist.add')"
         @click="isAddDrawerOpen = true"
       />
+      <UButton
+        v-else-if="activeTab === 'joint' && jointGiftStore.items.length > 0 && pairStore.isHost"
+        size="md"
+        color="primary"
+        variant="subtle"
+        leading-icon="i-lucide-plus"
+        :label="t('wishlist.joint.add')"
+        @click="isAddJointDrawerOpen = true"
+      />
     </div>
 
     <UTabs
@@ -98,75 +180,33 @@ function handleBackButton() {
       style="animation-delay: 0.15s"
     />
 
-    <div v-if="activeTab === 'mine'" class="space-y-2">
-      <div
-        v-if="wishlistStore.isLoadingMine"
-        class="flex justify-center py-8"
-      >
-        <UIcon name="i-lucide-loader-circle" class="text-primary size-8 animate-spin" />
-      </div>
-
-      <template v-else-if="wishlistStore.myItems.length > 0">
-        <WishCard
-          v-for="(item, index) in wishlistStore.myItems"
-          :key="item.id"
-          :item="item"
-          own
-          class="animate-slide-up opacity-0 translate-y-5"
-          :style="`animation-delay: ${0.2 + index * 0.05}s`"
-          @delete="handleDelete"
-        />
-      </template>
-
-      <div
-        v-else
-        class="flex flex-col items-center justify-center py-12 gap-3 animate-fade-in"
-      >
-        <UIcon name="i-lucide-gift" class="text-primary/40 size-16" />
-        <p class="text-gray-400 text-center">
-          {{ t('wishlist.empty.mine') }}
-        </p>
-        <UButton
-          color="primary"
-          variant="subtle"
-          leading-icon="i-lucide-plus"
-          :label="t('wishlist.add')"
-          @click="isAddDrawerOpen = true"
-        />
-      </div>
-    </div>
-
-    <div v-else class="space-y-2">
-      <div
-        v-if="wishlistStore.isLoadingPartner"
-        class="flex justify-center py-8"
-      >
-        <UIcon name="i-lucide-loader-circle" class="text-primary size-8 animate-spin" />
-      </div>
-
-      <template v-else-if="wishlistStore.partnerItems.length > 0">
-        <WishCard
-          v-for="(item, index) in wishlistStore.partnerItems"
-          :key="item.id"
-          :item="item"
-          class="animate-slide-up opacity-0 translate-y-5"
-          :style="`animation-delay: ${0.2 + index * 0.05}s`"
-          @book="handleBook"
-          @unbook="handleUnbook"
-        />
-      </template>
-
-      <div
-        v-else
-        class="flex flex-col items-center justify-center py-12 gap-3 animate-fade-in"
-      >
-        <UIcon name="i-lucide-heart" class="text-primary/40 size-16" />
-        <p class="text-gray-400 text-center">
-          {{ t('wishlist.empty.partner') }}
-        </p>
-      </div>
-    </div>
+    <MineTab
+      v-if="activeTab === 'mine'"
+      @add="isAddDrawerOpen = true"
+      @delete="handleDelete"
+    />
+    <PartnerTab
+      v-else-if="activeTab === 'partner'"
+      @book="handleBook"
+      @unbook="handleUnbook"
+    />
+    <JointTab
+      v-else
+      @add="isAddJointDrawerOpen = true"
+      @contribute="handleContributeOpen"
+      @complete="handleJointComplete"
+      @delete="handleJointDelete"
+    />
 
     <AddWishDrawer v-model:open="isAddDrawerOpen" :loading="isAddLoading" @submit="handleAdd" />
+    <AddJointGiftDrawer v-if="pairStore.isHost" v-model:open="isAddJointDrawerOpen" :loading="isAddJointLoading" @submit="handleJointAdd" />
+    <ContributeDrawer
+      v-if="contributeTarget"
+      v-model:open="isContributeOpen"
+      :gift="contributeTarget.gift"
+      :my-share="contributeTarget.myShare"
+      :loading="isContributeLoading"
+      @submit="handleContribute"
+    />
   </div>
 </template>

@@ -203,12 +203,13 @@
     "title": "Wishlist",
     "add": "Add Wish",
     "tabs": {
-      "mine": "My Wishes",
-      "partner": "Partner's Wishes"
+      "mine": "Mine",
+      "partner": "Partner",
+      "joint": "Joint"
     },
     "empty": {
       "mine": "No wishes yet. Add your first!",
-      "partner": "Your partner hasn't added any wishes yet."
+      "partner": "Your partner hasn't added any wishes yet"
     },
     "form": {
       "title": "Title",
@@ -246,7 +247,58 @@
       "openLink": "Open link"
     },
     "confirmDelete": "Your partner already booked this gift. Delete anyway?",
-    "confirmDeletePlain": "Remove this wish?"
+    "confirmDeletePlain": "Remove this wish?",
+    "joint": {
+      "add": "New Joint Gift",
+      "empty": "No joint gifts yet. Create the first one!",
+      "status": {
+        "active": "Active",
+        "funded": "Funded",
+        "completed": "Completed"
+      },
+      "progress": "Progress",
+      "myShare": "My share",
+      "partnerShare": "Partner's share",
+      "contribute": "Contribute",
+      "complete": "Mark as bought",
+      "delete": "Delete",
+      "confirmDelete": "Delete this joint gift?",
+      "confirmComplete": "Mark as bought?",
+      "form": {
+        "title": "Title",
+        "titlePlaceholder": "Gift name",
+        "description": "Description",
+        "descriptionPlaceholder": "Tell more about this gift...",
+        "link": "Link",
+        "linkPlaceholder": "https://...",
+        "price": "Total price",
+        "pricePlaceholder": "0",
+        "partnerPercent": "Partner's share (%)",
+        "image": "Image",
+        "imageSelect": "Select image",
+        "imageChange": "Change",
+        "imageRemove": "Remove",
+        "sharesPreview": "Share preview",
+        "submit": "Create joint gift",
+        "errors": {
+          "titleRequired": "Title is required",
+          "priceRequired": "Price is required",
+          "priceInvalid": "Price must be greater than 0",
+          "partnerPercentRequired": "Partner's share is required",
+          "partnerPercentInvalid": "Must be between 1 and 99"
+        }
+      },
+      "contributeForm": {
+        "title": "Contribute",
+        "amount": "Amount",
+        "remaining": "Your remaining: {amount} ₽",
+        "submit": "Contribute",
+        "errors": {
+          "amountRequired": "Amount is required",
+          "amountInvalid": "Must be between 1 and {max}"
+        }
+      }
+    }
   },
   "geo": {
     "noAccessTitle": "No access to geolocation",

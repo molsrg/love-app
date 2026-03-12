@@ -83,12 +83,11 @@ function handleSubmit() {
 
 <template>
   <UDrawer v-model:open="open" :title="t('wishlist.add')">
-    <template #content>
-      <div class="space-y-3 pb-3">
+    <template #body>
+      <div class="space-y-3 pb-3 overflow-y-auto max-h-[70vh]">
         <UFormField
           :label="t('wishlist.form.title')"
           :error="titleError"
-          required
         >
           <UInput
             v-model="title"
@@ -112,7 +111,6 @@ function handleSubmit() {
         <UFormField
           :label="t('wishlist.form.link')"
           :error="linkError || (link && !isValidUrl(link) ? t('wishlist.form.errors.invalidUrl') : '')"
-          required
         >
           <UInput
             v-model="link"

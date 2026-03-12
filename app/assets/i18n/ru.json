@@ -205,12 +205,13 @@
     "title": "Вишлист",
     "add": "Добавить желание",
     "tabs": {
-      "mine": "Мои желания",
-      "partner": "Желания партнёра"
+      "mine": "Мой",
+      "partner": "Партнёра",
+      "joint": "Совместный"
     },
     "empty": {
       "mine": "Пока нет желаний. Добавь первое!",
-      "partner": "Партнёр ещё не добавил желаний."
+      "partner": "Партнёр ещё не добавил желаний"
     },
     "form": {
       "title": "Название",
@@ -248,7 +249,58 @@
       "openLink": "Открыть ссылку"
     },
     "confirmDelete": "Партнёр уже забронировал этот подарок. Всё равно удалить?",
-    "confirmDeletePlain": "Удалить это желание?"
+    "confirmDeletePlain": "Удалить это желание?",
+    "joint": {
+      "add": "Новое желание",
+      "empty": "Совместных желаний пока нет. Создайте первое!",
+      "status": {
+        "active": "Копим",
+        "funded": "Накоплено",
+        "completed": "Куплено"
+      },
+      "progress": "Прогресс",
+      "myShare": "Моя доля",
+      "partnerShare": "Доля партнёра",
+      "contribute": "Внести взнос",
+      "complete": "Отметить как купленный",
+      "delete": "Удалить",
+      "confirmDelete": "Удалить этот совместный подарок?",
+      "confirmComplete": "Отметить как купленный?",
+      "form": {
+        "title": "Название",
+        "titlePlaceholder": "Название подарка",
+        "description": "Описание",
+        "descriptionPlaceholder": "Расскажи подробнее...",
+        "link": "Ссылка",
+        "linkPlaceholder": "https://...",
+        "price": "Общая цена",
+        "pricePlaceholder": "0",
+        "partnerPercent": "Доля партнёра (%)",
+        "image": "Изображение",
+        "imageSelect": "Выбрать фото",
+        "imageChange": "Изменить",
+        "imageRemove": "Удалить",
+        "sharesPreview": "Предпросмотр долей",
+        "submit": "Создать совместный подарок",
+        "errors": {
+          "titleRequired": "Название обязательно",
+          "priceRequired": "Цена обязательна",
+          "priceInvalid": "Цена должна быть больше 0",
+          "partnerPercentRequired": "Доля партнёра обязательна",
+          "partnerPercentInvalid": "Должно быть от 1 до 99"
+        }
+      },
+      "contributeForm": {
+        "title": "Внести долю",
+        "amount": "Сумма",
+        "remaining": "Остаток вашей доли: {amount} ₽",
+        "submit": "Внести",
+        "errors": {
+          "amountRequired": "Введите сумму",
+          "amountInvalid": "Сумма должна быть от 1 до {max}"
+        }
+      }
+    }
   },
   "geo": {
     "noAccessTitle": "Нет доступа к геопозиции",
