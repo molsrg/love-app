@@ -37,7 +37,7 @@ export default defineAppConfig({
     drawer: {
       slots: {
         content: 'p-2 pb-6',
-        // body: 'p-4',
+        container: 'w-full flex flex-col gap-4 p-1 overflow-y-auto',
       },
     },
     avatar: {

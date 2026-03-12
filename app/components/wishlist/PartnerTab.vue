@@ -27,7 +27,7 @@ const wishlistStore = useWishlistStore()
     </template>
 
     <div v-else class="flex flex-col items-center justify-center py-12 gap-3 animate-fade-in">
-      <UIcon name="i-lucide-heart" class="text-primary/40 size-16" />
+      <UIcon name="i-lucide-heart-handshake" class="text-primary/40 size-16" />
       <p class="text-gray-400 text-center">
         {{ t('wishlist.empty.partner') }}
       </p>

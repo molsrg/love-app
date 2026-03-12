@@ -82,90 +82,49 @@ function handleSubmit() {
 </script>
 
 <template>
-  <UDrawer v-model:open="open" :title="t('wishlist.add')">
+  <UDrawer v-model:open="open">
     <template #body>
-      <div class="space-y-3 pb-3 overflow-y-auto max-h-[70vh]">
-        <UFormField
-          :label="t('wishlist.form.title')"
-          :error="titleError"
-        >
-          <UInput
-            v-model="title"
-            :placeholder="t('wishlist.form.titlePlaceholder')"
-            class="w-full"
-            size="lg"
-          />
-        </UFormField>
+      <div class="space-y-2 pb-1 overflow-y-auto">
+        <div class="flex items-center gap-2">
+          <UFormField :label="t('wishlist.form.title')" :error="titleError || undefined" required class="w-full">
+            <UInput v-model="title" :placeholder="t('wishlist.form.titlePlaceholder')" class="w-full" size="lg" />
+          </UFormField>
+          <UFileUpload v-slot="{ open: openFile }" v-model="imageFile" accept="image/*" class="mr-1 mt-6">
+            <button type="button" class="relative block cursor-pointer" @click="openFile()">
+              <img v-if="imagePreviewUrl" :src="imagePreviewUrl" class="size-9 rounded-md object-cover" alt="">
+              <div v-else class="size-9 rounded-md bg-elevated flex items-center justify-center ring-1 ring-muted">
+                <UIcon name="i-lucide-image-plus" class="text-muted size-5" />
+              </div>
+            </button>
+          </UFileUpload>
+        </div>
 
         <UFormField :label="t('wishlist.form.description')">
           <UTextarea
-            v-model="description"
-            :placeholder="t('wishlist.form.descriptionPlaceholder')"
-            class="w-full"
-            size="lg"
-            :rows="3"
-            autoresize
+            v-model="description" :placeholder="t('wishlist.form.descriptionPlaceholder')" class="w-full"
+            size="lg" :rows="3" autoresize
           />
         </UFormField>
 
         <UFormField
-          :label="t('wishlist.form.link')"
-          :error="linkError || (link && !isValidUrl(link) ? t('wishlist.form.errors.invalidUrl') : '')"
+          required :label="t('wishlist.form.link')" :error="linkError
+            || (link && !isValidUrl(link)
+              ? t('wishlist.form.errors.invalidUrl')
+              : undefined)
+            || undefined
+          "
         >
           <UInput
-            v-model="link"
-            :placeholder="t('wishlist.form.linkPlaceholder')"
-            class="w-full"
-            size="lg"
+            v-model="link" :placeholder="t('wishlist.form.linkPlaceholder')" class="w-full" size="lg"
             trailing-icon="i-lucide-link"
           />
         </UFormField>
 
-        <UFormField
-          :label="t('wishlist.form.image')"
-        >
-          <UFileUpload v-slot="{ open, removeFile }" v-model="imageFile" accept="image/*">
-            <div class="flex flex-wrap items-center gap-3">
-              <img
-                v-if="imagePreviewUrl"
-                :src="imagePreviewUrl"
-                class="size-8 rounded-lg object-cover"
-                alt=""
-              >
-              <UIcon v-else name="i-lucide-image" class="text-muted size-8" />
-
-              <UButton
-                :label="imageFile ? t('wishlist.form.imageChange') : t('wishlist.form.imageSelect')"
-                color="neutral"
-                variant="subtle"
-                @click="open()"
-              />
-            </div>
-
-            <p v-if="imageFile" class="text-xs text-muted mt-1.5">
-              {{ imageFile.name }}
-              <UButton
-                :label="t('wishlist.form.imageRemove')"
-                color="error"
-                variant="link"
-                size="xs"
-                class="p-0"
-                @click="removeFile()"
-              />
-            </p>
-          </UFileUpload>
-        </UFormField>
-
         <div class="flex justify-end mt-4">
           <UButton
-            :disabled="!title.trim() || !link.trim() || (!!link && !isValidUrl(link))"
-            :loading="props.loading"
-            :label="t('wishlist.form.submit')"
-            color="primary"
-            variant="subtle"
-            leading-icon="i-lucide-plus"
-            size="lg"
-            @click="handleSubmit"
+            :disabled="!title.trim() || !link.trim() || (!!link && !isValidUrl(link))
+            " :loading="props.loading" :label="t('wishlist.form.submit')" color="primary" variant="subtle"
+            leading-icon="i-lucide-plus" size="lg" @click="handleSubmit"
           />
         </div>
       </div>

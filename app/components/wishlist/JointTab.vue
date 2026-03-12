@@ -9,6 +9,13 @@ const emit = defineEmits<{
 const { t } = useI18n()
 const jointGiftStore = useJointGiftStore()
 const pairStore = usePairStore()
+
+const activeItems = computed(() =>
+  jointGiftStore.items.filter(g => g.status !== 'completed'),
+)
+const archivedItems = computed(() =>
+  jointGiftStore.items.filter(g => g.status === 'completed'),
+)
 </script>
 
 <template>
@@ -17,9 +24,9 @@ const pairStore = usePairStore()
       <UIcon name="i-lucide-loader-circle" class="text-primary size-8 animate-spin" />
     </div>
 
-    <template v-else-if="jointGiftStore.items.length > 0">
+    <template v-else-if="activeItems.length > 0">
       <JointGiftCard
-        v-for="(gift, index) in jointGiftStore.items"
+        v-for="(gift, index) in activeItems"
         :key="gift.id"
         :gift="gift"
         class="animate-slide-up opacity-0 translate-y-5"
@@ -30,7 +37,7 @@ const pairStore = usePairStore()
       />
     </template>
 
-    <div v-else class="flex flex-col items-center justify-center py-12 gap-3 animate-fade-in">
+    <div v-else-if="!jointGiftStore.isLoading && activeItems.length === 0 && archivedItems.length === 0" class="flex flex-col items-center justify-center py-12 gap-3 animate-fade-in">
       <UIcon name="i-lucide-handshake" class="text-primary/40 size-16" />
       <p class="text-gray-400 text-center">
         {{ t('wishlist.joint.empty') }}
@@ -43,6 +50,43 @@ const pairStore = usePairStore()
         :label="t('wishlist.joint.add')"
         @click="emit('add')"
       />
+      <UCard v-else class="w-full mt-2" variant="subtle">
+        <div class="flex items-center gap-3">
+          <UIcon name="i-lucide-info" class="text-primary shrink-0 size-5" />
+          <p class="text-sm text-muted">
+            {{ t('wishlist.joint.onlyHostCanAdd') }}
+          </p>
+        </div>
+      </UCard>
     </div>
+
+    <UCollapsible v-if="archivedItems.length > 0" class="group mt-6">
+      <button class="flex w-full items-center gap-3 py-1 cursor-pointer">
+        <div class="h-px flex-1 bg-border" />
+        <span class="flex items-center gap-1.5 text-xs text-muted select-none">
+          <UIcon name="i-lucide-archive" class="size-3.5" />
+          {{ t('wishlist.joint.archive') }} ({{ archivedItems.length }})
+          <UIcon
+            name="i-lucide-chevron-down"
+            class="size-3.5 group-data-[state=open]:rotate-180 transition-transform duration-200"
+          />
+        </span>
+        <div class="h-px flex-1 bg-border" />
+      </button>
+      <template #content>
+        <div class="space-y-2 mt-2">
+          <JointGiftCard
+            v-for="(gift, index) in archivedItems"
+            :key="gift.id"
+            :gift="gift"
+            class="opacity-60"
+            :style="`animation-delay: ${index * 0.05}s`"
+            @contribute="emit('contribute', $event)"
+            @complete="emit('complete', $event)"
+            @delete="emit('delete', $event)"
+          />
+        </div>
+      </template>
+    </UCollapsible>
   </div>
 </template>

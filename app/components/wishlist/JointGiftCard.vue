@@ -64,12 +64,7 @@ function handleComplete() {
   <UCard variant="subtle" class="w-full">
     <div class="flex gap-3">
       <div class="flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden bg-elevated flex items-center justify-center">
-        <img
-          v-if="gift.imageUrl"
-          :src="gift.imageUrl"
-          :alt="gift.title"
-          class="w-full h-full object-cover"
-        >
+        <img v-if="gift.imageUrl" :src="gift.imageUrl" :alt="gift.title" class="w-full h-full object-cover">
         <UIcon v-else name="i-lucide-gift" class="text-primary size-8" />
       </div>
 
@@ -79,12 +74,12 @@ function handleComplete() {
             {{ gift.title }}
           </p>
           <div class="flex items-center gap-1.5 flex-shrink-0">
-            <UBadge :label="`~${formattedPrice}`" color="primary" variant="subtle"  />
-            <UBadge
-              :label="t(`wishlist.joint.status.${gift.status}`)"
-              :color="statusColor"
-              variant="subtle"
+            <UButton
+              v-if="gift.link" :href="gift.link" target="_blank" rel="noopener noreferrer" size="xs"
+              color="neutral" variant="subtle" leading-icon="i-lucide-external-link"
             />
+            <UBadge :label="formattedPrice" color="primary" variant="subtle" />
+            <UBadge :label="t(`wishlist.joint.status.${gift.status}`)" :color="statusColor" variant="subtle" />
           </div>
         </div>
         <p v-if="gift.description" class="text-sm text-gray-400 line-clamp-2 mt-0.5">
@@ -99,7 +94,7 @@ function handleComplete() {
           <span>{{ t('wishlist.joint.progress') }}</span>
           <span>{{ gift.progress }}%</span>
         </div>
-        <UProgress :model-value="gift.progress" :max="100" color="primary"  />
+        <UProgress :model-value="gift.progress" :max="100" color="primary" />
       </div>
 
       <div v-if="myShare" class="flex justify-between text-xs text-gray-400">
@@ -109,54 +104,28 @@ function handleComplete() {
 
       <div v-if="partnerShare" class="flex justify-between text-xs text-gray-400">
         <span>{{ t('wishlist.joint.partnerShare') }}</span>
-        <span>{{ formatAmount(partnerShare.contributed) }} / {{ formatAmount(partnerShare.amount) }} ({{ partnerProgress }}%)</span>
+        <span>{{ formatAmount(partnerShare.contributed) }} / {{ formatAmount(partnerShare.amount) }} ({{ partnerProgress
+        }}%)</span>
       </div>
     </div>
 
-    <div class="flex items-center justify-between mt-3 pt-3 border-t border-white/5">
-      <UButton
-        v-if="gift.link"
-        :href="gift.link"
-        target="_blank"
-        rel="noopener noreferrer"
-        size="xs"
-        color="neutral"
-        variant="subtle"
-        leading-icon="i-lucide-external-link"
-        :label="t('wishlist.actions.openLink')"
-      />
-      <div v-else />
-
-      <div class="flex items-center gap-2">
+    <div class="flex items-center justify-between mt-3 pt-3 border-t border-white/5 flex-wrap gap-2">
+      <div class="flex items-center gap-2 ml-auto">
         <template v-if="gift.status === 'active'">
           <UButton
-            v-if="myShare && myShare.contributed < myShare.amount"
-            size="xs"
-            color="primary"
-            variant="subtle"
-            leading-icon="i-lucide-wallet"
-            :label="t('wishlist.joint.contribute')"
+            v-if="myShare && myShare.contributed < myShare.amount" size="xs" color="primary" variant="subtle"
+            leading-icon="i-lucide-wallet" :label="t('wishlist.joint.contribute')"
             @click="emit('contribute', gift.id)"
           />
           <UButton
-            v-if="isHost"
-            size="xs"
-            color="error"
-            variant="subtle"
-            leading-icon="i-lucide-trash-2"
-            :label="t('wishlist.joint.delete')"
-            @click="handleDelete"
+            v-if="isHost" size="xs" color="error" variant="subtle" leading-icon="i-lucide-trash-2"
+            :label="t('wishlist.joint.delete')" @click="handleDelete"
           />
         </template>
 
         <UButton
-          v-if="gift.status === 'funded' && isHost"
-          size="xs"
-          color="success"
-          variant="subtle"
-          leading-icon="i-lucide-check-circle"
-          :label="t('wishlist.joint.complete')"
-          @click="handleComplete"
+          v-if="gift.status === 'funded' && isHost" size="xs" color="success" variant="subtle"
+          leading-icon="i-lucide-check-circle" :label="t('wishlist.joint.complete')" @click="handleComplete"
         />
       </div>
     </div>

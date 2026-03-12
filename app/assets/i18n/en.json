@@ -251,6 +251,9 @@
     "joint": {
       "add": "New Joint Gift",
       "empty": "No joint gifts yet. Create the first one!",
+      "onlyHostCanAdd": "Only the pair host can create joint gifts",
+      "archive": "Archive",
+      "archiveEmpty": "No purchased gifts yet",
       "status": {
         "active": "Active",
         "funded": "Funded",
@@ -279,6 +282,7 @@
         "imageChange": "Change",
         "imageRemove": "Remove",
         "sharesPreview": "Share preview",
+        "showPreview": "Show preview",
         "submit": "Create joint gift",
         "errors": {
           "titleRequired": "Title is required",
