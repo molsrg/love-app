@@ -75,12 +75,12 @@ const myPercent = computed(() =>
 )
 const myAmount = computed(() =>
   price.value && myPercent.value
-    ? Math.round((price.value * myPercent.value) / 100)
+    ? Math.round((price.value * myPercent.value) / 100 / 10) * 10
     : undefined,
 )
 const partnerAmount = computed(() =>
-  price.value && partnerPercent.value
-    ? Math.round((price.value * partnerPercent.value) / 100)
+  price.value && myAmount.value !== undefined
+    ? price.value - myAmount.value
     : undefined,
 )
 

@@ -11,7 +11,9 @@ const jointGiftStore = useJointGiftStore()
 const pairStore = usePairStore()
 
 const activeItems = computed(() =>
-  jointGiftStore.items.filter(g => g.status !== 'completed'),
+  jointGiftStore.items
+    .filter(g => g.status !== 'completed')
+    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()),
 )
 const archivedItems = computed(() =>
   jointGiftStore.items.filter(g => g.status === 'completed'),

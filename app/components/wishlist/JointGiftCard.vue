@@ -70,7 +70,7 @@ function handleComplete() {
 
       <div class="flex-1 min-w-0">
         <div class="flex items-start justify-between gap-2">
-          <p class="font-semibold text-white line-clamp-2">
+          <p class="font-semibold text-white line-clamp-2 min-w-0">
             {{ gift.title }}
           </p>
           <div class="flex items-center gap-1.5 flex-shrink-0">
