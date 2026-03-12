@@ -1,14 +1,10 @@
-export interface LoginResponse {
-  accessToken: string
-  isPaired: boolean
-}
+import type { components } from '~/shared/api.types'
+
+type LoginRequest = components['schemas']['CreateUserDto']
+type LoginResponse = components['schemas']['CreateUserResponseDto']
 
 export const authApi = {
-  login(initData: string | null) {
-    return useApi().post<LoginResponse>('/auth/init', {
-      queryString: initData,
-    })
+  login(body: LoginRequest) {
+    return useApi().post<LoginResponse>('/auth/init', body)
   },
 }
-
-export type AuthApiType = typeof authApi
