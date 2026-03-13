@@ -66,77 +66,81 @@ function handleComplete() {
 </script>
 
 <template>
-  <UCard variant="subtle" class="w-full">
-    <div class="flex gap-3">
-      <div class="flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden bg-elevated flex items-center justify-center">
+  <UCard variant="subtle">
+    <!-- <template #header>
+      <div class="flex items-center gap-1.5 flex-shrink-0">
+        <UBadge :label="formattedPrice" color="primary" variant="subtle" />
+        <UBadge :label="t(`wishlist.joint.status.${gift.status}`)" :color="statusColor" variant="subtle" />
+      </div>
+    </template> -->
+    <header class="flex gap-2">
+      <div
+        class="flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden bg-elevated flex ring-1 ring-accented items-center justify-center"
+      >
         <img v-if="gift.imageUrl" :src="gift.imageUrl" :alt="gift.title" class="w-full h-full object-cover">
         <UIcon v-else name="i-lucide-gift" class="text-primary size-8" />
       </div>
 
-      <div class="flex-1 min-w-0">
-        <div class="flex items-start justify-between gap-2">
-          <p class="font-semibold text-white line-clamp-2 min-w-0">
-            {{ gift.title }}
-          </p>
-          <div class="flex items-center gap-1.5 flex-shrink-0">
-            <UButton
-              v-if="gift.link" :href="gift.link" target="_blank" rel="noopener noreferrer" size="xs"
-              color="neutral" variant="subtle" leading-icon="i-lucide-external-link"
-            />
-            <UBadge :label="formattedPrice" color="primary" variant="subtle" />
-            <UBadge :label="t(`wishlist.joint.status.${gift.status}`)" :color="statusColor" variant="subtle" />
-          </div>
-        </div>
-        <p v-if="gift.description" class="text-sm text-gray-400 line-clamp-2 mt-0.5">
+      <div class="flex flex-col gap-0.5 overflow-hidden">
+        <p class="font-bold line-clamp-2 text-ellipsis">
+          {{ gift.title }}
+        </p>
+        <p v-if="gift.description" class="text-sm text-muted line-clamp-2 text-ellipsis">
           {{ gift.description }}
         </p>
       </div>
-    </div>
+    </header>
 
-    <div class="mt-3 space-y-2">
+    <div class="mt-2 flex flex-col gap-2">
       <div>
-        <div class="flex justify-between text-xs text-gray-400 mb-1">
+        <div class="flex justify-between text-xs font-medium mb-1">
           <span>{{ t('wishlist.joint.progress') }}</span>
           <span>{{ gift.progress }}%</span>
         </div>
         <UProgress :model-value="gift.progress" :max="100" color="primary" />
       </div>
 
-      <div v-if="myShare" class="flex justify-between text-xs text-gray-400">
+      <div v-if="myShare" class="flex justify-between text-xs text-muted">
         <span>{{ t('wishlist.joint.myShare') }} ({{ myShare.percent }}%)</span>
         <span>{{ formatAmount(myShare.contributed) }} / {{ formatAmount(myShare.amount) }} ({{ myProgress }}%)</span>
       </div>
 
-      <div v-if="partnerShare" class="flex justify-between text-xs text-gray-400">
+      <div v-if="partnerShare" class="flex justify-between text-xs text-muted ">
         <span>{{ t('wishlist.joint.partnerShare') }} ({{ partnerShare.percent }}%)</span>
-        <span>{{ formatAmount(partnerShare.contributed) }} / {{ formatAmount(partnerShare.amount) }} ({{ partnerProgress }}%)</span>
+        <span>{{ formatAmount(partnerShare.contributed) }} / {{ formatAmount(partnerShare.amount) }} ({{ partnerProgress
+        }}%)</span>
       </div>
 
-      <div class="flex items-center gap-1 text-xs text-gray-500 mt-1">
+      <div class="flex items-center gap-1 text-xs text-muted mt-1 ">
         <UIcon name="i-lucide-clock" class="size-3" />
         <span>{{ t('wishlist.joint.savingDays', { count: daysSinceCreated + 1 }) }}</span>
       </div>
     </div>
-
-    <div class="flex items-center justify-between mt-3 pt-3 border-t border-white/5 flex-wrap gap-2">
-      <div class="flex items-center gap-2 ml-auto">
-        <template v-if="gift.status === 'active'">
-          <UButton
-            v-if="myShare && myShare.contributed < myShare.amount" size="xs" color="primary" variant="subtle"
-            leading-icon="i-lucide-wallet" :label="t('wishlist.joint.contribute')"
-            @click="emit('contribute', gift.id)"
-          />
-          <UButton
-            v-if="isHost" size="xs" color="error" variant="subtle" leading-icon="i-lucide-trash-2"
-            :label="t('wishlist.joint.delete')" @click="handleDelete"
-          />
-        </template>
-
+    <template #footer>
+      <div class="flex items-center justify-between gap-2">
         <UButton
-          v-if="gift.status === 'funded' && isHost" size="xs" color="success" variant="subtle"
-          leading-icon="i-lucide-check-circle" :label="t('wishlist.joint.complete')" @click="handleComplete"
+          v-if="gift.link" :href="gift.link" target="_blank" rel="noopener noreferrer" size="xs" color="neutral"
+          variant="subtle" leading-icon="i-lucide-external-link"
         />
+        <div class="flex items-center gap-2 ml-auto">
+          <template v-if="gift.status === 'active'">
+            <UButton
+              v-if="myShare && myShare.contributed < myShare.amount" size="xs" color="success" variant="subtle"
+              leading-icon="i-lucide-wallet" :label="t('wishlist.joint.contribute')"
+              @click="emit('contribute', gift.id)"
+            />
+            <UButton
+              v-if="isHost" size="xs" color="error" variant="subtle" leading-icon="i-lucide-trash-2"
+              :label="t('wishlist.joint.delete')" @click="handleDelete"
+            />
+          </template>
+
+          <UButton
+            v-if="gift.status === 'funded' && isHost" size="xs" color="success" variant="subtle"
+            leading-icon="i-lucide-check-circle" :label="t('wishlist.joint.complete')" @click="handleComplete"
+          />
+        </div>
       </div>
-    </div>
+    </template>
   </UCard>
 </template>

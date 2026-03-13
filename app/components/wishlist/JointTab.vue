@@ -28,29 +28,24 @@ const archivedItems = computed(() =>
 
     <template v-else-if="activeItems.length > 0">
       <JointGiftCard
-        v-for="(gift, index) in activeItems"
-        :key="gift.id"
-        :gift="gift"
-        class="animate-slide-up opacity-0 translate-y-5"
-        :style="`animation-delay: ${0.2 + index * 0.05}s`"
-        @contribute="emit('contribute', $event)"
-        @complete="emit('complete', $event)"
+        v-for="(gift, index) in activeItems" :key="gift.id" :gift="gift"
+        class="animate-slide-up opacity-0 translate-y-5" :style="`animation-delay: ${0.2 + index * 0.05}s`"
+        @contribute="emit('contribute', $event)" @complete="emit('complete', $event)"
         @delete="emit('delete', $event)"
       />
     </template>
 
-    <div v-else-if="!jointGiftStore.isLoading && activeItems.length === 0 && archivedItems.length === 0" class="flex flex-col items-center justify-center py-12 gap-3 animate-fade-in">
+    <div
+      v-else-if="!jointGiftStore.isLoading && activeItems.length === 0 && archivedItems.length === 0"
+      class="flex flex-col items-center justify-center py-12 gap-3 animate-fade-in"
+    >
       <UIcon name="i-lucide-handshake" class="text-primary/40 size-16" />
       <p class="text-gray-400 text-center">
         {{ t('wishlist.joint.empty') }}
       </p>
       <UButton
-        v-if="pairStore.isHost"
-        color="primary"
-        variant="subtle"
-        leading-icon="i-lucide-plus"
-        :label="t('wishlist.joint.add')"
-        @click="emit('add')"
+        v-if="pairStore.isHost" color="primary" variant="subtle" leading-icon="i-lucide-plus"
+        :label="t('wishlist.joint.add')" @click="emit('add')"
       />
       <UCard v-else class="w-full mt-2" variant="subtle">
         <div class="flex items-center gap-3">
@@ -62,7 +57,7 @@ const archivedItems = computed(() =>
       </UCard>
     </div>
 
-    <UCollapsible v-if="archivedItems.length > 0" class="group my-6">
+    <UCollapsible v-if="archivedItems.length > 0" class="group  animate-slide-up opacity-0 translate-y-5 mb-4">
       <button class="flex w-full items-center gap-3 py-1 cursor-pointer">
         <div class="h-px flex-1 bg-border" />
         <span class="flex items-center gap-1.5 text-xs text-muted select-none">
@@ -78,14 +73,9 @@ const archivedItems = computed(() =>
       <template #content>
         <div class="space-y-2 mt-2">
           <JointGiftCard
-            v-for="(gift, index) in archivedItems"
-            :key="gift.id"
-            :gift="gift"
-            class="opacity-60"
-            :style="`animation-delay: ${index * 0.05}s`"
-            @contribute="emit('contribute', $event)"
-            @complete="emit('complete', $event)"
-            @delete="emit('delete', $event)"
+            v-for="(gift, index) in archivedItems" :key="gift.id" :gift="gift" class="opacity-60"
+            :style="`animation-delay: ${index * 0.05}s`" @contribute="emit('contribute', $event)"
+            @complete="emit('complete', $event)" @delete="emit('delete', $event)"
           />
         </div>
       </template>

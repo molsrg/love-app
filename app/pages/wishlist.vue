@@ -205,12 +205,12 @@ function handleBackButton() {
       </h1>
       <div class="flex items-center gap-2">
         <UButton
-          v-if="activeTab === 'mine'" size="md" color="primary" variant="subtle" leading-icon="i-lucide-plus"
+          v-if="activeTab === 'mine'" size="md" color="success" variant="subtle" leading-icon="i-lucide-plus"
           @click="isAddDrawerOpen = true"
         />
         <UButton
           v-else-if="activeTab === 'joint' && jointGiftStore.items.length > 0 && pairStore.isHost" size="md"
-          color="primary" variant="subtle" leading-icon="i-lucide-plus" @click="isAddJointDrawerOpen = true"
+          color="success" variant="subtle" leading-icon="i-lucide-plus" @click="isAddJointDrawerOpen = true"
         />
         <UDropdownMenu arrow :items="tabMenuItems">
           <UButton

@@ -30,7 +30,7 @@ const archivedItems = computed(() =>
         :key="item.id"
         :item="item"
         own
-        class="animate-slide-up opacity-0 translate-y-5 "
+        class="animate-slide-up opacity-0 translate-y-5"
         :style="`animation-delay: ${0.2 + index * 0.05}s`"
         @delete="emit('delete', $event)"
         @receive="emit('receive', $event)"
@@ -51,7 +51,7 @@ const archivedItems = computed(() =>
       />
     </div>
 
-    <UCollapsible v-if="archivedItems.length > 0" class="group mt-6">
+    <UCollapsible v-if="archivedItems.length > 0" class="group animate-slide-up opacity-0 translate-y-5 mb-4">
       <button class="flex w-full items-center gap-3 py-1 cursor-pointer">
         <div class="h-px flex-1 bg-border" />
         <span class="flex items-center gap-1.5 text-xs text-muted select-none">
