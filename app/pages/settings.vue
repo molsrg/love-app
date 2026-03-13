@@ -221,15 +221,14 @@ const { currentLocale, setLanguage, languages } = useLanguage()
         <div>
           <div class="flex gap-2 items-center mb-1">
             <label class="text-sm text-gray-400  block">{{ t('settings.profile.name') }}</label>
-            <UButton :label="t('settings.profile.change')" color="primary" size="xs" variant="outline" @click="isOpenChangeName = !isOpenChangeName " />
+            <UButton
+              :label="t('settings.profile.change')" color="primary" size="xs" variant="outline"
+              @click="isOpenChangeName = !isOpenChangeName"
+            />
           </div>
 
           <UInput
-            v-model="userName"
-            disabled
-
-            :placeholder="t('settings.profile.namePlaceholder')"
-            class="w-full"
+            v-model="userName" disabled :placeholder="t('settings.profile.namePlaceholder')" class="w-full"
             size="lg"
           />
         </div>
@@ -239,22 +238,12 @@ const { currentLocale, setLanguage, languages } = useLanguage()
           <UButton
             :avatar="{
               src: userProfile.avatar,
-            }"
-            class="w-full h-[36px] flex items-center"
-            color="neutral"
-            size="md"
-            variant="subtle"
+            }" class="w-full h-[36px] flex items-center" color="neutral" size="md" variant="subtle"
             @click="handleAvatarClick"
           >
             {{ t('settings.profile.changeAvatar') }}
           </UButton>
-          <input
-            ref="avatarInput"
-            accept="image/*"
-            class="hidden"
-            type="file"
-            @change="handleAvatarChange"
-          >
+          <input ref="avatarInput" accept="image/*" class="hidden" type="file" @change="handleAvatarChange">
         </div>
         <div>
           <label class="text-sm text-gray-400 mb-1 block">{{ t('settings.profile.theme') }}</label>
@@ -268,14 +257,9 @@ const { currentLocale, setLanguage, languages } = useLanguage()
               <div class="p-2">
                 <div class="grid grid-cols-2 gap-2">
                   <UButton
-                    v-for="theme in THEMES"
-                    :key="theme.value"
-                    :class="{ 'ring-1 ring-primary': activeTheme === theme.value }"
-                    :label="t(theme.name)"
-                    class="text-center"
-                    color="neutral"
-                    variant="subtle"
-                    @click="changeTheme(theme)"
+                    v-for="theme in THEMES" :key="theme.value"
+                    :class="{ 'ring-1 ring-primary': activeTheme === theme.value }" :label="t(theme.name)"
+                    class="text-center" color="neutral" variant="subtle" @click="changeTheme(theme)"
                   >
                     <template #leading>
                       <UChip :color="theme.value as any" size="sm" />
@@ -290,26 +274,18 @@ const { currentLocale, setLanguage, languages } = useLanguage()
           <label class="text-sm text-gray-400 mb-1 block">{{ t('settings.profile.language') }}</label>
 
           <USelect
-            v-model="currentLocale"
-            :ui="{
+            v-model="currentLocale" :ui="{
               trailingIcon: 'group-data-[state=open]:rotate-180 transition-transform duration-200',
-            }"
-            icon="i-famicons-language"
-            variant="subtle"
-            :content="{
+            }" icon="i-famicons-language" variant="subtle" :content="{
               align: 'center',
               side: 'bottom',
               sideOffset: 2,
-            }"
-            arrow
-            :items="languages"
-            class="w-full"
-            @update:model-value="setLanguage"
+            }" arrow :items="languages" class="w-full" @update:model-value="setLanguage"
           />
         </div>
       </div>
     </UCard>
-    <UCard class="animate-slide-up opacity-0 translate-y-5" style="animation-delay: 0.4s" variant="subtle">
+    <UCard class="animate-slide-up opacity-0 translate-y-5 mb-2" style="animation-delay: 0.4s" variant="subtle">
       <template #header>
         <div class="flex items-center gap-2">
           <UIcon :name="SETTINGS_SECTIONS.pair.icon" class="text-primary size-6" />
@@ -323,12 +299,8 @@ const { currentLocale, setLanguage, languages } = useLanguage()
         <div>
           <label class="text-sm text-gray-400 mb-1 block">{{ t('settings.partner.name') }}</label>
           <UInput
-            v-model="userProfile.partnerName"
-            variant="subtle"
-            :placeholder="t('settings.partner.namePlaceholder')"
-            class="w-full"
-            disabled
-            size="lg"
+            v-model="userProfile.partnerName" variant="subtle"
+            :placeholder="t('settings.partner.namePlaceholder')" class="w-full" disabled size="lg"
             trailing-icon="i-material-symbols-lock-outline"
           />
         </div>
@@ -336,12 +308,8 @@ const { currentLocale, setLanguage, languages } = useLanguage()
           <label class="text-sm text-gray-400 mb-1 block">{{ t('settings.partner.startDate') }}</label>
           <UPopover v-model:open="isCalendarPopoverOpen" arrow>
             <UButton
-              :disabled="!canEditPair"
-              :trailing-icon="!canEditPair ? 'i-material-symbols-lock-outline' : ''"
-              :ui="{ trailingIcon: 'ml-auto' }"
-              class="w-full h-[36px]"
-              color="neutral"
-              icon="i-lucide-calendar"
+              :disabled="!canEditPair" :trailing-icon="!canEditPair ? 'i-material-symbols-lock-outline' : ''"
+              :ui="{ trailingIcon: 'ml-auto' }" class="w-full h-[36px]" color="neutral" icon="i-lucide-calendar"
               variant="subtle"
             >
               {{ userProfile.startDate }}
@@ -349,13 +317,9 @@ const { currentLocale, setLanguage, languages } = useLanguage()
 
             <template #content>
               <UCalendar
-                v-model="selectedDate"
-                :is-date-disabled="isDateDisabled"
-                :ui="{
+                v-model="selectedDate" :is-date-disabled="isDateDisabled" :ui="{
                   cellTrigger: ' data-today:not-data-[selected]:text-[var(--ui-deafult)]',
-                }"
-                class="p-2 w-full"
-                @update:model-value="handleDateChange"
+                }" class="p-2 w-full" @update:model-value="handleDateChange"
               />
             </template>
           </UPopover>
@@ -371,22 +335,13 @@ const { currentLocale, setLanguage, languages } = useLanguage()
             </p>
           </div>
 
-          <UCheckbox
-            v-model="isHostTransferEnabled"
-            class="mr-1"
-            size="lg"
-          />
+          <UCheckbox v-model="isHostTransferEnabled" class="mr-1" size="lg" />
         </div>
 
         <div class="flex justify-center">
           <UButton
-            :label="t('settings.partner.breakUp')"
-            class="h-[36px]"
-            color="error"
-            leading-icon="i-material-symbols:heart-broken-outline"
-            size="lg"
-            variant="subtle"
-            @click="handleBreakUp"
+            :label="t('settings.partner.breakUp')" class="h-[36px]" color="error"
+            leading-icon="i-material-symbols:heart-broken-outline" size="lg" variant="subtle" @click="handleBreakUp"
           />
         </div>
       </div>
@@ -397,29 +352,21 @@ const { currentLocale, setLanguage, languages } = useLanguage()
           <div>
             <label class="text-sm text-gray-400 mb-1 block">{{ t('settings.profile.oldName') }}</label>
             <UInput
-              v-model="userName"
-              disabled
-              :placeholder="t('settings.profile.namePlaceholder')"
-              class="w-full"
+              v-model="userName" disabled :placeholder="t('settings.profile.namePlaceholder')" class="w-full"
               size="lg"
             />
           </div>
           <div>
             <label class="text-sm text-gray-400 mb-1 block">{{ t('settings.profile.newName') }}</label>
             <UInput
-              v-model="newUserName"
-              :placeholder="t('settings.profile.namePlaceholder')"
-              class="w-full"
+              v-model="newUserName" :placeholder="t('settings.profile.namePlaceholder')" class="w-full"
               size="lg"
             />
             <UBadge v-if="nameError" class="mt-1 ml-1" color="error" :label="nameError" variant="outline" />
           </div>
           <div class="flex justify-end">
             <UButton
-              :disabled="!!nameError"
-              :label="t('settings.profile.saveNewName')"
-              color="primary"
-              variant="subtle"
+              :disabled="!!nameError" :label="t('settings.profile.saveNewName')" color="primary" variant="subtle"
               @click="handleNameChange"
             />
           </div>

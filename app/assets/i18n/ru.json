@@ -122,8 +122,12 @@
       "hundredDays": "100 дней",
       "halfYear": "полгода",
       "year": "год",
+      "twoYears": "два года",
       "threeYears": "три года",
-      "fiveYears": "пять лет"
+      "fiveYears": "пять лет",
+      "tenYears": "10 лет",
+      "twentyFiveYears": "25 лет",
+      "fiftyYears": "50 лет"
     }
   },
   "connect": {
@@ -246,10 +250,12 @@
       "book": "Забронировать",
       "unbook": "Отменить бронь",
       "delete": "Удалить",
-      "openLink": "Открыть ссылку"
+      "openLink": "Открыть ссылку",
+      "receive": "Получил"
     },
     "confirmDelete": "Партнёр уже забронировал этот подарок. Всё равно удалить?",
     "confirmDeletePlain": "Удалить это желание?",
+    "archive": "Архив",
     "joint": {
       "add": "Новое желание",
       "empty": "Совместных желаний пока нет. Создайте первое!",
@@ -264,6 +270,7 @@
       "progress": "Прогресс",
       "myShare": "Моя доля",
       "partnerShare": "Доля партнёра",
+      "savingDays": "Копим уже {count} дн.",
       "contribute": "Внести взнос",
       "complete": "Отметить как купленный",
       "delete": "Удалить",

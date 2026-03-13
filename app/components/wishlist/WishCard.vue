@@ -10,6 +10,7 @@ const emit = defineEmits<{
   delete: [id: string]
   book: [id: string]
   unbook: [id: string]
+  receive: [id: string]
 }>()
 
 const { t } = useI18n()
@@ -47,12 +48,7 @@ const formattedPrice = computed(() => {
     </div>
     <div class="flex gap-3">
       <div class="flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden bg-elevated flex items-center justify-center">
-        <img
-          v-if="item.imageUrl"
-          :src="item.imageUrl"
-          :alt="item.title"
-          class="w-full h-full object-cover"
-        >
+        <img v-if="item.imageUrl" :src="item.imageUrl" :alt="item.title" class="w-full h-full object-cover">
         <UIcon v-else name="i-lucide-gift" class="text-primary size-8" />
       </div>
 
@@ -61,7 +57,10 @@ const formattedPrice = computed(() => {
           <p class="font-semibold text-white line-clamp-2">
             {{ item.title }}
           </p>
-          <UBadge v-if="formattedPrice" :label="formattedPrice" color="primary" variant="subtle" size="sm" class="flex-shrink-0" />
+          <UBadge
+            v-if="formattedPrice" :label="formattedPrice" color="primary" variant="subtle" size="sm"
+            class="flex-shrink-0"
+          />
         </div>
 
         <p v-if="item.description" class="text-sm text-gray-400 line-clamp-2 mt-0.5">
@@ -73,7 +72,7 @@ const formattedPrice = computed(() => {
           <span class="text-xs text-primary">{{ t('wishlist.card.booked') }}</span>
         </div>
 
-        <div v-if="item.isBooked && !own" class="flex items-center gap-1 mt-1">
+        <div v-if="item.isBooked && !own && !item.isReceived" class="flex items-center gap-1 mt-1">
           <UIcon name="i-lucide-check-circle" class="text-primary size-3.5 flex-shrink-0" />
           <span class="text-xs text-primary">{{ t('wishlist.card.bookedByYou') }}</span>
         </div>
@@ -82,35 +81,25 @@ const formattedPrice = computed(() => {
 
     <div class="flex items-center justify-between mt-3 pt-3 border-t border-white/5">
       <UButton
-        v-if="item.link"
-        :href="item.link"
-        target="_blank"
-        rel="noopener noreferrer"
-        size="xs"
-        color="neutral"
-        variant="subtle"
-        leading-icon="i-lucide-external-link"
-        :label="t('wishlist.actions.openLink')"
+        v-if="item.link" :class="{ 'ml-auto': item.isReceived }" :href="item.link" target="_blank" rel="noopener noreferrer" size="xs" color="neutral"
+        variant="subtle" leading-icon="i-lucide-external-link" :label="t('wishlist.actions.openLink')"
       />
-      <div v-else />
 
-      <div class="flex items-center gap-2">
+      <div v-if="!item.isReceived" class="flex items-center gap-2">
         <template v-if="own">
           <UButton
-            size="xs"
-            color="error"
-            variant="subtle"
-            leading-icon="i-lucide-trash-2"
-            :label="t('wishlist.actions.delete')"
-            @click="handleDelete"
+            v-if="item.isBooked" size="xs" color="success" variant="subtle" leading-icon="i-lucide-package-check"
+            :label="t('wishlist.actions.receive')" @click="emit('receive', item.id)"
+          />
+          <UButton
+            size="xs" color="error" variant="subtle" leading-icon="i-lucide-trash-2"
+            :label="t('wishlist.actions.delete')" @click="handleDelete"
           />
         </template>
 
         <template v-else>
           <UButton
-            size="xs"
-            :color="item.isBooked ? 'neutral' : 'primary'"
-            variant="subtle"
+            size="xs" :color="item.isBooked ? 'neutral' : 'primary'" variant="subtle"
             :leading-icon="item.isBooked ? 'i-lucide-bookmark-x' : 'i-lucide-bookmark'"
             :label="item.isBooked ? t('wishlist.actions.unbook') : t('wishlist.actions.book')"
             @click="handleAction(() => item.isBooked ? emit('unbook', item.id) : emit('book', item.id))"

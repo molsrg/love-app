@@ -55,6 +55,11 @@ export const useWishlistStore = defineStore('wishlist', () => {
       item.isBooked = false
   }
 
+  async function receiveItem(id: string) {
+    await wishlistApi.receiveWish(id)
+    myItems.value = myItems.value.filter(item => item.id !== id)
+  }
+
   return {
     myItems,
     partnerItems,
@@ -66,5 +71,6 @@ export const useWishlistStore = defineStore('wishlist', () => {
     removeItem,
     bookItem,
     unbookItem,
+    receiveItem,
   }
 })

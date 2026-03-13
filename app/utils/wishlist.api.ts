@@ -6,6 +6,8 @@ export interface WishlistItemResponse {
   imageUrl?: string
   price?: number
   isBooked: boolean
+  isReceived: boolean
+  receivedAt: string | null
   createdAt: string
 }
 
@@ -17,6 +19,7 @@ export interface PartnerWishlistItemResponse {
   imageUrl?: string
   price?: number
   isBooked: boolean
+  isReceived: boolean
   createdAt: string
 }
 
@@ -46,5 +49,8 @@ export const wishlistApi = {
   },
   async unbookWish(id: string) {
     return useApi().delete(`/wishlist/${id}/book`)
+  },
+  async receiveWish(id: string) {
+    return useApi().patch(`/wishlist/${id}/receive`, {})
   },
 }

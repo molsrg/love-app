@@ -82,6 +82,16 @@ const countdownValues = computed(() => [
   timeLeft.value.minutes,
   timeLeft.value.seconds,
 ])
+
+const visibleGoals = computed(() => {
+  const goals = RELATIONSHIP_GOALS
+  const firstUncompleted = goals.findIndex(g => daysTogether.value < g.days)
+  if (firstUncompleted === -1)
+    return goals.slice(-6)
+  const end = Math.min(goals.length, firstUncompleted + 5)
+  const start = Math.max(0, end - 6)
+  return goals.slice(start, end)
+})
 </script>
 
 <template>
@@ -149,7 +159,7 @@ const countdownValues = computed(() => [
     <!-- Прогресс отношений -->
     <div class="grid grid-cols-3 gap-3 w-full mx-auto">
       <div
-        v-for="(goal, index) in RELATIONSHIP_GOALS"
+        v-for="(goal, index) in visibleGoals"
         :key="goal.days"
         class="bg-elevated/50 rounded-lg p-2 flex flex-col items-center animate-slide-up opacity-0 translate-y-3"
         :style="{ animationDelay: `${0.5 + index * 0.2}s` }"

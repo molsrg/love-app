@@ -14,10 +14,10 @@ const props = defineProps<{
   routeColor?: string
 }>()
 
-const tabs = [
-  { label: 'Пеший', value: 'foot-walking', icon: 'i-lucide-footprints' },
-  { label: 'На машине', value: 'driving-car', icon: 'i-lucide-car' },
-]
+// const tabs = [
+//   { label: 'Пеший', value: 'foot-walking', icon: 'i-lucide-footprints' },
+//   { label: 'На машине', value: 'driving-car', icon: 'i-lucide-car' },
+// ]
 
 const activeProfile = ref('foot-walking')
 
@@ -132,29 +132,19 @@ watch(activeProfile, fetchRoute)
 
 <template>
   <div class="flex flex-col gap-2">
-    <UTabs v-model="activeProfile" :content="false" size="md" :items="tabs" />
+    <!-- <UTabs v-model="activeProfile" :content="false" size="md" :items="tabs" /> -->
 
     <div class="relative w-full h-[500px] rounded-lg overflow-hidden shadow-sm">
       <div ref="mapContainer" class="w-full h-full z-0" />
 
-      <div
-        v-if="loading"
-        class="absolute inset-0 z-20 flex items-center justify-center bg-white/70"
-      >
+      <div v-if="loading" class="absolute inset-0 z-20 flex items-center justify-center bg-white/70">
         <div class="flex flex-col items-center gap-2">
-          <span
-            class="loader border-4 border-primary border-t-transparent rounded-full w-10 h-10 animate-spin"
-          />
+          <span class="loader border-4 border-primary border-t-transparent rounded-full w-10 h-10 animate-spin" />
           <span class="text-sm text-gray-500">Загрузка карты...</span>
         </div>
       </div>
 
-      <UAlert
-        v-if="error"
-        color="rose"
-        variant="soft"
-        class="absolute top-4 left-1/2 -translate-x-1/2 z-[10]"
-      >
+      <UAlert v-if="error" color="rose" variant="soft" class="absolute top-4 left-1/2 -translate-x-1/2 z-[10]">
         {{ error }}
       </UAlert>
     </div>

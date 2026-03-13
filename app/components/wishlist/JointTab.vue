@@ -21,7 +21,7 @@ const archivedItems = computed(() =>
 </script>
 
 <template>
-  <div class="space-y-2">
+  <div class="space-y-2 -mt-2">
     <div v-if="jointGiftStore.isLoading" class="flex justify-center py-8">
       <UIcon name="i-lucide-loader-circle" class="text-primary size-8 animate-spin" />
     </div>
@@ -62,7 +62,7 @@ const archivedItems = computed(() =>
       </UCard>
     </div>
 
-    <UCollapsible v-if="archivedItems.length > 0" class="group mt-6">
+    <UCollapsible v-if="archivedItems.length > 0" class="group my-6">
       <button class="flex w-full items-center gap-3 py-1 cursor-pointer">
         <div class="h-px flex-1 bg-border" />
         <span class="flex items-center gap-1.5 text-xs text-muted select-none">

@@ -35,6 +35,11 @@ const formattedPrice = computed(() =>
   new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB', maximumFractionDigits: 0 }).format(props.gift.price),
 )
 
+const daysSinceCreated = computed(() => {
+  const diff = Date.now() - new Date(props.gift.createdAt).getTime()
+  return Math.floor(diff / (1000 * 60 * 60 * 24))
+})
+
 function formatAmount(amount: number) {
   return new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB', maximumFractionDigits: 0 }).format(amount)
 }
@@ -98,14 +103,18 @@ function handleComplete() {
       </div>
 
       <div v-if="myShare" class="flex justify-between text-xs text-gray-400">
-        <span>{{ t('wishlist.joint.myShare') }}</span>
+        <span>{{ t('wishlist.joint.myShare') }} ({{ myShare.percent }}%)</span>
         <span>{{ formatAmount(myShare.contributed) }} / {{ formatAmount(myShare.amount) }} ({{ myProgress }}%)</span>
       </div>
 
       <div v-if="partnerShare" class="flex justify-between text-xs text-gray-400">
-        <span>{{ t('wishlist.joint.partnerShare') }}</span>
-        <span>{{ formatAmount(partnerShare.contributed) }} / {{ formatAmount(partnerShare.amount) }} ({{ partnerProgress
-        }}%)</span>
+        <span>{{ t('wishlist.joint.partnerShare') }} ({{ partnerShare.percent }}%)</span>
+        <span>{{ formatAmount(partnerShare.contributed) }} / {{ formatAmount(partnerShare.amount) }} ({{ partnerProgress }}%)</span>
+      </div>
+
+      <div class="flex items-center gap-1 text-xs text-gray-500 mt-1">
+        <UIcon name="i-lucide-clock" class="size-3" />
+        <span>{{ t('wishlist.joint.savingDays', { count: daysSinceCreated + 1 }) }}</span>
       </div>
     </div>
 

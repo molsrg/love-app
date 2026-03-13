@@ -5,8 +5,12 @@ export const RELATIONSHIP_GOALS: RelationshipGoal[] = [
   { days: 100, label: 'index.goals.hundredDays' },
   { days: 180, label: 'index.goals.halfYear' },
   { days: 365, label: 'index.goals.year' },
-  { days: 1460, label: 'index.goals.threeYears' },
-  { days: 5840, label: 'index.goals.fiveYears' },
+  { days: 730, label: 'index.goals.twoYears' },
+  { days: 1095, label: 'index.goals.threeYears' },
+  { days: 1825, label: 'index.goals.fiveYears' },
+  { days: 3650, label: 'index.goals.tenYears' },
+  { days: 9125, label: 'index.goals.twentyFiveYears' },
+  { days: 18250, label: 'index.goals.fiftyYears' },
 ] as const
 
 export const COUNTDOWN_CONFIG = {

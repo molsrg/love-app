@@ -120,8 +120,12 @@
       "hundredDays": "100 days",
       "halfYear": "half year",
       "year": "year",
+      "twoYears": "two years",
       "threeYears": "three years",
-      "fiveYears": "five years"
+      "fiveYears": "five years",
+      "tenYears": "10 years",
+      "twentyFiveYears": "25 years",
+      "fiftyYears": "50 years"
     }
   },
   "connect": {
@@ -244,10 +248,12 @@
       "book": "Book",
       "unbook": "Unbook",
       "delete": "Delete",
-      "openLink": "Open link"
+      "openLink": "Open link",
+      "receive": "Received"
     },
     "confirmDelete": "Your partner already booked this gift. Delete anyway?",
     "confirmDeletePlain": "Remove this wish?",
+    "archive": "Archive",
     "joint": {
       "add": "New Joint Gift",
       "empty": "No joint gifts yet. Create the first one!",
@@ -262,6 +268,7 @@
       "progress": "Progress",
       "myShare": "My share",
       "partnerShare": "Partner's share",
+      "savingDays": "Saving for {count} days",
       "contribute": "Contribute",
       "complete": "Mark as bought",
       "delete": "Delete",
