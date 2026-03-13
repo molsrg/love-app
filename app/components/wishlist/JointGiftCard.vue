@@ -63,6 +63,8 @@ function handleComplete() {
     return
   emit('complete', props.gift.id)
 }
+
+const isImageOpen = ref(false)
 </script>
 
 <template>
@@ -75,21 +77,40 @@ function handleComplete() {
     </template> -->
     <header class="flex gap-2">
       <div
-        class="flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden bg-elevated flex ring-1 ring-accented items-center justify-center"
+        class="relative shrink-0 w-16 h-16 rounded-lg overflow-hidden bg-elevated flex ring-1 ring-accented items-center justify-center"
+        :class="{ 'cursor-zoom-in': gift.imageUrl }" @click="gift.imageUrl && (isImageOpen = true)"
       >
         <img v-if="gift.imageUrl" :src="gift.imageUrl" :alt="gift.title" class="w-full h-full object-cover">
+
         <UIcon v-else name="i-lucide-gift" class="text-primary size-8" />
+
+        <div v-if="gift.imageUrl" class="absolute top-0 right-0.5 rounded">
+          <UIcon name="i-lucide-zoom-in" class="size-3.5 text-white" />
+        </div>
       </div>
 
-      <div class="flex flex-col gap-0.5 overflow-hidden">
-        <p class="font-bold line-clamp-2 text-ellipsis">
+      <div class="flex flex-col gap-0.5 flex-1 min-w-0">
+        <p class="font-bold line-clamp-2">
           {{ gift.title }}
         </p>
-        <p v-if="gift.description" class="text-sm text-muted line-clamp-2 text-ellipsis">
+
+        <p v-if="gift.description" class="text-sm text-muted line-clamp-2">
           {{ gift.description }}
         </p>
       </div>
     </header>
+
+    <UModal
+      v-if="gift.imageUrl" v-model:open="isImageOpen"
+      :ui="{ content: 'bg-transparent shadow-none p-0 max-w-screen-sm' }"
+    >
+      <template #content>
+        <img
+          :src="gift.imageUrl" :alt="gift.title" class="w-full rounded-lg object-contain max-h-[80vh]"
+          @click="isImageOpen = false"
+        >
+      </template>
+    </UModal>
 
     <div class="mt-2 flex flex-col gap-2">
       <div>
@@ -97,7 +118,7 @@ function handleComplete() {
           <span>{{ t('wishlist.joint.progress') }}</span>
           <span>{{ gift.progress }}%</span>
         </div>
-        <UProgress :model-value="gift.progress" :max="100" color="primary" />
+        <ProgressBar :percent="gift.progress / 100" />
       </div>
 
       <div v-if="myShare" class="flex justify-between text-xs text-muted">
@@ -111,7 +132,7 @@ function handleComplete() {
         }}%)</span>
       </div>
 
-      <div class="flex items-center gap-1 text-xs text-muted mt-1 ">
+      <div class="flex items-center gap-1 text-xs text-muted">
         <UIcon name="i-lucide-clock" class="size-3" />
         <span>{{ t('wishlist.joint.savingDays', { count: daysSinceCreated + 1 }) }}</span>
       </div>
@@ -119,8 +140,8 @@ function handleComplete() {
     <template #footer>
       <div class="flex items-center justify-between gap-2">
         <UButton
-          v-if="gift.link" :href="gift.link" target="_blank" rel="noopener noreferrer" size="xs" color="neutral"
-          variant="subtle" leading-icon="i-lucide-external-link"
+          v-if="gift.link" :href="gift.link" target="_blank" :label="t('wishlist.actions.openLink')"
+          rel="noopener noreferrer" size="xs" color="neutral" variant="subtle" leading-icon="i-lucide-external-link"
         />
         <div class="flex items-center gap-2 ml-auto">
           <template v-if="gift.status === 'active'">

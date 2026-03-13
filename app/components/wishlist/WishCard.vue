@@ -16,6 +16,7 @@ const emit = defineEmits<{
 const { t } = useI18n()
 
 const isLoading = ref(false)
+const isImageOpen = ref(false)
 
 watch(() => props.item, () => {
   isLoading.value = false
@@ -47,10 +48,29 @@ const formattedPrice = computed(() => {
       <UIcon name="i-lucide-loader-circle" class="text-primary size-6 animate-spin" />
     </div>
     <div class="flex gap-3">
-      <div class="flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden bg-elevated flex items-center justify-center">
+      <div
+        class="relative flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden bg-elevated flex items-center justify-center"
+        :class="{ 'cursor-zoom-in': item.imageUrl }" @click="item.imageUrl && (isImageOpen = true)"
+      >
         <img v-if="item.imageUrl" :src="item.imageUrl" :alt="item.title" class="w-full h-full object-cover">
         <UIcon v-else name="i-lucide-gift" class="text-primary size-8" />
+
+        <div v-if="item.imageUrl" class="absolute top-0 right-0.5 rounded">
+          <UIcon name="i-lucide-zoom-in" class="size-3.5 text-white" />
+        </div>
       </div>
+
+      <UModal
+        v-if="item.imageUrl" v-model:open="isImageOpen"
+        :ui="{ content: 'bg-transparent shadow-none p-0 max-w-screen-sm' }"
+      >
+        <template #content>
+          <img
+            :src="item.imageUrl" :alt="item.title" class="w-full rounded-lg object-contain max-h-[80vh]"
+            @click="isImageOpen = false"
+          >
+        </template>
+      </UModal>
 
       <div class="flex-1 min-w-0">
         <div class="flex items-start justify-between gap-2">
@@ -81,8 +101,9 @@ const formattedPrice = computed(() => {
 
     <div class="flex items-center justify-between mt-3 pt-3 border-t border-white/5">
       <UButton
-        v-if="item.link" :class="{ 'ml-auto': item.isReceived }" :href="item.link" target="_blank" rel="noopener noreferrer" size="xs" color="neutral"
-        variant="subtle" leading-icon="i-lucide-external-link" :label="t('wishlist.actions.openLink')"
+        v-if="item.link" :class="{ 'ml-auto': item.isReceived }" :href="item.link" target="_blank"
+        rel="noopener noreferrer" size="xs" color="neutral" variant="subtle" leading-icon="i-lucide-external-link"
+        :label="t('wishlist.actions.openLink')"
       />
 
       <div v-if="!item.isReceived" class="flex items-center gap-2">
