@@ -208,7 +208,7 @@ function handleBackButton() {
           @click="isAddDrawerOpen = true" />
         <UButton v-else-if="activeTab === 'joint' && jointGiftStore.items.length > 0 && pairStore.isHost" class="animate-fade-in" size="lg"
           color="success" variant="subtle" leading-icon="i-lucide-plus" @click="isAddJointDrawerOpen = true" />
-        <UDropdownMenu arrow :items="tabMenuItems">
+        <UDropdownMenu arrow :items="tabMenuItems" size="lg">
           <UButton size="lg" color="neutral" variant="subtle" :leading-icon="activeTabItem.icon"
             :label="activeTabItem.label" trailing-icon="i-lucide-chevron-down" />
 
