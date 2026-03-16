@@ -203,20 +203,14 @@ function handleBackButton() {
       <h1 class="text-2xl font-bold text-white">
         {{ t('wishlist.title') }}
       </h1>
-      <div class="flex items-center gap-2">
-        <UButton
-          v-if="activeTab === 'mine'" size="md" color="success" variant="subtle" leading-icon="i-lucide-plus"
-          @click="isAddDrawerOpen = true"
-        />
-        <UButton
-          v-else-if="activeTab === 'joint' && jointGiftStore.items.length > 0 && pairStore.isHost" size="md"
-          color="success" variant="subtle" leading-icon="i-lucide-plus" @click="isAddJointDrawerOpen = true"
-        />
+      <div class="flex items-center gap-2 animate-fade-in">
+        <UButton v-if="activeTab === 'mine'" class="animate-fade-in" size="lg" color="success" variant="subtle" leading-icon="i-lucide-plus"
+          @click="isAddDrawerOpen = true" />
+        <UButton v-else-if="activeTab === 'joint' && jointGiftStore.items.length > 0 && pairStore.isHost" class="animate-fade-in" size="lg"
+          color="success" variant="subtle" leading-icon="i-lucide-plus" @click="isAddJointDrawerOpen = true" />
         <UDropdownMenu arrow :items="tabMenuItems">
-          <UButton
-            size="md" color="neutral" variant="subtle" :leading-icon="activeTabItem.icon"
-            :label="activeTabItem.label" trailing-icon="i-lucide-chevron-down"
-          />
+          <UButton size="lg" color="neutral" variant="subtle" :leading-icon="activeTabItem.icon"
+            :label="activeTabItem.label" trailing-icon="i-lucide-chevron-down" />
 
           <!-- <template #item-trailing="{ item }">
             <UIcon v-if="item.active" name="i-lucide-check" class="shrink-0 size-4 text-primary" />
@@ -225,24 +219,16 @@ function handleBackButton() {
       </div>
     </div>
 
-    <MineTab
-      v-if="activeTab === 'mine'" @add="isAddDrawerOpen = true" @delete="handleDelete"
-      @receive="handleReceive"
-    />
+    <MineTab v-if="activeTab === 'mine'" @add="isAddDrawerOpen = true" @delete="handleDelete"
+      @receive="handleReceive" />
     <PartnerTab v-else-if="activeTab === 'partner'" @book="handleBook" @unbook="handleUnbook" />
-    <JointTab
-      v-else @add="isAddJointDrawerOpen = true" @contribute="handleContributeOpen"
-      @complete="handleJointComplete" @delete="handleJointDelete"
-    />
+    <JointTab v-else @add="isAddJointDrawerOpen = true" @contribute="handleContributeOpen"
+      @complete="handleJointComplete" @delete="handleJointDelete" />
 
     <AddWishDrawer v-model:open="isAddDrawerOpen" :loading="isAddLoading" @submit="handleAdd" />
-    <AddJointGiftDrawer
-      v-if="pairStore.isHost" v-model:open="isAddJointDrawerOpen" :loading="isAddJointLoading"
-      @submit="handleJointAdd"
-    />
-    <ContributeDrawer
-      v-if="contributeTarget" v-model:open="isContributeOpen" :gift="contributeTarget.gift"
-      :my-share="contributeTarget.myShare" :loading="isContributeLoading" @submit="handleContribute"
-    />
+    <AddJointGiftDrawer v-if="pairStore.isHost" v-model:open="isAddJointDrawerOpen" :loading="isAddJointLoading"
+      @submit="handleJointAdd" />
+    <ContributeDrawer v-if="contributeTarget" v-model:open="isContributeOpen" :gift="contributeTarget.gift"
+      :my-share="contributeTarget.myShare" :loading="isContributeLoading" @submit="handleContribute" />
   </div>
 </template>

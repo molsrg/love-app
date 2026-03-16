@@ -13,7 +13,7 @@ const activePartnerItems = computed(() =>
 </script>
 
 <template>
-  <div class="space-y-2 -mt-2">
+  <div class="space-y-2 -mt-2 mb-2">
     <div v-if="wishlistStore.isLoadingPartner" class="flex justify-center py-8">
       <UIcon name="i-lucide-loader-circle" class="text-primary size-8 animate-spin" />
     </div>

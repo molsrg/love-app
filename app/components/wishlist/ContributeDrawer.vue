@@ -14,53 +14,37 @@ const emit = defineEmits<{
 const open = defineModel<boolean>('open', { required: true })
 const { t } = useI18n()
 
+const MIN_AMOUNT = 200
+
+const remaining = computed(() => props.myShare.amount - props.myShare.contributed)
 const amount = ref<number | undefined>(200)
 const amountError = ref('')
 
-const remaining = computed(() => props.myShare.amount - props.myShare.contributed)
+const progressAfter = computed(() =>
+  Math.min(100, Math.round(((props.myShare.contributed + (amount.value ?? 0)) / props.myShare.amount) * 100)),
+)
+const remainingAfter = computed(() => Math.max(0, remaining.value - (amount.value ?? 0)))
+const contributedAfter = computed(() => props.myShare.contributed + (amount.value ?? 0))
 
 watch(open, (isOpen) => {
-  if (!isOpen) {
-    amount.value = 200
+  if (isOpen) {
+    amount.value = MIN_AMOUNT
     amountError.value = ''
   }
 })
 
 watch(amount, () => {
-  if (
-    amountError.value
-    && amount.value
-    && amount.value >= 1
-    && amount.value <= remaining.value
-  ) {
+  if (amountError.value && amount.value && amount.value >= MIN_AMOUNT && amount.value <= remaining.value)
     amountError.value = ''
-  }
 })
 
 function changeAmount(delta: number) {
-  amount.value = Math.min(
-    remaining.value,
-    Math.max(100, (amount.value ?? 100) + delta),
-  )
+  amount.value = Math.min(remaining.value, Math.max(MIN_AMOUNT, (amount.value ?? MIN_AMOUNT) + delta))
 }
 
-const isSubmitDisabled = computed(() => {
-  return !amount.value || amount.value < 1 || amount.value > remaining.value
-})
+const isSubmitDisabled = computed(() => !amount.value || amount.value < MIN_AMOUNT || amount.value > remaining.value)
 
 function handleSubmit() {
-  if (!amount.value || amount.value < 1) {
-    amountError.value = t('wishlist.joint.contributeForm.errors.amountRequired')
-    return
-  }
-
-  if (amount.value > remaining.value) {
-    amountError.value = t('wishlist.joint.contributeForm.errors.amountInvalid', {
-      max: remaining.value,
-    })
-    return
-  }
-
   emit('submit', amount.value)
 }
 </script>
@@ -68,45 +52,70 @@ function handleSubmit() {
 <template>
   <UDrawer v-model:open="open">
     <template #body>
-      <div class="space-y-2 pb-1 overflow-y-auto mt-4">
+      <div class="flex flex-col gap-4 px-1 pt-1 pb-2">
+        <!-- Gift header -->
+        <div class="flex items-center gap-3">
+          <img v-if="gift.imageUrl" :src="gift.imageUrl" class="size-12 rounded-xl object-cover shrink-0">
+          <div v-else class="size-12 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
+            <UIcon name="i-lucide-gift" class="size-6 text-primary" />
+          </div>
+          <div class="flex-1 min-w-0">
+            <p class="font-semibold truncate">
+              {{ gift.title }}
+            </p>
+            <p class="text-sm text-muted">
+              {{ gift.price.toLocaleString('ru-RU') }} ₽
+            </p>
+          </div>
+        </div>
+
+        <!-- My share card with live progress -->
+        <UCard variant="subtle">
+          <div class="space-y-2">
+            <div class="flex justify-between items-center text-sm">
+              <span class="text-muted">{{ t('wishlist.joint.contributeForm.myShare') }}</span>
+              <span class="font-medium">{{ myShare.amount.toLocaleString('ru-RU') }} ₽</span>
+            </div>
+            <ProgressBar :percent="progressAfter / 100" />
+            <div class="flex justify-between text-xs">
+              <span class="text-muted">
+                {{ t('wishlist.joint.contributeForm.contributed') }}:
+                <span class="text-highlighted font-medium transition-all duration-200">
+                  {{ contributedAfter.toLocaleString('ru-RU') }} ₽
+                </span>
+              </span>
+              <span :class="remainingAfter === 0 ? 'text-success font-medium' : 'text-muted'">
+                {{ remainingAfter === 0
+                  ? t('wishlist.joint.contributeForm.fullyFunded')
+                  : `${t('wishlist.joint.contributeForm.remainingAfter')}: ${remainingAfter.toLocaleString('ru-RU')} ₽`
+                }}
+              </span>
+            </div>
+          </div>
+        </UCard>
+
+        <!-- Amount input -->
         <UFormField :label="t('wishlist.joint.contributeForm.amount')" :error="amountError || undefined">
-          <template #hint>
-            <UBadge
-              :label="t('wishlist.joint.contributeForm.remaining', {
-                amount: remaining.toLocaleString('ru-RU'),
-              })" color="neutral" variant="subtle" size="md"
-            />
-          </template>
-          <div class="flex items-cemter" />
-          <UInputNumber
-            v-model="amount" class="w-full" size="lg" :min="100" :step="10" :step-snapping="false" readonly
-            :max="remaining" :format-options="{
+          <UInputNumber v-model="amount" class="w-full" size="lg" :min="MIN_AMOUNT" :step="10" :step-snapping="false"
+            readonly :max="remaining" :format-options="{
               style: 'currency',
               currency: 'RUB',
               maximumFractionDigits: 0,
-            }"
-          />
+            }" />
         </UFormField>
 
-        <div class="flex flex-wrap gap-1.5">
-          <UButton
-            v-for="delta in [100, 300, 500]" :key="`add-${delta}`" :label="`+${delta}`" size="xs" color="primary"
-            variant="subtle" @click="changeAmount(delta)"
-          />
-
-          <UButton
-            v-for="delta in [100, 300, 500]" :key="`sub-${delta}`" :label="`-${delta}`" size="xs" color="neutral"
-            variant="subtle" @click="changeAmount(-delta)"
-          />
+        <!-- Delta buttons -->
+        <div class="grid grid-cols-3 gap-2">
+          <UButton v-for="delta in [500, 1000, 5000]" :key="`add-${delta}`" :label="`+${delta.toLocaleString('ru-RU')}`"
+            size="sm" color="primary" variant="subtle" class="w-full" @click="changeAmount(delta)" />
+          <UButton v-for="delta in [500, 1000, 5000]" :key="`sub-${delta}`" :label="`−${delta.toLocaleString('ru-RU')}`"
+            size="sm" color="neutral" variant="subtle" class="w-full" @click="changeAmount(-delta)" />
         </div>
 
-        <div class="flex justify-end mt-4">
-          <UButton
-            :disabled="isSubmitDisabled" :loading="props.loading"
-            :label="t('wishlist.joint.contributeForm.submit')" color="primary" variant="subtle"
-            leading-icon="i-lucide-wallet" size="lg" @click="handleSubmit"
-          />
-        </div>
+        <!-- Submit -->
+        <UButton block :disabled="isSubmitDisabled" :loading="props.loading"
+          :label="t('wishlist.joint.contributeForm.submit')" color="primary" variant="subtle"
+          leading-icon="i-lucide-wallet" size="lg" @click="handleSubmit" />
       </div>
     </template>
   </UDrawer>

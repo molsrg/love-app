@@ -304,6 +304,10 @@
         "amount": "Amount",
         "remaining": "Your remaining: {amount} ₽",
         "submit": "Contribute",
+        "myShare": "My share",
+        "contributed": "Contributed",
+        "remainingAfter": "Remaining",
+        "fullyFunded": "Share fully funded",
         "errors": {
           "amountRequired": "Amount is required",
           "amountInvalid": "Must be between 1 and {max}"

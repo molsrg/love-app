@@ -268,8 +268,8 @@
         "completed": "Куплено"
       },
       "progress": "Прогресс",
-      "myShare": "Моя доля",
-      "partnerShare": "Доля партнёра",
+      "myShare": "Мой вклад",
+      "partnerShare": "Вклад партнёра",
       "savingDays": "Копим уже {count} дн.",
       "contribute": "Внести взнос",
       "complete": "Отметить как купленный",
@@ -306,6 +306,10 @@
         "amount": "Сумма",
         "remaining": "Остаток вашей доли: {amount} ₽",
         "submit": "Внести",
+        "myShare": "Мой вклад",
+        "contributed": "Добавишь",
+        "remainingAfter": "Останется",
+        "fullyFunded": "Полностью закроешь сумму!",
         "errors": {
           "amountRequired": "Введите сумму",
           "amountInvalid": "Сумма должна быть от 1 до {max}"
