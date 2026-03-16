@@ -305,7 +305,7 @@
         "remaining": "Your remaining: {amount} ₽",
         "submit": "Contribute",
         "myShare": "My share",
-        "contributed": "Contributed",
+        "contributed": "Total contributed",
         "remainingAfter": "Remaining",
         "fullyFunded": "Share fully funded",
         "errors": {

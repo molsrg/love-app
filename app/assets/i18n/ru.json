@@ -307,7 +307,7 @@
         "remaining": "Остаток вашей доли: {amount} ₽",
         "submit": "Внести",
         "myShare": "Мой вклад",
-        "contributed": "Добавишь",
+        "contributed": "Будет внесено",
         "remainingAfter": "Останется",
         "fullyFunded": "Полностью закроешь сумму!",
         "errors": {
