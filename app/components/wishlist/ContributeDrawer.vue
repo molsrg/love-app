@@ -96,26 +96,34 @@ function handleSubmit() {
 
         <!-- Amount input -->
         <UFormField :label="t('wishlist.joint.contributeForm.amount')" :error="amountError || undefined">
-          <UInputNumber v-model="amount" class="w-full" size="lg" :min="MIN_AMOUNT" :step="10" :step-snapping="false"
+          <UInputNumber
+            v-model="amount" class="w-full" size="lg" :min="MIN_AMOUNT" :step="10" :step-snapping="false"
             readonly :max="remaining" :format-options="{
               style: 'currency',
               currency: 'RUB',
               maximumFractionDigits: 0,
-            }" />
+            }"
+          />
         </UFormField>
 
         <!-- Delta buttons -->
         <div class="grid grid-cols-3 gap-2">
-          <UButton v-for="delta in [500, 1000, 5000]" :key="`add-${delta}`" :label="`+${delta.toLocaleString('ru-RU')}`"
-            size="sm" color="primary" variant="subtle" class="w-full" @click="changeAmount(delta)" />
-          <UButton v-for="delta in [500, 1000, 5000]" :key="`sub-${delta}`" :label="`−${delta.toLocaleString('ru-RU')}`"
-            size="sm" color="neutral" variant="subtle" class="w-full" @click="changeAmount(-delta)" />
+          <UButton
+            v-for="delta in [500, 1000, 5000]" :key="`add-${delta}`" :label="`+${delta.toLocaleString('ru-RU')}`"
+            size="sm" color="primary" variant="subtle" class="w-full" @click="changeAmount(delta)"
+          />
+          <UButton
+            v-for="delta in [500, 1000, 5000]" :key="`sub-${delta}`" :label="`−${delta.toLocaleString('ru-RU')}`"
+            size="sm" color="neutral" variant="subtle" class="w-full" @click="changeAmount(-delta)"
+          />
         </div>
 
         <!-- Submit -->
-        <UButton block :disabled="isSubmitDisabled" :loading="props.loading"
+        <UButton
+          block :disabled="isSubmitDisabled" :loading="props.loading"
           :label="t('wishlist.joint.contributeForm.submit')" color="primary" variant="subtle"
-          leading-icon="i-lucide-wallet" size="lg" @click="handleSubmit" />
+          leading-icon="i-lucide-wallet" size="lg" @click="handleSubmit"
+        />
       </div>
     </template>
   </UDrawer>
