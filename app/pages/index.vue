@@ -36,7 +36,9 @@ watch(daysTogether, (newValue, oldValue) => {
   }
 }, { immediate: true })
 
-watch(() => wishlistStore.partnerItems.length, (newValue, oldValue) => {
+const activePartnerCount = computed(() => wishlistStore.partnerItems.filter(i => !i.isReceived).length)
+
+watch(activePartnerCount, (newValue, oldValue) => {
   if (newValue !== oldValue) {
     animateWishlistTo(newValue)
   }
@@ -65,7 +67,7 @@ const stats = computed(() => {
     }
   }
   if (config.wishlist) {
-    const count = wishlistStore.partnerItems.length
+    const count = activePartnerCount.value
     const animatedCount = Math.round(animatedWishlist.value)
     config.wishlist = {
       ...config.wishlist,
