@@ -27,9 +27,11 @@ export default defineEventHandler(async (event) => {
   const response = await fetch(url)
 
   if (!response.ok) {
+    const body = await response.text().catch(() => '')
+    console.error(`ORS API error ${response.status}:`, body)
     throw createError({
       statusCode: response.status,
-      message: 'ORS API error',
+      message: `ORS API error: ${response.status} ${body}`,
     })
   }
 
